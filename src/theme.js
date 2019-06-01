@@ -14,6 +14,9 @@ const theme = createMuiTheme({
       dark: '#530000',
       contrastText: '#fff',
     },
+    typography: {
+      suppressWarning: true,
+    },
   },
 });
 

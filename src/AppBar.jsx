@@ -1,10 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  AppBar, Toolbar, Typography, IconButton, Menu, MenuItem
+  AppBar, Toolbar, Typography, IconButton, Menu
 } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import MenuIcon from '@material-ui/icons/Menu';
+import VisitorMenu from './VisitorMenu';
 import useWindowDimensions from './modules/useWindowDimensions';
 
 const useStyles = makeStyles(theme => ({
@@ -20,16 +21,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const VisitorMenu = (props) => {
-  return (
-    <React.Fragment>
-      <MenuItem onClick={props.closeMenu}>Log In</MenuItem>
-      <MenuItem onClick={props.closeMenu}>Regsiter</MenuItem>
-    </React.Fragment>
-  );
-}
-
-function ProAssistAppBar() {
+function ProAssistAppBar(props) {
   const classes = useStyles();
   const { width } = useWindowDimensions();
   const mobileView = width <= 768;
@@ -39,11 +31,11 @@ function ProAssistAppBar() {
 
   const handleMenu = (e) => {
     setAnchorEl(e.currentTarget);
-  }
+  };
 
   const closeMenu = () => {
     setAnchorEl(null);
-  }
+  };
 
   return (
     <AppBar position="static">
@@ -74,12 +66,13 @@ function ProAssistAppBar() {
           open={open}
           onClose={closeMenu}
         >
-          <VisitorMenu closeMenu={closeMenu} />
+          {VisitorMenu(closeMenu)}
         </Menu>
 
         <IconButton
           color="inherit"
           hidden={!mobileView}
+          onClick={props.toggleDrawer}
         >
           <MenuIcon />
         </IconButton>
