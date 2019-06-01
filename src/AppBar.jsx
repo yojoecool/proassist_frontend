@@ -11,7 +11,23 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
   },
+  menuItem: {
+    '&:hover': {
+      fontWeight: 'bold',
+      cursor: 'pointer'
+    },
+    marginRight: 10
+  }
 }));
+
+const VisitorMenu = (props) => {
+  return (
+    <React.Fragment>
+      <MenuItem onClick={props.closeMenu}>Log In</MenuItem>
+      <MenuItem onClick={props.closeMenu}>Regsiter</MenuItem>
+    </React.Fragment>
+  );
+}
 
 function ProAssistAppBar() {
   const classes = useStyles();
@@ -36,7 +52,11 @@ function ProAssistAppBar() {
           ProAssist
         </Typography>
 
-        <Typography variant="subtitle1" hidden={mobileView}>
+        <Typography
+          variant="subtitle1"
+          hidden={mobileView}
+          className={classes.menuItem}
+        >
           Test
         </Typography>
         <IconButton
@@ -54,8 +74,7 @@ function ProAssistAppBar() {
           open={open}
           onClose={closeMenu}
         >
-          <MenuItem onClick={closeMenu}>LogIn</MenuItem>
-          <MenuItem onClick={closeMenu}>Regsiter</MenuItem>
+          <VisitorMenu closeMenu={closeMenu} />
         </Menu>
 
         <IconButton
