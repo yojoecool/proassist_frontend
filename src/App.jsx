@@ -1,6 +1,7 @@
 import React from 'react';
 import AppBar from './AppBar';
 import Drawer from './Drawer';
+import Footer from './Footer';
 import './App.css';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <AppBar toggleDrawer={toggleDrawer} />
       <Drawer openDrawer={openDrawer} closeDrawer={closeDrawer} />
       <p>Hi</p>
+      <Footer />
     </div>
   );
 }
