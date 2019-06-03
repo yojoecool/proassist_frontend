@@ -19,6 +19,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     fontWeight: 'bold'
+  },
+  topDiv: {
+    height: '5%'
   }
 }));
 
@@ -45,7 +48,8 @@ function ProAssistDrawer(props) {
       <div
         className={classNames(classToUse, classes.drawer, classes.fullHeight)}
       >
-        <MenuItem onClick={props.closeMenu}>Test</MenuItem>
+        <div className={classNames(classes.topDiv)} />
+        <MenuItem onClick={props.closeDrawer}>Test</MenuItem>
         {VisitorMenu(props.closeDrawer)}
       </div>
     </Drawer>
