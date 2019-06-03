@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Drawer, MenuItem } from '@material-ui/core';
+import { Drawer, MenuItem, IconButton } from '@material-ui/core';
+import { Close } from '@material-ui/icons'
 import classNames from 'classnames';
 import VisitorMenu from './VisitorMenu';
 import useWindowDimensions from './modules/useWindowDimensions';
@@ -21,7 +22,8 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold'
   },
   topDiv: {
-    height: '5%'
+    height: '8%',
+    padding: 10
   }
 }));
 
@@ -48,7 +50,14 @@ function ProAssistDrawer(props) {
       <div
         className={classNames(classToUse, classes.drawer, classes.fullHeight)}
       >
-        <div className={classNames(classes.topDiv)} />
+        <div className={classNames(classes.topDiv, 'd-flex', 'justify-content-end', 'align-items-center')}>
+          <IconButton
+            color="inherit"
+            onClick={props.closeDrawer}
+          >
+            <Close />
+          </IconButton>
+        </div>
         <MenuItem onClick={props.closeDrawer}>Test</MenuItem>
         {VisitorMenu(props.closeDrawer)}
       </div>

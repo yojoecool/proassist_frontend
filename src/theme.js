@@ -6,22 +6,22 @@ const theme = createMuiTheme({
       light: '#484848',
       main: '#212121',
       dark: '#000000',
-      contrastText: '#fff',
+      contrastText: '#fff'
     },
     secondary: {
       light: '#ce4735',
       main: '#960d0d',
       dark: '#620000',
-      contrastText: '#fff',
+      contrastText: '#fff'
     },
     typography: {
-      suppressWarning: true,
       fontFamily: [
         '"Noto Sans HK"',
         'Lato',
         'Roboto',
         'sans-serif'
       ].join(','),
+      suppressWarning: true
     },
   },
 });
