@@ -11,16 +11,14 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     bottom: 0,
-    position: 'fixed',
+    position: 'absolute',
+    minHeight: 175
+  },
+  footerHeight: {
     minHeight: 175
   },
   bottomSection: {
-    width: '100%',
-    backgroundColor: theme.palette.primary.dark,
-    color: theme.palette.primary.contrastText,
-    minHeight: 35,
-    position: 'fixed',
-    bottom: 0
+    minHeight: 35
   },
   colSection: {
     minHeight: 175,
@@ -48,11 +46,11 @@ function Footer(props) {
   const bodyType = mobileView ? 'caption' : 'body2';
 
   return (
-    <section className={classNames(classes.footer)}>
-      <div className={classNames('row')}>
+    <section className={classNames(classes.footer, classes.footerHeight)}>
+      <div className={classNames('row', 'w-100')}>
         <div
-          className={
-            classNames(classes.colSection, 'pl-5',
+          className={classNames(
+              classes.colSection, 'pl-5',
               { 'col-8': !mobileView }, { 'col-6': mobileView },
               'd-flex', 'align-items-start', 
               'justify-content-center', 'flex-column'
@@ -69,8 +67,8 @@ function Footer(props) {
             )}
           >
             <div
-              className={
-                classNames({ [classes.colSection2]: !mobileView }, { 'w-100': mobileView },
+              className={classNames(
+                  { [classes.colSection2]: !mobileView }, { 'w-100': mobileView },
                   'd-flex', 'align-items-start', 
                   'justify-content-center', 'flex-column'
               )}
@@ -107,7 +105,7 @@ function Footer(props) {
           className={
             classNames('col', 'd-flex', 'align-items-center', 
               'justify-content-center', classes.colSection,
-              'flex-column', 'pr-4'
+              'flex-column'
           )}
         >
           <Typography variant="h6" className={classNames('w-100', 'text-center')}>
