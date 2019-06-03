@@ -39,25 +39,36 @@ function Footer(props) {
           className={
             classNames(classes.colSection,
               'col', 'd-flex', 'align-items-center', 
-              'justify-content-center'
+              'justify-content-center', 'flex-column'
           )}
         >
-          <Typography variant="h6">
-            ProAssist
+          <Typography variant="subtitle1">
+            CONTACT US
           </Typography>
+          <p>
+            PROASSIST HEALTHCARE<br />SOLUTIONS, INC
+          </p>
         </div>
-      </div>
-      <div className={classNames(classes.bottomSection)}>
+
         <div
           className={
             classNames('col', 'd-flex', 'align-items-center', 
-              'justify-content-center', classes.mediaDiv
+              'justify-content-center', classes.colSection,
+              'flex-column'
           )}
         >
-          <img src={twitter} className="mr-3" alt="twitter" height="32" width="32" />
-          <img src={facebook} className="mr-3" alt="facebook" height="32" width="32" />
-          <img src={linkedIn} alt="linkedIn" height="32" width="32" />
+          <Typography variant="subtitle1">
+            FOLLOW US
+          </Typography>
+          <div className="mt-2">
+            <img src={twitter} className="mr-3" alt="twitter" height="40" width="40" />
+            <img src={facebook} className="mr-3" alt="facebook" height="40" width="40" />
+            <img src={linkedIn} alt="linkedIn" height="40" width="40" />
+          </div>
         </div>
+      </div>
+
+      <div className={classNames(classes.bottomSection)}>
       </div>
     </section>
   );
