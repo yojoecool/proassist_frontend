@@ -12,23 +12,23 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.contrastText,
     bottom: 0,
     position: 'absolute',
-    minHeight: 175
+    height: 215
   },
   footerHeight: {
-    minHeight: 175
+    height: 215
   },
   bottomSection: {
-    minHeight: 35
+    height: 35
   },
   colSection: {
-    minHeight: 175,
-    marginBottom: 15
+    height: 215,
+    // marginBottom: 15
   },
   colSection2: {
     width: '50%'
   },
   mediaDiv: {
-    minHeight: 35
+    height: 35
   },
   typeSection: {
     width: 250
