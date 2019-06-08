@@ -75,7 +75,8 @@ function LogIn(props) {
     }
 
     try {
-      const response = await axios.post('http://100.115.92.205:3006/users/login', { email, password });
+      const { REACT_APP_BACKEND_URL } = process.env;
+      const response = await axios.post(`${REACT_APP_BACKEND_URL}/users/login`, { email, password });
       toast('Login Successful!', 'success');
       props.history.push('/profile');
     } catch (err) {
