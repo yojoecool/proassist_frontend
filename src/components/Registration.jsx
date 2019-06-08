@@ -52,7 +52,7 @@ function PickIdentity(props) {
             </RadioGroup>
         </FormControl>
 
-        <Button size="large" variant="contained" color="primary" className={classes.button} onClick={props.changeView('jobSeeker')}>
+        <Button size="large" variant="contained" color="primary" className={classes.button} onClick={props.changeView()}>
             Continue
         </Button>
         </div>
@@ -62,6 +62,7 @@ function JobSeeker(props) {
     const classes = useStyles();
     return (
         <div>
+            <h2>Job Seeker Application:</h2>
             <TextField
                 required
                 label="Name"
@@ -83,7 +84,7 @@ function JobSeeker(props) {
             />
             <FormHelperText>Required</FormHelperText>
 
-            <Button size="large" variant="contained" color="primary" className={classes.button} onClick={props.changeView('pickIdentity')}>
+            <Button size="large" variant="contained" color="primary" className={classes.button} onClick={props.changeView("back")}>
                 Back
             </Button>
 
@@ -102,7 +103,35 @@ function Company(props) {
     const classes = useStyles();
     return (
         <div>
-            <p>Company!</p>
+            <h2>Company Application:</h2>
+            <TextField
+                required
+                label="Name"
+                id="name"
+                className={classes.textField}
+                value={props.name}
+                onChange={props.handleChange('name')}
+                margin="normal"
+            />
+            <FormHelperText>Required</FormHelperText>
+            <TextField
+                required
+                label="Email"
+                id="email"
+                className={classes.textField}
+                value={props.email}
+                onChange={props.handleChange('email')}
+                margin="normal"
+            />
+            <FormHelperText>Required</FormHelperText>
+
+            <Button size="large" variant="contained" color="primary" className={classes.button} onClick={props.changeView("back")}>
+                Back
+            </Button>
+
+            <Button size="large" variant="contained" color="primary" className={classes.button}>
+                Register
+            </Button>
         </div>
     )
 }
@@ -129,22 +158,27 @@ function Registration() {
     
     let view;
 
-    const changeView = event => {
-        setState({
-            ...state,
-            view: event.target.value
-        })
-        if (event.target.value === "company"){
-            view = <Company name={this.state.name} password={this.state.password} email={this.state.email} handleChange={this.handleChange} changeView={this.changeView}/>
-        } else if (event.target.value === "jobSeeker"){
-            view = <JobSeeker name={this.state.name} password={this.state.password} email={this.state.email} handleChange={this.handleChange} changeView={this.changeView}/>
+    const changeView = (key) => () => {
+        if (key === "back"){
+            setState({
+                ...state,
+                view: 'pickIdentity'
+            })
         } else {
-            view = <PickIdentity identity={this.state.identity} handleChange={this.handleChange} changeView={this.changeView}/>;
+            setState({
+                ...state,
+                view: state.identity
+            })
         }
     }
 
-    if (!view){
-        view = <PickIdentity identity={state.identity} /> //handleChange={this.handleChange} changeView={this.changeView}/>;
+
+    if (state.view === "company"){
+        view = <Company name={state.name} password={state.password} email={state.email} handleChange={handleChange} changeView={changeView}/>
+    } else if (state.view === "jobSeeker"){
+        view = <JobSeeker name={state.name} password={state.password} email={state.email} handleChange={handleChange} changeView={changeView}/>
+    } else {
+        view = <PickIdentity identity={state.identity} handleChange={handleChange} changeView={changeView}/>;
     }
 
     return (
