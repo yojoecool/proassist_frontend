@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import AppBar from './AppBar';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Main from './components/Main';
@@ -9,11 +10,13 @@ import Login from './components/Login';
 import Registration from './components/Registration';
 import Drawer from './Drawer';
 import Footer from './Footer';
+import LogIn from './LogIn';
 
 const useStyles = makeStyles(theme => ({
   app: {
     position: 'relative',
-    minHeight: '100vh'
+    minHeight: '100vh',
+    paddingBottom: 215
   }
 }));
 
@@ -35,13 +38,17 @@ function App() {
       <BrowserRouter>
         <AppBar toggleDrawer={toggleDrawer} />
         <Drawer openDrawer={openDrawer} closeDrawer={closeDrawer} />
-        <Route exact path="/" component={Main} />
-        <Route path="/about" component={About} />
-        <Route path="/careers" component={Careers} />
-        <Route path="/login" component={Login} />
-        <Route path="/registration" component={Registration} />
+        
+        <Switch>
+          <Route exact path="/" component={Main} />
+          <Route path="/about" component={About} />
+          <Route path="/careers" component={Careers} />
+          <Route path="/login" component={Login} />
+          <Route path="/registration" component={Registration} />
+        </Switch>
+
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </div>
   );
 }

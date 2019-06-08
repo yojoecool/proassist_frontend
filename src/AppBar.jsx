@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import MenuIcon from '@material-ui/icons/Menu';
+import { Link } from "react-router-dom";
 import VisitorMenu from './VisitorMenu';
 import useWindowDimensions from './modules/useWindowDimensions';
 import { NavLink } from 'react-router-dom'
@@ -19,6 +20,12 @@ const useStyles = makeStyles(theme => ({
       cursor: 'pointer'
     },
     marginRight: 10
+  },
+  linkItems: {
+    '&:hover': {
+      color: 'inherit'
+    },
+    color: 'inherit'
   }
 }));
 
@@ -58,7 +65,7 @@ function ProAssistAppBar(props) {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
-          ProAssist
+          <Link to="/" className={classes.linkItems}>ProAssist</Link>
         </Typography>
 
         <Typography
@@ -66,7 +73,7 @@ function ProAssistAppBar(props) {
           hidden={mobileView}
           className={classes.menuItem}
         >
-          Test
+          <Link to="/test" className={classes.linkItems}>Test</Link>
         </Typography>
         <Tabs className={classes.tabsDesktop} value={value} onChange={handleChange}>
             <NavLinkTab label="Main" to="/" />
