@@ -49,6 +49,7 @@ function Splashpage(props) {
                 // id="outlined-simple-start-adornment"
                 variant="outlined"
                 label="Keyword or Title"
+                required
                 onChange={e => handleChange(e)}
               />
 
