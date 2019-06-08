@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, MenuItem, IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons'
@@ -26,6 +27,17 @@ const useStyles = makeStyles(theme => ({
     padding: 10
   }
 }));
+
+function MenuLink(props) {
+  return (
+    <MenuItem
+      component={Link}
+      {...props}
+    >
+      {props.children}
+    </MenuItem>
+  );
+}
 
 function ProAssistDrawer(props) {
   const { width } = useWindowDimensions();
@@ -58,7 +70,10 @@ function ProAssistDrawer(props) {
             <Close />
           </IconButton>
         </div>
-        <MenuItem onClick={props.closeDrawer}>Test</MenuItem>
+
+        <MenuLink onClick={props.closeDrawer} to="/">Home</MenuLink>
+        <MenuLink onClick={props.closeDrawer} to="/about">About</MenuLink>
+        <MenuLink onClick={props.closeDrawer} to="/careers">Careers</MenuLink>
         {VisitorMenu(props.closeDrawer)}
       </div>
     </Drawer>
