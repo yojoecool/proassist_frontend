@@ -1,49 +1,48 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import {
+    Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography, 
+  } from '@material-ui/core';
 
 
 const useStyles = makeStyles(theme => ({
-    registration: {
+    root: {
+        width: '100%',
         display: 'flex',
+        justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'column',
+        flexWrap: 'wrap',
+        marginTop: 25,
+        flexDirection: 'column'
+    },
+    registrationText: {
+        color: theme.palette.secondary.main,
+        fontWeight: 'bold'
     },
     formControl: {
-        margin: theme.spacing(1),
         minWidth: 120,
     },  
-    textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        width: 400,
-    },
-    radioField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
+    formField: {
         width: 400,
     },
     button: {
-        width: 200
+        width: 150,
+        margin: (50,25,50,25)
+    },
+    subsection: {
+        margin: (50,0)
     }
   }));
 
 function PickIdentity(props) {
     const classes = useStyles();
     return (
-        <div>
+        <div className={classes.root}>
          <FormControl component="fieldset" className={classes.formControl}>
             <FormLabel component="legend">Who are you?</FormLabel>
             <RadioGroup
             name="identity"
-            className={classes.radioField}
+            className={classes.formField}
             value={props.identity}
             onChange={props.handleChange('identity')}
             >
@@ -61,40 +60,69 @@ function PickIdentity(props) {
 function JobSeeker(props) {
     const classes = useStyles();
     return (
-        <div>
-            <h2>Job Seeker Application:</h2>
+        <div className={classes.root}>
+            <Typography variant="h5">Job Seeker Application:</Typography>
             <TextField
                 required
-                label="Name"
-                id="name"
-                className={classes.textField}
-                value={props.name}
-                onChange={props.handleChange('name')}
+                label="First Name"
+                id="firstName"
+                className={classes.formField}
+                value={props.firstName}
+                onChange={props.handleChange('firstName')}
                 margin="normal"
             />
-            <FormHelperText>Required</FormHelperText>
+            <TextField
+                required
+                label="Last Name"
+                id="lastName"
+                className={classes.formField}
+                value={props.lastName}
+                onChange={props.handleChange('lastName')}
+                margin="normal"
+            />
             <TextField
                 required
                 label="Email"
                 id="email"
-                className={classes.textField}
+                className={classes.formField}
                 value={props.email}
                 onChange={props.handleChange('email')}
                 margin="normal"
             />
-            <FormHelperText>Required</FormHelperText>
-
-            <Button size="large" variant="contained" color="primary" className={classes.button} onClick={props.changeView("back")}>
-                Back
-            </Button>
+            <TextField
+                required
+                label="Password"
+                id="password"
+                className={classes.formField}
+                value={props.password}
+                onChange={props.handleChange('password')}
+                margin="normal"
+                type="password"
+            />
+            <TextField
+                required
+                label="Confirm Password"
+                id="passwordCheck"
+                className={classes.formField}
+                value={props.passwordCheck}
+                onChange={props.handleChange('passwordCheck')}
+                margin="normal"
+                type="password"
+            />
 
             {/* <Button size="large" variant="contained" color="primary" className={classes.button}>
                 Login with Facebook
             </Button> */}
 
-            <Button size="large" variant="contained" color="primary" className={classes.button}>
-                Register
-            </Button>
+            <div> 
+                <Button size="large" variant="contained" color="primary-light" className={classes.button} onClick={props.changeView("back")}>
+                    Back
+                </Button>
+
+                <Button size="large" variant="contained" color="primary" className={classes.button}>
+                    Register
+                </Button>
+            </div>
         </div>
     )
 }
@@ -102,36 +130,84 @@ function JobSeeker(props) {
 function Company(props) {
     const classes = useStyles();
     return (
-        <div>
-            <h2>Company Application:</h2>
+        <div className={classes.root}>
+            <Typography variant="h5">Company Application:</Typography>
             <TextField
                 required
-                label="Name"
-                id="name"
-                className={classes.textField}
-                value={props.name}
-                onChange={props.handleChange('name')}
+                label="Company Name"
+                id="companyName"
+                className={classes.formField}
+                value={props.companyName}
+                onChange={props.handleChange('companyName')}
                 margin="normal"
             />
-            <FormHelperText>Required</FormHelperText>
+            <Typography variant="p" className={classes.subsection}>Point of Contact Information:</Typography>
+            <TextField
+                required
+                label="First Name"
+                id="firstName"
+                className={classes.formField}
+                value={props.firstName}
+                onChange={props.handleChange('firstName')}
+                margin="normal"
+            />
+            <TextField
+                required
+                label="Last Name"
+                id="lastName"
+                className={classes.formField}
+                value={props.lastName}
+                onChange={props.handleChange('lastName')}
+                margin="normal"
+            />
             <TextField
                 required
                 label="Email"
                 id="email"
-                className={classes.textField}
+                className={classes.formField}
                 value={props.email}
                 onChange={props.handleChange('email')}
                 margin="normal"
             />
-            <FormHelperText>Required</FormHelperText>
+            <TextField
+                required
+                label="Phone Number"
+                id="phoneNumber"
+                className={classes.formField}
+                value={props.phoneNumber}
+                onChange={props.handleChange('phoneNumber')}
+                margin="normal"
+            />
+            <TextField
+                required
+                label="Password"
+                id="password"
+                className={classes.formField}
+                value={props.password}
+                onChange={props.handleChange('password')}
+                margin="normal"
+                type="password"
+            />
+            <TextField
+                required
+                label="Confirm Password"
+                id="passwordCheck"
+                className={classes.formField}
+                value={props.passwordCheck}
+                onChange={props.handleChange('passwordCheck')}
+                margin="normal"
+                type="password"
+            />
 
-            <Button size="large" variant="contained" color="primary" className={classes.button} onClick={props.changeView("back")}>
-                Back
-            </Button>
+            <div> 
+                <Button size="large" variant="contained" color="primary-light" className={classes.button} onClick={props.changeView("back")}>
+                    Back
+                </Button>
 
-            <Button size="large" variant="contained" color="primary" className={classes.button}>
-                Register
-            </Button>
+                <Button size="large" variant="contained" color="primary" className={classes.button}>
+                    Register
+                </Button>
+            </div>
         </div>
     )
 }
@@ -140,8 +216,12 @@ function Company(props) {
 function Registration() {
     const classes = useStyles();
     const [state, setState] = React.useState({
-        name: '',
+        firstName: '',
+        lastName: '',
+        companyName: '',
+        phoneNumber: '',
         password: '',
+        passwordCheck: '',
         email: '',
         identity: 'jobSeeker',
         view: 'pickIdentity'
@@ -174,16 +254,37 @@ function Registration() {
 
 
     if (state.view === "company"){
-        view = <Company name={state.name} password={state.password} email={state.email} handleChange={handleChange} changeView={changeView}/>
+        view = <Company 
+            firstName={state.firstName} 
+            lastName={state.lastName} 
+            password={state.password}
+            passwordCheck={state.passwordCheck} 
+            companyName={state.companyName} 
+            email={state.email} 
+            handleChange={handleChange} 
+            changeView={changeView}
+            />
     } else if (state.view === "jobSeeker"){
-        view = <JobSeeker name={state.name} password={state.password} email={state.email} handleChange={handleChange} changeView={changeView}/>
+        view = <JobSeeker 
+            firstName={state.firstName} 
+            lastName={state.lastName} 
+            password={state.password} 
+            passwordCheck={state.passwordCheck} 
+            email={state.email} 
+            handleChange={handleChange} 
+            changeView={changeView}
+            />
     } else {
-        view = <PickIdentity identity={state.identity} handleChange={handleChange} changeView={changeView}/>;
+        view = <PickIdentity 
+            identity={state.identity} 
+            handleChange={handleChange} 
+            changeView={changeView}
+            />
     }
 
     return (
-        <div className={classes.registration}>
-            <h1>Register for an Account</h1>
+        <div className={classes.root}>
+            <Typography variant="h4" className={classes.registrationText}>Registration</Typography>
             {view}
         </div>
     );

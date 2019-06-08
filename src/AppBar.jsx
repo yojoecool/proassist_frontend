@@ -79,8 +79,6 @@ function ProAssistAppBar(props) {
             <NavLinkTab label="Main" to="/" />
             <NavLinkTab label="About" to="/about" />
             <NavLinkTab label="Careers" to="/careers" />
-            <NavLinkTab label="Login" to="/login" />
-            <NavLinkTab label="Registration" to="/register" />
           </Tabs> 
         <IconButton
           aria-owns={open ? 'menu-appbar' : undefined}
