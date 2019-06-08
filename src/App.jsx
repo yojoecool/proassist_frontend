@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from './AppBar';
 import Drawer from './Drawer';
 import Footer from './Footer';
+import Splashpage from './Splashpage';
 
 const useStyles = makeStyles(theme => ({
   app: {
@@ -28,7 +29,7 @@ function App() {
     <div className={classes.app}>
       <AppBar toggleDrawer={toggleDrawer} />
       <Drawer openDrawer={openDrawer} closeDrawer={closeDrawer} />
-      <p>Hi</p>
+      <Splashpage />
       <Footer />
     </div>
   );
