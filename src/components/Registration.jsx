@@ -11,9 +11,6 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        display: 'flex',
-    },
     registration: {
         display: 'flex',
         alignItems: 'center',
@@ -38,67 +35,124 @@ const useStyles = makeStyles(theme => ({
     }
   }));
 
+function PickIdentity(props) {
+    const classes = useStyles();
+    return (
+        <div>
+         <FormControl component="fieldset" className={classes.formControl}>
+            <FormLabel component="legend">Who are you?</FormLabel>
+            <RadioGroup
+            name="identity"
+            className={classes.radioField}
+            value={props.identity}
+            onChange={props.handleChange('identity')}
+            >
+            <FormControlLabel value="jobSeeker" control={<Radio />} label="Job Seeker" />
+            <FormControlLabel value="company" control={<Radio />} label="Company" />
+            </RadioGroup>
+        </FormControl>
+
+        <Button size="large" variant="contained" color="primary" className={classes.button} onClick={props.changeView('jobSeeker')}>
+            Continue
+        </Button>
+        </div>
+    )
+}
+function JobSeeker(props) {
+    const classes = useStyles();
+    return (
+        <div>
+            <TextField
+                required
+                label="Name"
+                id="name"
+                className={classes.textField}
+                value={props.name}
+                onChange={props.handleChange('name')}
+                margin="normal"
+            />
+            <FormHelperText>Required</FormHelperText>
+            <TextField
+                required
+                label="Email"
+                id="email"
+                className={classes.textField}
+                value={props.email}
+                onChange={props.handleChange('email')}
+                margin="normal"
+            />
+            <FormHelperText>Required</FormHelperText>
+
+            <Button size="large" variant="contained" color="primary" className={classes.button} onClick={props.changeView('pickIdentity')}>
+                Back
+            </Button>
+
+            {/* <Button size="large" variant="contained" color="primary" className={classes.button}>
+                Login with Facebook
+            </Button> */}
+
+            <Button size="large" variant="contained" color="primary" className={classes.button}>
+                Register
+            </Button>
+        </div>
+    )
+}
+
+function Company(props) {
+    const classes = useStyles();
+    return (
+        <div>
+            <p>Company!</p>
+        </div>
+    )
+}
+
+// If user is already logged in, reroute to profile page?
 function Registration() {
     const classes = useStyles();
     const [state, setState] = React.useState({
         name: '',
         password: '',
         email: '',
-        identity: 'job_seeker',
+        identity: 'jobSeeker',
+        view: 'pickIdentity'
     });
 
-  const handleChange = name => event => {
-    setState({
-      ...state,
-      [name]: event.target.value,
-    });
-  };
+    const handleChange = name => event => {
+        setState({
+        ...state,
+        [name]: event.target.value,
+        });
+        console.log(name)
+        console.log(event.target.value)
+    };
+    
+    let view;
 
-  return (
-    <div className={classes.registration}>
-        <p>Registration for an Account!</p>
-        <TextField
-            required
-            label="Name"
-            id="name"
-            className={classes.textField}
-            value={state.name}
-            onChange={handleChange('name')}
-            margin="normal"
-        />
-        <FormHelperText>Required</FormHelperText>
-        <TextField
-            required
-            label="Email"
-            id="email"
-            className={classes.textField}
-            value={state.email}
-            onChange={handleChange('email')}
-            margin="normal"
-        />
-        <FormHelperText>Required</FormHelperText>
-        <FormControl component="fieldset" className={classes.formControl}>
-            <FormLabel component="legend">Who are you?</FormLabel>
-            <RadioGroup
-            name="identity"
-            className={classes.radioField}
-            value={state.identity}
-            onChange={handleChange('identity')}
-            >
-            <FormControlLabel value="job_seeker" control={<Radio />} label="Job Seeker" />
-            <FormControlLabel value="company" control={<Radio />} label="Company" />
-            </RadioGroup>
-      </FormControl>
+    const changeView = event => {
+        setState({
+            ...state,
+            view: event.target.value
+        })
+        if (event.target.value === "company"){
+            view = <Company name={this.state.name} password={this.state.password} email={this.state.email} handleChange={this.handleChange} changeView={this.changeView}/>
+        } else if (event.target.value === "jobSeeker"){
+            view = <JobSeeker name={this.state.name} password={this.state.password} email={this.state.email} handleChange={this.handleChange} changeView={this.changeView}/>
+        } else {
+            view = <PickIdentity identity={this.state.identity} handleChange={this.handleChange} changeView={this.changeView}/>;
+        }
+    }
 
-        {/* <Button size="large" variant="contained" color="primary" className={classes.button}>
-            Login with Facebook
-        </Button> */}
-        <Button size="large" variant="contained" color="primary" className={classes.button}>
-            Sign Up
-        </Button>
+    if (!view){
+        view = <PickIdentity identity={state.identity} /> //handleChange={this.handleChange} changeView={this.changeView}/>;
+    }
 
-    </div>
-  );
+    return (
+        <div className={classes.registration}>
+            <h1>Register for an Account</h1>
+            {view}
+        </div>
+    );
 }
 
 export default Registration;
