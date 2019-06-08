@@ -1,6 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AppBar from './AppBar';
 import Drawer from './Drawer';
 import Footer from './Footer';
@@ -39,6 +41,7 @@ function App() {
 
         <Footer />
       </BrowserRouter>
+      <ToastContainer autoClose={3000} />
     </div>
   );
 }
