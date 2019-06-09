@@ -7,7 +7,7 @@ import {
   } from '@material-ui/core';
 import MaskedInput from 'react-text-mask';
 import PropTypes from 'prop-types';
-import {validateEmail, validatePhoneNumber} from './validations';
+import {validateEmail, validatePhoneNumber, validatePassword} from './validations';
 
 // TODO: should return error if email already exists in DB
 
@@ -30,7 +30,18 @@ const useStyles = makeStyles(theme => ({
     },
     subsection: {
         marginTop: 35,
-    }
+    },
+    errorText: {
+        color: 'red',
+        marginTop: 10,
+        width: '100%'
+    },
+    errorHeight: {
+        height: 20,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
   }));
 
 function PhoneNumberFormat(props) {
@@ -76,7 +87,7 @@ function Company(props) {
           newErrors.password = true;
           newErrors.errorText = 'Missing Password';
         }
-        if (props.password && props.password !== props.passwordCheck) {
+        if (props.password && !validatePassword(props.password, props.passwordCheck)) {
             newErrors.passwordCheck = true;
             newErrors.errorText = 'Passwords do not match';
         }
@@ -137,8 +148,14 @@ function Company(props) {
     return (
         <div className={classes.root}>
             <Typography variant="h5">Company Application:</Typography>
+
+            <div className={classes.errorHeight}>
+                <Typography variant="subtitle1" className={classes.errorText}>
+                {errors.errorText}
+                </Typography>
+            </div>
+
             <form className={classes.root} onSubmit={submit}>
-            <Typography variant="subtitle1" className={classes.subsection}>Company Information:</Typography>
             <TextField
                 required
                 label="Company Name"

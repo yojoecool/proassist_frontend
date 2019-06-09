@@ -7,8 +7,13 @@ function validateEmail(email)
 function validatePhoneNumber(num)  
 {
     const digits = num.replace(/\D/g, '');
-    return (digits.length === 10)
+    return digits.length === 10;
+}
+
+function validatePassword(password,check)  
+{
+    return password === check;
 }
 
 
-export {validateEmail, validatePhoneNumber};
+export {validateEmail, validatePhoneNumber, validatePassword};

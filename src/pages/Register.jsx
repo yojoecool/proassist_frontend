@@ -5,6 +5,8 @@ import {
     Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography, 
   } from '@material-ui/core';
 import { JobSeeker, Company } from './registration';
+import { useWindowDimensions } from '../modules';
+import classNames from 'classnames';
 
 // TODO: fix routing so if you are on job seeker or company registration, back button will go back to PickIdentity
 const useStyles = makeStyles(theme => ({
@@ -14,8 +16,31 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',
-        marginTop: 25,
-        flexDirection: 'column'
+        flexDirection: 'column',
+        paddingBottom: 35,
+        marginTop: '10%',
+        marginBottom: '10%',
+    },
+    formDisplay: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        flexDirection: 'column',
+        paddingBottom: 35,
+        marginTop: '2%',
+        marginBottom: '2%',
+    },
+    pickIdentity: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        flexDirection: 'column',
+        paddingBottom: 35,
+        marginTop: '3%'
     },
     registrationText: {
         color: theme.palette.secondary.main,
@@ -30,17 +55,13 @@ const useStyles = makeStyles(theme => ({
     button: {
         width: 150,
         margin: 25,
-    },
-    subsection: {
-        marginTop: 35,
-        fontWeight: 'bold'
     }
   }));
 
 function PickIdentity(props) {
     const classes = useStyles();
     return (
-        <div className={classes.root}>
+        <div className={classes.pickIdentity}>
          <FormControl component="fieldset" className={classes.formControl}>
             <FormLabel component="legend">Who are you?</FormLabel>
             <RadioGroup
@@ -64,6 +85,10 @@ function PickIdentity(props) {
 // If user is already logged in, reroute to profile page?
 function Register() {
     const classes = useStyles();
+    
+    const { width } = useWindowDimensions();
+    const desktopView = width > 768;
+
     const [state, setState] = React.useState({
         firstName: '',
         lastName: '',
@@ -130,8 +155,13 @@ function Register() {
             />
     }
 
+    let classToUse = classes.root;
+    if (state.view !== "pickIdentity" && desktopView){
+        classToUse = classes.formDisplay
+    }
+
     return (
-        <div className={classes.root}>
+        <div className={classNames(classToUse)}>
             <Typography variant="h4" className={classes.registrationText}>Registration</Typography>
             {view}
         </div>
