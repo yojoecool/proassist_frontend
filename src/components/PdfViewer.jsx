@@ -17,13 +17,14 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center'
   },
   pageNums: {
-    flexGrow: 1,
+    marginRight: 50,
+    marginLeft: 50,
     textAlign: 'center',
     marginTop: 10
   },
   pageNumContainer: {
     display: 'flex',
-    justifyContent: 'space-around'
+    justifyContent: 'center'
   },
   icons: {
     width: 50
