@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import AppBar from './AppBar';
 import Main from './components/Main';
+import Splashpage from './components/Splashpage';
 import About from './components/About';
 import Careers from './components/Careers';
 import Registration from './components/Registration';
@@ -38,7 +39,7 @@ function App() {
         <Drawer openDrawer={openDrawer} closeDrawer={closeDrawer} />
         
         <Switch>
-          <Route exact path="/" component={Main} />
+          <Route exact path="/" component={Splashpage} />
           <Route path="/about" component={About} />
           <Route path="/careers" component={Careers} />
           <Route path="/login" component={LogIn} />
