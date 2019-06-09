@@ -38,6 +38,9 @@ function FileUpload() {
   const fileInput = React.createRef();
 
   const onChangeFile = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      return;
+    }
     if (e.target.files[0].type !== 'application/pdf') {
       toast('Only PDF files are accepted', 'error');
       return;
