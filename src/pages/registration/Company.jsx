@@ -116,10 +116,11 @@ function Company(props) {
         }
     };
 
-    const update = (e) => {
+    const update = (e, changeFunction) => {
         const { [e.target.name]: removed, ...newErrors } = errors;
         setErrors({ ...newErrors, errorText: '' });
-    };
+        changeFunction(e.target.value);
+};
     
 
     return (
@@ -133,7 +134,7 @@ function Company(props) {
                 id="companyName"
                 className={classes.formField}
                 value={props.companyName}
-                onChange={(e) => {update(e), props.handleChange('companyName')(e)}}
+                onChange={props.handleChange('companyName')}
                 margin="normal"
             />
             <TextField
