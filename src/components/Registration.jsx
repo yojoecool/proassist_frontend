@@ -27,10 +27,11 @@ const useStyles = makeStyles(theme => ({
     },
     button: {
         width: 150,
-        margin: (50,25,50,25)
+        margin: 25,
     },
     subsection: {
-        margin: (50,0)
+        marginTop: 35,
+        fontWeight: 'bold'
     }
   }));
 
@@ -132,6 +133,7 @@ function Company(props) {
     return (
         <div className={classes.root}>
             <Typography variant="h5">Company Application:</Typography>
+            <Typography variant="p" className={classes.subsection}>Company Information:</Typography>
             <TextField
                 required
                 label="Company Name"
@@ -141,25 +143,6 @@ function Company(props) {
                 onChange={props.handleChange('companyName')}
                 margin="normal"
             />
-            <Typography variant="p" className={classes.subsection}>Point of Contact Information:</Typography>
-            <TextField
-                required
-                label="First Name"
-                id="firstName"
-                className={classes.formField}
-                value={props.firstName}
-                onChange={props.handleChange('firstName')}
-                margin="normal"
-            />
-            <TextField
-                required
-                label="Last Name"
-                id="lastName"
-                className={classes.formField}
-                value={props.lastName}
-                onChange={props.handleChange('lastName')}
-                margin="normal"
-            />
             <TextField
                 required
                 label="Email"
@@ -167,15 +150,6 @@ function Company(props) {
                 className={classes.formField}
                 value={props.email}
                 onChange={props.handleChange('email')}
-                margin="normal"
-            />
-            <TextField
-                required
-                label="Phone Number"
-                id="phoneNumber"
-                className={classes.formField}
-                value={props.phoneNumber}
-                onChange={props.handleChange('phoneNumber')}
                 margin="normal"
             />
             <TextField
@@ -198,6 +172,35 @@ function Company(props) {
                 margin="normal"
                 type="password"
             />
+            <Typography variant="p" className={classes.subsection}>Point of Contact Information:</Typography>
+            <TextField
+                required
+                label="First Name"
+                id="firstName"
+                className={classes.formField}
+                value={props.firstName}
+                onChange={props.handleChange('firstName')}
+                margin="normal"
+            />
+            <TextField
+                required
+                label="Last Name"
+                id="lastName"
+                className={classes.formField}
+                value={props.lastName}
+                onChange={props.handleChange('lastName')}
+                margin="normal"
+            />
+            <TextField
+                required
+                label="Phone Number"
+                id="phoneNumber"
+                className={classes.formField}
+                value={props.phoneNumber}
+                onChange={props.handleChange('phoneNumber')}
+                margin="normal"
+            />
+            
 
             <div> 
                 <Button size="large" variant="contained" color="primary-light" className={classes.button} onClick={props.changeView("back")}>
