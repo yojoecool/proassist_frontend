@@ -47,7 +47,7 @@ function PickIdentity(props) {
             name="identity"
             className={classes.formField}
             value={props.identity}
-            onChange={props.handleChange('identity')}
+            onChange={(e) => props.handleChange('identity', e)}
             >
             <FormControlLabel value="jobSeeker" control={<Radio />} label="Job Seeker" />
             <FormControlLabel value="company" control={<Radio />} label="Company" />
@@ -76,7 +76,7 @@ function Register() {
         view: 'pickIdentity'
     });
 
-    const handleChange = name => event => {
+    const handleChange = (name, event) => {
         setState({
         ...state,
         [name]: event.target.value,

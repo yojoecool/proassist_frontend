@@ -35,7 +35,7 @@ function JobSeeker(props) {
                 id="firstName"
                 className={classes.formField}
                 value={props.firstName}
-                onChange={props.handleChange('firstName')}
+                onChange={(e) => props.handleChange('firstName', e)}
                 margin="normal"
             />
             <TextField
@@ -44,7 +44,7 @@ function JobSeeker(props) {
                 id="lastName"
                 className={classes.formField}
                 value={props.lastName}
-                onChange={props.handleChange('lastName')}
+                onChange={(e) => props.handleChange('lastName', e)}
                 margin="normal"
             />
             <TextField
@@ -53,7 +53,7 @@ function JobSeeker(props) {
                 id="email"
                 className={classes.formField}
                 value={props.email}
-                onChange={props.handleChange('email')}
+                onChange={(e) => props.handleChange('email', e)}
                 margin="normal"
             />
             <TextField
@@ -62,7 +62,7 @@ function JobSeeker(props) {
                 id="password"
                 className={classes.formField}
                 value={props.password}
-                onChange={props.handleChange('password')}
+                onChange={(e) => props.handleChange('password', e)}
                 margin="normal"
                 type="password"
             />
@@ -72,7 +72,7 @@ function JobSeeker(props) {
                 id="passwordCheck"
                 className={classes.formField}
                 value={props.passwordCheck}
-                onChange={props.handleChange('passwordCheck')}
+                onChange={(e) => props.handleChange('passwordCheck', e)}
                 margin="normal"
                 type="password"
             />
@@ -82,7 +82,7 @@ function JobSeeker(props) {
             </Button> */}
 
             <div> 
-                <Button size="large" variant="contained" color="primary-light" className={classes.button} onClick={props.changeView("back")}>
+                <Button size="large" variant="contained" className={classes.button} onClick={props.changeView("back")}>
                     Back
                 </Button>
 

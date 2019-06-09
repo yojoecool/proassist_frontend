@@ -3,10 +3,13 @@ import axios from 'axios';
 import toast from '../../modules/toast';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Button, Input, TextField, Typography, 
+    Button, TextField, Typography, 
   } from '@material-ui/core';
 import MaskedInput from 'react-text-mask';
 import PropTypes from 'prop-types';
+import {validateEmail, validatePhoneNumber} from './validations';
+
+// TODO: should return error if email already exists in DB
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -59,36 +62,44 @@ function Company(props) {
     
         if (!props.companyName) {
             newErrors.companyName = true;
-            newErrors.errorText = 'Missing Required Field(s)';
+            newErrors.errorText = 'Missing Company Name';
         }
         if (!props.email) {
           newErrors.email = true;
-          newErrors.errorText = 'Missing Required Field(s)';
+          newErrors.errorText = 'Missing Email';
+        }
+        if (props.email && !validateEmail(props.email)) {
+          newErrors.email = true;
+          newErrors.errorText = 'Invalid Email';
         }
         if (!props.password) {
           newErrors.password = true;
-          newErrors.errorText = 'Missing Required Field(s)';
+          newErrors.errorText = 'Missing Password';
         }
-        if (props.password && props.password != props.passwordCheck) {
+        if (props.password && props.password !== props.passwordCheck) {
             newErrors.passwordCheck = true;
             newErrors.errorText = 'Passwords do not match';
         }
         if (!props.firstName) {
             newErrors.firstName = true;
-            newErrors.errorText = 'Missing Required Field(s)';
+            newErrors.errorText = 'Missing First Name';
         }
         if (!props.lastName) {
             newErrors.lastName = true;
-            newErrors.errorText = 'Missing Required Field(s)';
+            newErrors.errorText = 'Missing Last Name';
         }
         if (!props.phoneNumber) {
             newErrors.phoneNumber = true;
-            newErrors.errorText = 'Missing Required Field(s)';
+            newErrors.errorText = 'Missing Phone Number';
+        }
+        if (props.phoneNumber && !validatePhoneNumber(props.phoneNumber)) {
+            newErrors.phoneNumber = true;
+            newErrors.errorText = 'Invalid Phone Number';
         }
     
         setErrors(newErrors);
         if (Object.keys(newErrors).length > 0) {
-          toast('Errors on the page.', 'error');
+          toast('Errors on the page.', errors);
           return;
         }
     
@@ -116,10 +127,10 @@ function Company(props) {
         }
     };
 
-    const update = (e, changeFunction) => {
-        const { [e.target.name]: removed, ...newErrors } = errors;
+    const update = (e) => {
+        const { [e.target.id]: removed, ...newErrors } = errors;
         setErrors({ ...newErrors, errorText: '' });
-        changeFunction(e.target.value);
+        console.log(errors)
 };
     
 
@@ -134,7 +145,7 @@ function Company(props) {
                 id="companyName"
                 className={classes.formField}
                 value={props.companyName}
-                onChange={props.handleChange('companyName')}
+                onChange={(e) => {update(e); props.handleChange('companyName', e)}}
                 margin="normal"
             />
             <TextField
@@ -143,7 +154,7 @@ function Company(props) {
                 id="email"
                 className={classes.formField}
                 value={props.email}
-                onChange={props.handleChange('email')}
+                onChange={(e) => {update(e); props.handleChange('email', e)}}
                 margin="normal"
             />
             <TextField
@@ -152,7 +163,7 @@ function Company(props) {
                 id="password"
                 className={classes.formField}
                 value={props.password}
-                onChange={props.handleChange('password')}
+                onChange={(e) => {update(e); props.handleChange('password', e)}}
                 margin="normal"
                 type="password"
             />
@@ -162,7 +173,7 @@ function Company(props) {
                 id="passwordCheck"
                 className={classes.formField}
                 value={props.passwordCheck}
-                onChange={props.handleChange('passwordCheck')}
+                onChange={(e) => {update(e); props.handleChange('passwordCheck', e)}}
                 margin="normal"
                 type="password"
             />
@@ -173,7 +184,7 @@ function Company(props) {
                 id="firstName"
                 className={classes.formField}
                 value={props.firstName}
-                onChange={props.handleChange('firstName')}
+                onChange={(e) => {update(e); props.handleChange('firstName', e)}}
                 margin="normal"
             />
             <TextField
@@ -182,7 +193,7 @@ function Company(props) {
                 id="lastName"
                 className={classes.formField}
                 value={props.lastName}
-                onChange={props.handleChange('lastName')}
+                onChange={(e) => {update(e); props.handleChange('lastName', e)}}
                 margin="normal"
             />
             <TextField
@@ -191,7 +202,7 @@ function Company(props) {
                 id="phoneNumber"
                 className={classes.formField}
                 value={props.phoneNumber}
-                onChange={props.handleChange('phoneNumber')}
+                onChange={(e) => {update(e); props.handleChange('phoneNumber', e)}}
                 margin="normal"
                 InputProps={{
                     inputComponent: PhoneNumberFormat,
