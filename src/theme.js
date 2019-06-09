@@ -14,16 +14,28 @@ const theme = createMuiTheme({
       dark: '#620000',
       contrastText: '#fff'
     },
-    typography: {
-      fontFamily: [
-        '"Noto Sans HK"',
-        'Lato',
-        'Roboto',
-        'sans-serif'
-      ].join(','),
-      suppressWarning: true
+    blue: {
+      light: '#446594',
+      main: '#0d3b66',
+      dark: '#00163b',
+      contrastText: '#fff'
     },
+    yellow: {
+      light: '#ffff8f',
+      main: '#f4d35e',
+      dark: '#bea22d',
+      contrastText: '#000'
+    }
   },
+  typography: {
+    fontFamily: [
+      '"Noto Sans HK"',
+      'Lato',
+      'Roboto',
+      'sans-serif'
+    ].join(','),
+    suppressWarning: true
+  }
 });
 
 export default theme;

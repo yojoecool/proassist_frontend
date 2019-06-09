@@ -1,9 +1,11 @@
 import React from 'react';
+import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Drawer, MenuItem, IconButton, Typography, TextField, Button
+  Typography, TextField, Button
 } from '@material-ui/core';
-import classNames from 'classnames';
+import toast from '../modules/toast';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -12,8 +14,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     flexWrap: 'wrap',
-    marginTop: 25,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    paddingBottom: 35,
+    marginTop: '10%'
   },
   loginText: {
     color: theme.palette.secondary.main,
@@ -24,13 +27,26 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center'
   },
   errorText: {
-    color: 'red'
+    color: 'red',
+    marginTop: 10,
+    width: '100%'
   },
   errorHeight: {
     height: 20,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  submitButton: {
+    backgroundColor: '#2e7d32',
+    color: 'white',
+    '&:hover': {
+      backgroundColor: '#005005',
+      color: 'white'
+    }
+  },
+  input: {
+    width: 300
   }
 }));
 
@@ -48,20 +64,36 @@ function LogIn(props) {
 
     if (!email) {
       newErrors.email = true;
+      newErrors.errorText = 'Missing Required Field(s)';
     }
     if (!password) {
       newErrors.password = true;
+      newErrors.errorText = 'Missing Required Field(s)';
     }
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) {
+      toast('Errors on the page.', 'error');
       return;
+    }
+
+    try {
+      const { REACT_APP_BACKEND_URL } = process.env;
+      const response = await axios.post(`${REACT_APP_BACKEND_URL}/users/login`, { email, password });
+      toast('Login Successful!', 'success');
+      props.history.push('/profile');
+    } catch (err) {
+      if (err.response.status === 401) {
+        toast('Invalid Login', 'error');
+      } else {
+        toast('Error logging in. Please try again later.', 'error');
+      }
     }
   };
 
   const update = (e, changeFunction) => {
     const { [e.target.name]: removed, ...newErrors } = errors;
-    setErrors(newErrors);
+    setErrors({ ...newErrors, errorText: '' });
     changeFunction(e.target.value);
   };
 
@@ -71,8 +103,10 @@ function LogIn(props) {
 
       <div className={classes.errorHeight}>
         <Typography variant="subtitle1" className={classes.errorText}>
+          {errors.errorText}
         </Typography>
       </div>
+
       <form className={classes.form} onSubmit={submit}>
         <TextField
           label="Email"
@@ -84,6 +118,7 @@ function LogIn(props) {
           type="email"
           autoComplete="email"
           error={errors.email}
+          className={classes.input}
         />
 
         <br />
@@ -96,10 +131,11 @@ function LogIn(props) {
           variant="outlined"
           type="password"
           error={errors.password}
+          className={classes.input}
         />
 
         <br /><br />
-        <Button variant="contained" color="primary" className={classes.button} type="submit">
+        <Button variant="contained" className={classes.submitButton} type="submit">
           Submit
         </Button>
       </form>
@@ -108,4 +144,4 @@ function LogIn(props) {
   );
 }
 
-export default LogIn;
+export default withRouter(LogIn);

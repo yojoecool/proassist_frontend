@@ -1,11 +1,11 @@
 import React from 'react';
 
-function Main() {
+function Home() {
   return (
     <div className="Main">
-      <p>Welcome to ProAssist Main Page!</p>
+      <p>Welcome to ProAssist Home Page!</p>
     </div>
   );
 }
 
-export default Main;
+export default Home;
