@@ -3,10 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AppBar from './AppBar';
-import Drawer from './Drawer';
-import Footer from './Footer';
-import LogIn from './LogIn';
+import { AppBar, Drawer, Footer } from './navigation';
+import { Login } from './pages';
 
 const useStyles = makeStyles(theme => ({
   app: {
@@ -36,7 +34,7 @@ function App() {
         <Drawer openDrawer={openDrawer} closeDrawer={closeDrawer} />
         
         <Switch>
-          <Route path="/login" component={LogIn} />
+          <Route path="/login" component={Login} />
         </Switch>
 
         <Footer />

@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Typography, TextField, Button
 } from '@material-ui/core';
-import toast from './modules/toast';
+import toast from '../modules/toast';
 
 const useStyles = makeStyles(theme => ({
   root: {
