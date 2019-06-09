@@ -4,8 +4,8 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AppBar, Drawer, Footer } from './navigation';
-import { Login } from './pages';
-import { PdfViewer } from './components';
+import { Login, FileTests } from './pages';
+import { PdfViewer, FileUpload } from './components';
 import './App.css';
 
 const useStyles = makeStyles(theme => ({
@@ -37,7 +37,7 @@ function App() {
         
         <Switch>
           <Route path="/login" component={Login} />
-          <Route path="/pdf" component={PdfViewer} />
+          <Route path="/files" component={FileTests} />
         </Switch>
 
         <Footer />

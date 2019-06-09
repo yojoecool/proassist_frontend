@@ -6,3 +6,11 @@
   display: flex;
   justify-content: center;
 }
+
+.Toastify__toast--error {
+  background-color: #960d0d;
+}
+
+.Toastify__toast--success {
+  background-color: #2e7d32;
+}
