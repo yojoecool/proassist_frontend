@@ -1,10 +1,12 @@
 import React from 'react';
+import axios from 'axios';
 import { pdfjs, Document, Page } from 'react-pdf';
+import { saveAs } from 'file-saver';
 import { Typography, IconButton, Button } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles';
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import { useWindowDimensions } from '../modules';
+import { useWindowDimensions, toast } from '../modules';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -69,12 +71,12 @@ function PdfViewer(props) {
 
   // userId will be used with file object's url to get a user's resume
   // alternatively, a url can be passed in isntead of a user id for generic pdfs
-  // downloadOnly will only render the download button
+  // download only will only render the download button
   const { userId, downloadOnly, url } = props;
 
   const [totalPages, setTotalPages] = React.useState(null);
   const [currPage, setCurrPage] = React.useState(1);
-  const [fileObject] = React.useState({ url: `${process.env.REACT_APP_BACKEND_URL}/pdf` });
+  const [fileObject] = React.useState({ url: !!url ? url : `${process.env.REACT_APP_BACKEND_URL}/pdf` });
   const [currDisplayed, setDisplayed] = React.useState(1);
 
   const { width } = useWindowDimensions();
@@ -82,10 +84,25 @@ function PdfViewer(props) {
 
   const pageWidth = mobileView ? width * 0.9 : width * 0.65;
 
+  const downloadFile = async () => {
+    try {
+      const response = await axios({
+        url: fileObject.url,
+        method: 'GET',
+        responseType: 'blob'
+      });
+
+      const fileName = !!userId ? 'resume.pdf' : 'file.pdf';
+      saveAs(new Blob([response.data]), fileName);
+    } catch (err) {
+      toast('Unable to download file', 'error');
+    }
+  };
+
   return (
     <div className={classes.pdfViewer}>
       <Button
-        href={fileObject.url}
+        onClick={downloadFile}
         className={classes.downloadButton}
         variant="outlined"
       >

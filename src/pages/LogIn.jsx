@@ -44,6 +44,9 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: '#005005',
       color: 'white'
     }
+  },
+  input: {
+    width: 300
   }
 }));
 
@@ -115,6 +118,7 @@ function LogIn(props) {
           type="email"
           autoComplete="email"
           error={errors.email}
+          className={classes.input}
         />
 
         <br />
@@ -127,6 +131,7 @@ function LogIn(props) {
           variant="outlined"
           type="password"
           error={errors.password}
+          className={classes.input}
         />
 
         <br /><br />
