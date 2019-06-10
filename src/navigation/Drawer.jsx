@@ -23,7 +23,10 @@ const useStyles = makeStyles(theme => ({
   },
   topDiv: {
     height: '8%',
-    padding: 10
+    padding: 10,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   pathDiv: {
     height: 20,
@@ -134,7 +137,7 @@ function ProAssistDrawer(props) {
       <div
         className={classNames(classToUse, classes.drawer, classes.fullHeight)}
       >
-        <div className={classNames(classes.topDiv, 'd-flex', 'justify-content-end', 'align-items-center')}>
+        <div className={classNames(classes.topDiv)}>
           <IconButton
             color="inherit"
             onClick={props.closeDrawer}

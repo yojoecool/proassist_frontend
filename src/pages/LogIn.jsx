@@ -60,23 +60,6 @@ function LogIn(props) {
   const submit = async (e) => {
     e.preventDefault();
 
-    const newErrors = {};
-
-    if (!email) {
-      newErrors.email = true;
-      newErrors.errorText = 'Missing Required Field(s)';
-    }
-    if (!password) {
-      newErrors.password = true;
-      newErrors.errorText = 'Missing Required Field(s)';
-    }
-
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) {
-      toast('Errors on the page.', 'error');
-      return;
-    }
-
     try {
       const { REACT_APP_BACKEND_URL } = process.env;
       await axios.post(`${REACT_APP_BACKEND_URL}/users/login`, { email, password });
@@ -85,6 +68,7 @@ function LogIn(props) {
     } catch (err) {
       if (err.response.status === 401) {
         toast('Invalid Login', 'error');
+        setErrors({ password: true, email: true, errorText: 'Invalid email or password.' });
       } else {
         toast('Error logging in. Please try again later.', 'error');
       }
@@ -119,6 +103,7 @@ function LogIn(props) {
           autoComplete="email"
           error={errors.email}
           className={classes.input}
+          required
         />
 
         <br />
@@ -132,6 +117,7 @@ function LogIn(props) {
           type="password"
           error={errors.password}
           className={classes.input}
+          required
         />
 
         <br /><br />
