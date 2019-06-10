@@ -33,14 +33,14 @@ const useStyles = makeStyles(theme => ({
     },
     errorText: {
         color: 'red',
-        marginTop: 10,
-        width: '100%'
+        width: '100%',
+        textAlign: 'center'
     },
     errorHeight: {
-        height: 20,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        flexWrap: 'wrap'
     },
   }));
 
@@ -64,53 +64,28 @@ PhoneNumberFormat.propTypes = {
 
 function Company(props) {
     const classes = useStyles();
-    const [errors, setErrors] = React.useState({});
+    const [errors, setErrors] = React.useState({ errorText: [] });
 
     const submit = async (e) => {
         e.preventDefault();
     
-        const newErrors = {};
-    
-        if (!props.companyName) {
-            newErrors.companyName = true;
-            newErrors.errorText = 'Missing Company Name';
-        }
-        if (!props.email) {
-          newErrors.email = true;
-          newErrors.errorText = 'Missing Email';
-        }
+        const newErrors = {errorText:[]};
         if (props.email && !validateEmail(props.email)) {
-          newErrors.email = true;
-          newErrors.errorText = 'Invalid Email';
-        }
-        if (!props.password) {
-          newErrors.password = true;
-          newErrors.errorText = 'Missing Password';
+            newErrors.email = true;
+            newErrors.errorText = [...newErrors.errorText, 'Invalid Email'];
         }
         if (props.password && !validatePassword(props.password, props.passwordCheck)) {
-            newErrors.passwordCheck = true;
-            newErrors.errorText = 'Passwords do not match';
-        }
-        if (!props.firstName) {
-            newErrors.firstName = true;
-            newErrors.errorText = 'Missing First Name';
-        }
-        if (!props.lastName) {
-            newErrors.lastName = true;
-            newErrors.errorText = 'Missing Last Name';
-        }
-        if (!props.phoneNumber) {
-            newErrors.phoneNumber = true;
-            newErrors.errorText = 'Missing Phone Number';
+            newErrors.password = true;
+            newErrors.errorText = [...newErrors.errorText, 'Passwords do not match'];
         }
         if (props.phoneNumber && !validatePhoneNumber(props.phoneNumber)) {
             newErrors.phoneNumber = true;
-            newErrors.errorText = 'Invalid Phone Number';
+            newErrors.errorText = [...newErrors.errorText, 'Invalid Phone Number'];
         }
     
         setErrors(newErrors);
         if (Object.keys(newErrors).length > 0) {
-          toast('Errors on the page.', errors);
+          toast('Errors on the page.', "error");
           return;
         }
     
@@ -139,9 +114,8 @@ function Company(props) {
     };
 
     const update = (e) => {
-        const { [e.target.id]: removed, ...newErrors } = errors;
-        setErrors({ ...newErrors, errorText: '' });
-        console.log(errors)
+        const { [e.target.name]: removed, ...newErrors } = errors;
+        setErrors({ ...newErrors, errorText: [] });
 };
     
 
@@ -150,73 +124,85 @@ function Company(props) {
             <Typography variant="h5">Company Application:</Typography>
 
             <div className={classes.errorHeight}>
-                <Typography variant="subtitle1" className={classes.errorText}>
-                {errors.errorText}
-                </Typography>
+                {errors.errorText.map(err => {
+                return (
+                    <Typography variant="subtitle1" className={classes.errorText}>
+                        {err}
+                    </Typography>
+                )
+                })}
             </div>
 
             <form className={classes.root} onSubmit={submit}>
             <TextField
                 required
                 label="Company Name"
-                id="companyName"
+                name="companyName"
                 className={classes.formField}
                 value={props.companyName}
                 onChange={(e) => {update(e); props.handleChange('companyName', e)}}
                 margin="normal"
+                error={errors.companyName}
             />
             <TextField
                 required
                 label="Email"
-                id="email"
+                name="email"
                 className={classes.formField}
                 value={props.email}
                 onChange={(e) => {update(e); props.handleChange('email', e)}}
+                type="email"
+                autoComplete="email"
                 margin="normal"
+                error={errors.email}
             />
             <TextField
                 required
                 label="Password"
-                id="password"
+                name="password"
                 className={classes.formField}
                 value={props.password}
                 onChange={(e) => {update(e); props.handleChange('password', e)}}
                 margin="normal"
                 type="password"
+                error={errors.password}
             />
             <TextField
                 required
                 label="Confirm Password"
-                id="passwordCheck"
+                name="passwordCheck"
                 className={classes.formField}
                 value={props.passwordCheck}
                 onChange={(e) => {update(e); props.handleChange('passwordCheck', e)}}
                 margin="normal"
                 type="password"
+                error={errors.password}
             />
             <Typography variant="subtitle1" className={classes.subsection}>Point of Contact Information:</Typography>
             <TextField
                 required
                 label="First Name"
-                id="firstName"
+                name="firstName"
                 className={classes.formField}
                 value={props.firstName}
                 onChange={(e) => {update(e); props.handleChange('firstName', e)}}
                 margin="normal"
+                error={errors.firstName}
             />
             <TextField
                 required
                 label="Last Name"
-                id="lastName"
+                name="lastName"
                 className={classes.formField}
                 value={props.lastName}
                 onChange={(e) => {update(e); props.handleChange('lastName', e)}}
                 margin="normal"
+                error={errors.lastName}
             />
             <TextField
                 required
                 label="Phone Number"
-                id="phoneNumber"
+                name="phoneNumber"
                 className={classes.formField}
                 value={props.phoneNumber}
                 onChange={(e) => {update(e); props.handleChange('phoneNumber', e)}}
@@ -224,6 +210,7 @@ function Company(props) {
                 InputProps={{
                     inputComponent: PhoneNumberFormat,
                 }}
+                error={errors.phoneNumber}
             />
             
             <div> 

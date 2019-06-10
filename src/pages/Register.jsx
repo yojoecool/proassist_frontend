@@ -9,6 +9,7 @@ import { useWindowDimensions } from '../modules';
 import classNames from 'classnames';
 
 // TODO: fix routing so if you are on job seeker or company registration, back button will go back to PickIdentity
+// Nest Switch
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -19,7 +20,7 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         paddingBottom: 35,
         marginTop: '10%',
-        marginBottom: '10%',
+        marginBottom: '3%',
     },
     formDisplay: {
         width: '100%',
@@ -93,7 +94,7 @@ function Register() {
         firstName: '',
         lastName: '',
         companyName: '',
-        phoneNumber: '(  )    -    ',
+        phoneNumber: '',
         password: '',
         passwordCheck: '',
         email: '',
@@ -102,12 +103,14 @@ function Register() {
     });
 
     const handleChange = (name, event) => {
+        if (name === 'phoneNumber') {
+            console.log(name)
+            console.log(event.target.value)
+        }
         setState({
         ...state,
         [name]: event.target.value,
         });
-        console.log(name)
-        console.log(event.target.value)
     };
     
     let view;
@@ -136,6 +139,7 @@ function Register() {
             email={state.email} 
             handleChange={handleChange} 
             changeView={changeView}
+            phoneNumber={state.phoneNumber}
             />
     } else if (state.view === "jobSeeker"){
         view = <JobSeeker 
