@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     height: '8%',
     padding: 10,
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center'
   },
   pathDiv: {
