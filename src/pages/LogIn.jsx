@@ -79,9 +79,9 @@ function LogIn(props) {
 
     try {
       const { REACT_APP_BACKEND_URL } = process.env;
-      const response = await axios.post(`${REACT_APP_BACKEND_URL}/users/login`, { email, password });
+      await axios.post(`${REACT_APP_BACKEND_URL}/users/login`, { email, password });
       toast('Login Successful!', 'success');
-      props.history.push('/profile');
+      props.history.replace('/profile');
     } catch (err) {
       if (err.response.status === 401) {
         toast('Invalid Login', 'error');

@@ -120,7 +120,9 @@ function ProAssistDrawer(props) {
 
     setInitialPage(props.history.location);
 
-    props.history.listen(setInitialPage);
+    const unlisten = props.history.listen(setInitialPage);
+
+    return () => unlisten();
   }, [props.history]);
 
   return (

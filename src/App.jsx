@@ -5,7 +5,6 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AppBar, Drawer, Footer } from './navigation';
 import { Login, FileTests } from './pages';
-import { PdfViewer, FileUpload } from './components';
 import './App.css';
 
 const useStyles = makeStyles(theme => ({
