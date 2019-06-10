@@ -17,52 +17,33 @@ const useStyles = makeStyles({
 function Careers() {
   const classes = useStyles();
 
-  const [selected, setSelected] = React.useState(false);
+  const [selected, setSelected] = React.useState(null);
 
-  const handleSelected = (job) => {
-    setSelected(true);
+  const handleSelected = (e, jobIndex) => {
+    console.log('handleSelected jobIndex:', jobIndex);
+    setSelected(jobIndex);
   };
 
   const closeDetails = (e) => {
     setSelected(false);
   };
 
-  let description;
-  let responsibilities;
-  let close;
-  let applyButton;
-  if (selected) {
-    applyButton = <Button size="medium">Submit</Button>
-    description = <div>
-      {job.description}
-    </div>;
-    responsibilities = <div>
-      Responsibilities:
-      <ul>
-        {jobs.skills.map((skill, index) => {
-          return <li>{skill}</li>
-        })}
-      </ul>  
-    </div>;
-    close = <div className={classNames('d-flex', 'justify-content-end', 'align-items-center')}>
-      <IconButton
-        color="inherit"
-        onClick={e => closeDetails(e)}
-      >
-        <Close />
-      </IconButton>
-    </div>;
-  } else {
-    applyButton = <Button size="medium" onClick={handleSelected(job)}>Expand</Button>;
-  }
-
   return (
     <div className="Careers">
       <p>Welcome to ProAssist Careers Page!</p>
       {mockedJobs.map((job, index) => {
-        return <Card className={classes.card}>
+        return <Card key={index} className={classes.card}>
           <CardContent>
-            {close}
+          <div hidden={selected !== index} className={classNames('d-flex', 'justify-content-end', 'align-items-center')}>
+            <IconButton
+              color="inherit"
+              hidden={selected !== index}
+              onClick={e => closeDetails(e)}
+            >
+              <Close />
+            </IconButton>
+          </div>
+            {/* {close} */}
             <Typography className={classes.title} variant="h5" color="textSecondary" gutterBottom>
               {job.title}
             </Typography>
@@ -72,12 +53,27 @@ function Careers() {
             <Typography component="p">
               {job.description}
             </Typography>
-            {description}
-            {responsibilities}
+            <div hidden={selected !== index}>
+              <div>
+                Description: 
+                {job.description}
+              </div>
+              <div>
+                Skills: 
+                <ul>
+                  {job.skills.map((skill, index) => {
+                    return <li key={index}>{skill}</li>
+                  })}
+                </ul>  
+              </div>
+            </div>
+            {/* {description}
+            {responsibilities} */}
           </CardContent>
           <CardActions>
             <Button size="medium">Save</Button>
-            {applyButton}
+            <Button hidden={selected === index} size="medium" onClick={(e) => handleSelected(e, index)}>Expand</Button>
+            <Button hidden={selected !== index} size="medium">Submit</Button>
           </CardActions>
         </Card>
       })}
