@@ -10,7 +10,8 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 10,
   },
   buttonWrapper: {
-    position: 'relative'
+    position: 'relative',
+    marginBottom: 15
   },
   buttonProgress: {
     color: theme.palette.secondary.main,
@@ -36,7 +37,12 @@ const useStyles = makeStyles(theme => ({
     flexWrap: 'wrap'
   },
   textInput: {
-    width: 300
+    width: 300,
+    marginBottom: 15,
+    padding: 5,
+    '@media (max-width:525px)': {
+      width: '100%'
+    }
   }
 }));
 
