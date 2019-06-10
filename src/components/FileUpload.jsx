@@ -1,13 +1,24 @@
 import React from 'react';
 import axios from 'axios';
 import classNames from 'classnames';
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { toast } from '../modules';
 
 const useStyles = makeStyles(theme => ({
   button: {
     marginLeft: 10,
+  },
+  buttonWrapper: {
+    position: 'relative'
+  },
+  buttonProgress: {
+    color: theme.palette.secondary.main,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
   },
   uploadButton: {
     backgroundColor: theme.palette.blue.main,
@@ -34,6 +45,7 @@ function FileUpload() {
 
   const [fileData, setFile] = React.useState(null);
   const [fileName, setFileName] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
 
   const fileInput = React.createRef();
 
@@ -67,10 +79,16 @@ function FileUpload() {
     data.append('file', fileData);
 
     try {
+      setLoading(true);
       await axios.post(`${process.env.REACT_APP_BACKEND_URL}/s3pdf`, data);
       toast('File successfully uploaded!', 'success');
+
+      setFile(null);
+      setFileName('');
     } catch (err) {
       toast('File upload failed. Please try again later.', 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,24 +102,33 @@ function FileUpload() {
         disabled
       />
 
-      <Button
-        variant="contained"
-        onClick={onFileButtonClick}
-        className={classNames(classes.button, classes.uploadButton)}
-      >
-        Select File
-      </Button>
+      <div className={classes.buttonWrapper}>
+        <Button
+          variant="contained"
+          onClick={onFileButtonClick}
+          className={classNames(classes.button, classes.uploadButton)}
+          disabled={loading}
+        >
+          Select File
+        </Button>
+        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+      </div>
 
       <input type="file" name="blah" onChange={onChangeFile} hidden ref={fileInput} accept=".pdf" />
 
-      <Button
-        variant="contained"
-        color="primary"
-        type="submit"
-        className={classNames(classes.button)}
-      >
-        Submit
-      </Button>
+
+      <div className={classes.buttonWrapper}>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          className={classNames(classes.button)}
+          disabled={loading}
+        >
+          Submit
+        </Button>
+        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+      </div>
     </form>
   );
 }
