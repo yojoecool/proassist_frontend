@@ -24,16 +24,13 @@ function Splashpage(props) {
     // const mobileView = width <= 768;
 
     const [query, setQueryValue] = React.useState(null);
-
-    // const [submitted, setSubmitted] = React.useState(false);
   
     const handleChange = (e) => {
       setQueryValue(e.target.value);
     };
 
     const submit = (e) => {
-      // setSubmitted(true);
-      return <Redirect to="/careers" />;
+      props.history.replace('/careers');
     };
 
     return (

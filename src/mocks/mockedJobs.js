@@ -3,7 +3,7 @@ module.exports = [
     jobId: 1,
     companyId: 1,
     description: "Seeking a Nuclear Pathologist Assistant with minimal experience and MRI imaging certifications.",
-    skills: ["bread", "carrots", "soup"],
+    skills: ["CHURROS", "carrots", "soup"],
     title: "Nuclear Pathologist Assistant 1",
     city: "New York City",
     state: "NY",
