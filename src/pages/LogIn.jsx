@@ -62,7 +62,11 @@ function LogIn(props) {
 
     try {
       const { REACT_APP_BACKEND_URL } = process.env;
-      await axios.post(`${REACT_APP_BACKEND_URL}/users/login`, { email, password });
+      const response = await axios.post(`${REACT_APP_BACKEND_URL}/users/login`, { email, password });
+      const token = response.data.token;
+
+      window.localStorage.setItem('proAssistToken', token);
+
       toast('Login Successful!', 'success');
       props.history.replace('/profile');
     } catch (err) {

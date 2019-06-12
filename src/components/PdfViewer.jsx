@@ -77,7 +77,11 @@ function PdfViewer(props) {
 
   const [totalPages, setTotalPages] = React.useState(null);
   const [currPage, setCurrPage] = React.useState(1);
-  const [fileObject] = React.useState({ url: !!url ? url : `${process.env.REACT_APP_BACKEND_URL}/somefile` });
+  const [fileObject] = React.useState({
+    url: !!url
+      ? url : `${process.env.REACT_APP_BACKEND_URL}/getResume?user=${userId}`,
+    httpHeaders: { 'authorization': 'Bearer ' + window.localStorage.getItem('proAssistToken') }
+  });
   const [currDisplayed, setDisplayed] = React.useState(1);
 
   const { width } = useWindowDimensions();

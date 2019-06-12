@@ -53,7 +53,7 @@ function FileUpload() {
   const [fileName, setFileName] = React.useState('');
   const [loading, setLoading] = React.useState(false);
 
-  const fileInput = React.createRef();
+  const fileInput = React.useRef(null);
 
   const onChangeFile = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -86,12 +86,22 @@ function FileUpload() {
 
     try {
       setLoading(true);
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/s3pdf`, data);
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/uploadResume`,
+        data,
+        {
+          headers: {
+            authorization: 'Bearer ' + window.localStorage.getItem('proAssistToken')
+          }
+        }
+      );
       toast('File successfully uploaded!', 'success');
 
       setFile(null);
       setFileName('');
+      fileInput.current.value = null;
     } catch (err) {
+      console.log(err);
       toast('File upload failed. Please try again later.', 'error');
     } finally {
       setLoading(false);
