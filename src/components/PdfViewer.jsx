@@ -94,7 +94,8 @@ function PdfViewer(props) {
       const response = await axios({
         url: fileObject.url,
         method: 'GET',
-        responseType: 'blob'
+        responseType: 'blob',
+        headers: fileObject.httpHeaders
       });
 
       const fileName = !!userId ? 'resume.pdf' : 'file.pdf';
