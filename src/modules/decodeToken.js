@@ -17,6 +17,7 @@ export default () => {
 
     return decoded;
   } catch (err) {
+    window.localStorage.removeItem('proAssistToken');
     return null;
   }
 }

@@ -16,8 +16,8 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     flexWrap: 'wrap',
     flexDirection: 'column',
-    paddingBottom: 35,
-    marginTop: '10%'
+    marginTop: '10%',
+    marginBottom: '10%'
   },
   loginText: {
     color: theme.palette.secondary.main,
