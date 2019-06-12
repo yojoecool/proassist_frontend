@@ -78,9 +78,9 @@ function PdfViewer(props) {
   const [totalPages, setTotalPages] = React.useState(null);
   const [currPage, setCurrPage] = React.useState(1);
   const [fileObject] = React.useState({
-    url: !!url
-      ? url : `${process.env.REACT_APP_BACKEND_URL}/getResume?user=${userId}`,
-    httpHeaders: { 'authorization': 'Bearer ' + window.localStorage.getItem('proAssistToken') }
+    url: !!url ? url : `${process.env.REACT_APP_BACKEND_URL}/getResume?user=${userId}`,
+    httpHeaders: { 'authorization': 'Bearer ' + window.localStorage.getItem('proAssistToken') },
+    withCredentials: true
   });
   const [currDisplayed, setDisplayed] = React.useState(1);
 
@@ -95,7 +95,8 @@ function PdfViewer(props) {
         url: fileObject.url,
         method: 'GET',
         responseType: 'blob',
-        headers: fileObject.httpHeaders
+        headers: fileObject.httpHeaders,
+        withCredentials: fileObject.withCredentials
       });
 
       const fileName = !!userId ? 'resume.pdf' : 'file.pdf';
