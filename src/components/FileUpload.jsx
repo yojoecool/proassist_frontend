@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import classNames from 'classnames';
+import useLocalStorage from 'react-use-localstorage';
 import { TextField, Button, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { toast } from '../modules';
@@ -53,6 +54,8 @@ function FileUpload() {
   const [fileName, setFileName] = React.useState('');
   const [loading, setLoading] = React.useState(false);
 
+  const [token] = useLocalStorage('proAssistToken');
+
   const fileInput = React.useRef(null);
 
   const onChangeFile = (e) => {
@@ -89,11 +92,7 @@ function FileUpload() {
       await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/uploadResume`,
         data,
-        {
-          headers: {
-            authorization: 'Bearer ' + window.localStorage.getItem('proAssistToken')
-          }
-        }
+        { headers: { authorization: 'Bearer ' + token } }
       );
       toast('File successfully uploaded!', 'success');
 

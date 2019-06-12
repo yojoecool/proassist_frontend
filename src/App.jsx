@@ -36,7 +36,7 @@ function App() {
         
         <Switch>
           <Route path="/login" component={Login} />
-          <Route path="/files" component={FileTests} />
+          <Route path="/profile" component={FileTests} />
         </Switch>
 
         <Footer />

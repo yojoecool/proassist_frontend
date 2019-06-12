@@ -6,8 +6,8 @@ import {
 import { AccountCircle } from '@material-ui/icons';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link, withRouter } from "react-router-dom";
-import VisitorMenu from './VisitorMenu';
-import { useWindowDimensions } from '../modules';
+import { VisitorMenu, JSMenu } from './AppBarMenus';
+import { useWindowDimensions, decodeToken } from '../modules';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -38,6 +38,7 @@ function ProAssistAppBar(props) {
   const mobileView = width <= 768;
 
   const [page, setPage] = React.useState(false);
+  const [userType, setMenu] = React.useState('Visitor');
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = !!anchorEl;
@@ -62,6 +63,14 @@ function ProAssistAppBar(props) {
       }
 
       setPage(initialPage);
+
+      if (!decodeToken()) {
+        setMenu('Visitor');
+        return;
+      }
+
+      const { userType } = decodeToken();
+      setMenu(userType);
     }
 
     setInitialPage(props.history.location);
@@ -78,6 +87,17 @@ function ProAssistAppBar(props) {
   const closeMenu = () => {
     setAnchorEl(null);
   };
+
+  let menu;
+  switch (userType) {
+    case 'Company':
+    case 'JobSeeker':
+      menu = JSMenu(closeMenu);
+      break;
+    default:
+      menu = VisitorMenu(closeMenu);
+      break;
+  }
 
   return (
     <AppBar position="static">
@@ -107,7 +127,7 @@ function ProAssistAppBar(props) {
           open={open}
           onClose={closeMenu}
         >
-          {VisitorMenu(closeMenu)}
+          {menu}
         </Menu>
 
         <IconButton

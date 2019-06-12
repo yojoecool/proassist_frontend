@@ -1,11 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import useLocalStorage from 'react-use-localstorage';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Typography, TextField, Button
 } from '@material-ui/core';
-import toast from '../modules/toast';
+import { toast, decodeToken } from '../modules';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -57,6 +58,14 @@ function LogIn(props) {
   const [errors, setErrors] = React.useState({});
   const [password, changePassword] = React.useState('');
 
+  const [token, setToken] = useLocalStorage('proAssistToken');
+
+  React.useEffect(() => {
+    if (!!decodeToken()) {
+      props.history.replace('/profile');
+    }
+  }, [token, props.history]);
+
   const submit = async (e) => {
     e.preventDefault();
 
@@ -65,10 +74,8 @@ function LogIn(props) {
       const response = await axios.post(`${REACT_APP_BACKEND_URL}/users/login`, { email, password });
       const token = response.data.token;
 
-      window.localStorage.setItem('proAssistToken', token);
-
       toast('Login Successful!', 'success');
-      props.history.replace('/profile');
+      setToken(token);
     } catch (err) {
       if (err.response.status === 401) {
         toast('Invalid Login', 'error');

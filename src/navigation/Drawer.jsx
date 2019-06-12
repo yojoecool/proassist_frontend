@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, MenuItem, IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons'
 import classNames from 'classnames';
-import { useWindowDimensions } from '../modules';
+import { useWindowDimensions, decodeToken } from '../modules';
 
 const useStyles = makeStyles(theme => ({
   mobileDrawer: {
@@ -77,12 +77,27 @@ function VisitorMenu(props) {
   );
 }
 
+function JSMenu(props) {
+  return (
+    <React.Fragment>
+      <MenuLink
+        onClick={props.onClick}
+        to="/profile"
+        curr={props.page === 5 ? 1 : 0}
+      >
+        Profile
+      </MenuLink>
+    </React.Fragment>
+  );
+}
+
 function ProAssistDrawer(props) {
   const { width } = useWindowDimensions();
   const mobileView = width <= 425;
   const tabletView = width > 425 && width <= 768;
 
   const [page, setPage] = React.useState(-1);
+  const [userType, setMenu] = React.useState('Visitor');
 
   const classes = useStyles();
   let classToUse = classes.tabletDrawer;
@@ -113,12 +128,23 @@ function ProAssistDrawer(props) {
         case '/register':
           initialPage = 4;
           break;
+        case '/profile':
+          initialPage = 5;
+          break;
         default:
           initialPage = -1;
           break;
       }
 
       setPage(initialPage);
+
+      if (!decodeToken()) {
+        setMenu('Visitor');
+        return;
+      }
+
+      const { userType } = decodeToken();
+      setMenu(userType);
     }
 
     setInitialPage(props.history.location);
@@ -127,6 +153,17 @@ function ProAssistDrawer(props) {
 
     return () => unlisten();
   }, [props.history]);
+
+  let menu;
+  switch (userType) {
+    case 'Company':
+    case 'JobSeeker':
+      menu = <JSMenu page={page} onClick={props.closeDrawer} />
+      break;
+    default:
+      menu = <VisitorMenu page={page} onClick={props.closeDrawer} />
+      break;
+  }
 
   return (
     <Drawer
@@ -167,7 +204,7 @@ function ProAssistDrawer(props) {
         >
           Careers
         </MenuLink>
-        <VisitorMenu onClick={props.closeDrawer} page={page} />
+        {menu}
       </div>
     </Drawer>
   );

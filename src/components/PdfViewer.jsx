@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import useLocalStorage from 'react-use-localstorage';
 import { pdfjs, Document, Page } from 'react-pdf';
 import { saveAs } from 'file-saver';
 import { Typography, IconButton, Button } from '@material-ui/core';
@@ -75,12 +76,13 @@ function PdfViewer(props) {
   // download only will only render the download button
   const { userId, downloadOnly, url } = props;
 
+  const [token] = useLocalStorage('proAssistToken');
+
   const [totalPages, setTotalPages] = React.useState(null);
   const [currPage, setCurrPage] = React.useState(1);
   const [fileObject] = React.useState({
     url: !!url ? url : `${process.env.REACT_APP_BACKEND_URL}/getResume?user=${userId}`,
-    httpHeaders: { 'authorization': 'Bearer ' + window.localStorage.getItem('proAssistToken') },
-    withCredentials: true
+    httpHeaders: { 'authorization': 'Bearer ' + token }
   });
   const [currDisplayed, setDisplayed] = React.useState(1);
 
@@ -95,8 +97,7 @@ function PdfViewer(props) {
         url: fileObject.url,
         method: 'GET',
         responseType: 'blob',
-        headers: fileObject.httpHeaders,
-        withCredentials: fileObject.withCredentials
+        headers: fileObject.httpHeaders
       });
 
       const fileName = !!userId ? 'resume.pdf' : 'file.pdf';
