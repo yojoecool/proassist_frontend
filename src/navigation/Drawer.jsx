@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, MenuItem, IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons'
 import classNames from 'classnames';
-import { useWindowDimensions, decodeToken } from '../modules';
+import { useWindowDimensions, decodeToken, logout } from '../modules';
 
 const useStyles = makeStyles(theme => ({
   mobileDrawer: {
@@ -86,6 +86,12 @@ function JSMenu(props) {
         curr={props.page === 5 ? 1 : 0}
       >
         Profile
+      </MenuLink>
+      <MenuLink
+        onClick={() => { logout(); props.onClick(); }}
+        to="/login"
+      >
+        Logout
       </MenuLink>
     </React.Fragment>
   );
