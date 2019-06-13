@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, MenuItem, IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons'
 import classNames from 'classnames';
-import { useWindowDimensions, decodeToken, logout } from '../modules';
+import { useWindowDimensions, useToken, logout } from '../modules';
 
 const useStyles = makeStyles(theme => ({
   mobileDrawer: {
@@ -98,12 +98,12 @@ function JSMenu(props) {
 }
 
 function ProAssistDrawer(props) {
+  const { userType } = useToken();
   const { width } = useWindowDimensions();
   const mobileView = width <= 425;
   const tabletView = width > 425 && width <= 768;
 
   const [page, setPage] = React.useState(-1);
-  const [userType, setMenu] = React.useState('Visitor');
 
   const classes = useStyles();
   let classToUse = classes.tabletDrawer;
@@ -143,14 +143,6 @@ function ProAssistDrawer(props) {
       }
 
       setPage(initialPage);
-
-      if (!decodeToken()) {
-        setMenu('Visitor');
-        return;
-      }
-
-      const { userType } = decodeToken();
-      setMenu(userType);
     }
 
     setInitialPage(props.history.location);

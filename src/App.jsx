@@ -1,10 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Route, Switch, Router } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AppBar, Drawer, Footer } from './navigation';
 import { Login, Profile } from './pages';
+import { history } from './modules';
 import './App.css';
 
 const useStyles = makeStyles(theme => ({
@@ -30,7 +31,7 @@ function App() {
 
   return (
     <div className={classes.app}>
-      <BrowserRouter>
+      <Router history={history}>
         <AppBar toggleDrawer={toggleDrawer} />
         <Drawer openDrawer={openDrawer} closeDrawer={closeDrawer} />
         
@@ -40,7 +41,7 @@ function App() {
         </Switch>
 
         <Footer />
-      </BrowserRouter>
+      </Router>
       <ToastContainer autoClose={3000} />
     </div>
   );

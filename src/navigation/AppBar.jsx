@@ -7,7 +7,7 @@ import { AccountCircle } from '@material-ui/icons';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link, withRouter } from "react-router-dom";
 import { VisitorMenu, JSMenu } from './AppBarMenus';
-import { useWindowDimensions, decodeToken } from '../modules';
+import { useWindowDimensions, useToken } from '../modules';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -34,11 +34,11 @@ function NavTab(props) {
 
 function ProAssistAppBar(props) {
   const classes = useStyles();
+  const { userType } = useToken();
   const { width } = useWindowDimensions();
   const mobileView = width <= 768;
 
   const [page, setPage] = React.useState(false);
-  const [userType, setMenu] = React.useState('Visitor');
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = !!anchorEl;
@@ -63,14 +63,6 @@ function ProAssistAppBar(props) {
       }
 
       setPage(initialPage);
-
-      if (!decodeToken()) {
-        setMenu('Visitor');
-        return;
-      }
-
-      const { userType } = decodeToken();
-      setMenu(userType);
     }
 
     setInitialPage(props.history.location);
