@@ -99,6 +99,7 @@ function JSMenu(props) {
 
 function ProAssistDrawer(props) {
   const { userType } = useToken();
+
   const { width } = useWindowDimensions();
   const mobileView = width <= 425;
   const tabletView = width > 425 && width <= 768;

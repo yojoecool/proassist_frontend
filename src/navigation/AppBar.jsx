@@ -35,6 +35,7 @@ function NavTab(props) {
 function ProAssistAppBar(props) {
   const classes = useStyles();
   const { userType } = useToken();
+
   const { width } = useWindowDimensions();
   const mobileView = width <= 768;
 
