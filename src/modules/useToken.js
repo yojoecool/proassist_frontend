@@ -16,7 +16,9 @@ function useToken() {
       setToken({ userType, email, userId });
     }
 
-    history.listen(something);
+    const unlisten = history.listen(something);
+
+    return () => unlisten();
   }, []);
 
   return token;
