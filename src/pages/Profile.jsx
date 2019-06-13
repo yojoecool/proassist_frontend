@@ -8,10 +8,12 @@ function FileTests(props) {
     toast('You must be logged in to view this page', 'error');
     props.history.replace('/login');
   } else {
+    const { userId } = decodeToken();
+
     return (
       <React.Fragment>
         <FileUpload />
-        <PdfViewer userId="546ec3f6-67cf-44a2-9054-ba0d8cb7c88c" />
+        <PdfViewer userId={userId} />
       </React.Fragment>
     );
   }
