@@ -89,7 +89,7 @@ function JSMenu(props) {
       </MenuLink>
       <MenuLink
         onClick={() => { logout(); props.onClick(); }}
-        to="/login"
+        component="li"
       >
         Logout
       </MenuLink>

@@ -33,7 +33,7 @@ export const JSMenu = (closeMenu) => ([
     </MenuItem>
   ),
   (
-    <MenuItem onClick={() => { logout(); closeMenu(); }} component={Link} to="/login" key="logout">
+    <MenuItem onClick={() => { logout(); closeMenu(); }} key="logout">
       Logout
     </MenuItem>
   )
