@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, MenuItem, IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons'
 import classNames from 'classnames';
-import { useWindowDimensions, useToken, logout } from '../modules';
+import { logout } from '../modules';
+import { useWindowDimensions, useToken } from '../hooks';
 
 const useStyles = makeStyles(theme => ({
   mobileDrawer: {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import decodeToken from './decodeToken';
-import history from './history';
+import { decodeToken, history } from '../modules';
 
 function useToken() {
   const [token, setToken] = useState(decodeToken() || { userType: 'Visitor' });

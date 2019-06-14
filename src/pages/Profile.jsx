@@ -1,7 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { FileUpload, PdfViewer } from '../components';
-import { useToken, toast } from '../modules';
+import { toast } from '../modules';
+import { useToken } from '../hooks';
 
 function FileTests(props) {
   const { userType, userId } = useToken();

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import classNames from 'classnames';
 import { facebook, linkedIn, twitter } from '../img';
-import { useWindowDimensions } from '../modules';
+import { useWindowDimensions } from '../hooks';
 
 const useStyles = makeStyles(theme => ({
   footer: {

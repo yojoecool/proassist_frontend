@@ -7,7 +7,7 @@ import { AccountCircle } from '@material-ui/icons';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link, withRouter } from 'react-router-dom';
 import { VisitorMenu, JSMenu } from './AppBarMenus';
-import { useWindowDimensions, useToken } from '../modules';
+import { useWindowDimensions, useToken } from '../hooks';
 
 const useStyles = makeStyles(theme => ({
   title: {

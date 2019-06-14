@@ -7,7 +7,8 @@ import { Typography, IconButton, Button } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles';
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import { useWindowDimensions, toast } from '../modules';
+import { toast } from '../modules';
+import { useWindowDimensions } from '../hooks';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
