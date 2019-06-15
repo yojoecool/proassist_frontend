@@ -1,27 +1,27 @@
 import React from 'react';
-import { Button, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, IconButton, Typography } from '@material-ui/core';
+import { Button, Checkbox, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
 import classNames from 'classnames';
+import CareerSearch from './CareerSearch';
 import mockedJobs from '../mocks/mockedJobs';
-import AnimateHeight from 'react-animate-height';
 
 const useStyles = makeStyles({
-  root: {
+  listings: {
     width: '80%',
     display: 'flex',
     // justifyContent: 'center',
     flexWrap: 'wrap',
-    backgroundColor: 'pink'
+    // backgroundColor: 'pink'
   },
   listing: {
     width: '100%'
   },
-  page: {
+  root: {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: 'yellow'
+    // backgroundColor: 'yellow'
   },
   star: {
     display: 'flex',
@@ -33,8 +33,8 @@ const useStyles = makeStyles({
   },
   title: {
     color: "black",
-    flexBasis: "33.33%",
-    flexShrink: 0
+    // flexBasis: "33.33%",
+    // flexShrink: 0
   },
 });
 
@@ -49,9 +49,9 @@ function Careers() {
 
   const [saved, setSaved] = React.useState(false);
 
-  const handleSave = (e, isSaved) => {
+  const handleSave = isSaved => event => {
     console.log('isSaved:', isSaved);
-    setSaved(!!isSaved);
+    setSaved(event.target.checked);
   };
 
   const handleApply = (e, jobIndex) => {
@@ -60,8 +60,9 @@ function Careers() {
   };
 
   return (
-    <div className={classes.page}>
-      <div className={classes.root}>
+    <div className={classes.root}>
+      <div className={classes.listings}>
+        <CareerSearch />
         {mockedJobs.map((job, index) => {
           return <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
@@ -108,8 +109,7 @@ function Careers() {
               </div>
             </ExpansionPanelDetails>
             <ExpansionPanelActions>
-              {/* <Button size="medium">Save</Button> */}
-              <IconButton
+              {/* <IconButton
                 hidden={saved}
                 className={classes.star}
                 onClick={(e) => handleSave(e, index)}
@@ -122,13 +122,16 @@ function Careers() {
                 onClick={(e) => handleSave(e, index)}
               >
                 <Star />
-              </IconButton>
+              </IconButton> */}
+              <FormControlLabel
+                control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} value='saved' />}
+              />
               <Button size="medium" onClick={(e) => handleApply(e, index)}>Apply</Button>
             </ExpansionPanelActions>
           </ExpansionPanel>
         })}
       </div>
-     </div>
+    </div>
   );
 }
 

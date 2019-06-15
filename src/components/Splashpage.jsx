@@ -50,6 +50,7 @@ function Splashpage(props) {
                 variant="outlined"
                 label="Keyword or Title"
                 required
+                // fullWidth
                 onChange={e => handleChange(e)}
               />
 
