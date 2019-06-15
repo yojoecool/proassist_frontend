@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, MenuItem, IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons'
 import classNames from 'classnames';
-import { useWindowDimensions } from '../modules';
+import { logout } from '../modules';
+import { useWindowDimensions, useToken } from '../hooks';
 
 const useStyles = makeStyles(theme => ({
   mobileDrawer: {
@@ -23,7 +24,10 @@ const useStyles = makeStyles(theme => ({
   },
   topDiv: {
     height: '8%',
-    padding: 10
+    padding: 10,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
   },
   pathDiv: {
     height: 20,
@@ -74,7 +78,29 @@ function VisitorMenu(props) {
   );
 }
 
+function JSMenu(props) {
+  return (
+    <React.Fragment>
+      <MenuLink
+        onClick={props.onClick}
+        to="/profile"
+        curr={props.page === 5 ? 1 : 0}
+      >
+        Profile
+      </MenuLink>
+      <MenuLink
+        onClick={() => { logout(); props.onClick(); }}
+        component="li"
+      >
+        Logout
+      </MenuLink>
+    </React.Fragment>
+  );
+}
+
 function ProAssistDrawer(props) {
+  const { userType } = useToken();
+
   const { width } = useWindowDimensions();
   const mobileView = width <= 425;
   const tabletView = width > 425 && width <= 768;
@@ -110,6 +136,9 @@ function ProAssistDrawer(props) {
         case '/register':
           initialPage = 4;
           break;
+        case '/profile':
+          initialPage = 5;
+          break;
         default:
           initialPage = -1;
           break;
@@ -120,8 +149,21 @@ function ProAssistDrawer(props) {
 
     setInitialPage(props.history.location);
 
-    props.history.listen(setInitialPage);
+    const unlisten = props.history.listen(setInitialPage);
+
+    return () => unlisten();
   }, [props.history]);
+
+  let menu;
+  switch (userType) {
+    case 'Company':
+    case 'JobSeeker':
+      menu = <JSMenu page={page} onClick={props.closeDrawer} />
+      break;
+    default:
+      menu = <VisitorMenu page={page} onClick={props.closeDrawer} />
+      break;
+  }
 
   return (
     <Drawer
@@ -132,7 +174,7 @@ function ProAssistDrawer(props) {
       <div
         className={classNames(classToUse, classes.drawer, classes.fullHeight)}
       >
-        <div className={classNames(classes.topDiv, 'd-flex', 'justify-content-end', 'align-items-center')}>
+        <div className={classNames(classes.topDiv)}>
           <IconButton
             color="inherit"
             onClick={props.closeDrawer}
@@ -162,7 +204,7 @@ function ProAssistDrawer(props) {
         >
           Careers
         </MenuLink>
-        <VisitorMenu onClick={props.closeDrawer} page={page} />
+        {menu}
       </div>
     </Drawer>
   );

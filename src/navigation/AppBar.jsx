@@ -5,10 +5,9 @@ import {
 } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Link, withRouter } from "react-router-dom";
-import VisitorMenu from './VisitorMenu';
-import { NavLink } from 'react-router-dom'
-import { useWindowDimensions } from '../modules';
+import { Link, withRouter } from 'react-router-dom';
+import { VisitorMenu, JSMenu } from './AppBarMenus';
+import { useWindowDimensions, useToken } from '../hooks';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -35,6 +34,8 @@ function NavTab(props) {
 
 function ProAssistAppBar(props) {
   const classes = useStyles();
+  const { userType } = useToken();
+
   const { width } = useWindowDimensions();
   const mobileView = width <= 768;
 
@@ -67,7 +68,9 @@ function ProAssistAppBar(props) {
 
     setInitialPage(props.history.location);
 
-    props.history.listen(setInitialPage);
+    const unlisten = props.history.listen(setInitialPage);
+
+    return () => unlisten();
   }, [props.history]);
 
   const handleMenu = (e) => {
@@ -77,6 +80,17 @@ function ProAssistAppBar(props) {
   const closeMenu = () => {
     setAnchorEl(null);
   };
+
+  let menu;
+  switch (userType) {
+    case 'Company':
+    case 'JobSeeker':
+      menu = JSMenu(closeMenu);
+      break;
+    default:
+      menu = VisitorMenu(closeMenu);
+      break;
+  }
 
   return (
     <AppBar position="static">
@@ -106,7 +120,7 @@ function ProAssistAppBar(props) {
           open={open}
           onClose={closeMenu}
         >
-          {VisitorMenu(closeMenu)}
+          {menu}
         </Menu>
 
         <IconButton

@@ -1,12 +1,14 @@
 import React from 'react';
 import axios from 'axios';
+import useLocalStorage from 'react-use-localstorage';
 import { pdfjs, Document, Page } from 'react-pdf';
 import { saveAs } from 'file-saver';
 import { Typography, IconButton, Button } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles';
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import { useWindowDimensions, toast } from '../modules';
+import { toast } from '../modules';
+import { useWindowDimensions } from '../hooks';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -75,9 +77,14 @@ function PdfViewer(props) {
   // download only will only render the download button
   const { userId, downloadOnly, url } = props;
 
+  const [token] = useLocalStorage('proAssistToken');
+
   const [totalPages, setTotalPages] = React.useState(null);
   const [currPage, setCurrPage] = React.useState(1);
-  const [fileObject] = React.useState({ url: !!url ? url : `${process.env.REACT_APP_BACKEND_URL}/somefile` });
+  const [fileObject] = React.useState({
+    url: !!url ? url : `${process.env.REACT_APP_BACKEND_URL}/getResume?user=${userId}`,
+    httpHeaders: { 'authorization': 'Bearer ' + token }
+  });
   const [currDisplayed, setDisplayed] = React.useState(1);
 
   const { width } = useWindowDimensions();
@@ -90,7 +97,8 @@ function PdfViewer(props) {
       const response = await axios({
         url: fileObject.url,
         method: 'GET',
-        responseType: 'blob'
+        responseType: 'blob',
+        headers: fileObject.httpHeaders
       });
 
       const fileName = !!userId ? 'resume.pdf' : 'file.pdf';

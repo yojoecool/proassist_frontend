@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import classNames from 'classnames';
+import useLocalStorage from 'react-use-localstorage';
 import { TextField, Button, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { toast } from '../modules';
@@ -10,7 +11,8 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 10,
   },
   buttonWrapper: {
-    position: 'relative'
+    position: 'relative',
+    marginBottom: 15
   },
   buttonProgress: {
     color: theme.palette.secondary.main,
@@ -36,7 +38,12 @@ const useStyles = makeStyles(theme => ({
     flexWrap: 'wrap'
   },
   textInput: {
-    width: 300
+    width: 300,
+    marginBottom: 15,
+    padding: 5,
+    '@media (max-width:525px)': {
+      width: '100%'
+    }
   }
 }));
 
@@ -47,7 +54,9 @@ function FileUpload() {
   const [fileName, setFileName] = React.useState('');
   const [loading, setLoading] = React.useState(false);
 
-  const fileInput = React.createRef();
+  const [token] = useLocalStorage('proAssistToken');
+
+  const fileInput = React.useRef(null);
 
   const onChangeFile = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -80,12 +89,18 @@ function FileUpload() {
 
     try {
       setLoading(true);
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/s3pdf`, data);
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/uploadResume`,
+        data,
+        { headers: { authorization: 'Bearer ' + token } }
+      );
       toast('File successfully uploaded!', 'success');
 
       setFile(null);
       setFileName('');
+      fileInput.current.value = null;
     } catch (err) {
+      console.log(err);
       toast('File upload failed. Please try again later.', 'error');
     } finally {
       setLoading(false);

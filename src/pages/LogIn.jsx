@@ -1,11 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import useLocalStorage from 'react-use-localstorage';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Typography, TextField, Button
 } from '@material-ui/core';
-import toast from '../modules/toast';
+import { toast, decodeToken } from '../modules';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,8 +16,8 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     flexWrap: 'wrap',
     flexDirection: 'column',
-    paddingBottom: 35,
-    marginTop: '10%'
+    marginTop: '10%',
+    marginBottom: '10%'
   },
   loginText: {
     color: theme.palette.secondary.main,
@@ -57,34 +58,28 @@ function LogIn(props) {
   const [errors, setErrors] = React.useState({});
   const [password, changePassword] = React.useState('');
 
+  const [token, setToken] = useLocalStorage('proAssistToken');
+
+  React.useEffect(() => {
+    if (!!decodeToken()) {
+      props.history.replace('/profile');
+    }
+  }, [token, props.history]);
+
   const submit = async (e) => {
     e.preventDefault();
-
-    const newErrors = {};
-
-    if (!email) {
-      newErrors.email = true;
-      newErrors.errorText = 'Missing Required Field(s)';
-    }
-    if (!password) {
-      newErrors.password = true;
-      newErrors.errorText = 'Missing Required Field(s)';
-    }
-
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) {
-      toast('Errors on the page.', 'error');
-      return;
-    }
 
     try {
       const { REACT_APP_BACKEND_URL } = process.env;
       const response = await axios.post(`${REACT_APP_BACKEND_URL}/users/login`, { email, password });
+      const token = response.data.token;
+
       toast('Login Successful!', 'success');
-      props.history.push('/profile');
+      setToken(token);
     } catch (err) {
       if (err.response.status === 401) {
         toast('Invalid Login', 'error');
+        setErrors({ password: true, email: true, errorText: 'Invalid email or password.' });
       } else {
         toast('Error logging in. Please try again later.', 'error');
       }
@@ -119,6 +114,7 @@ function LogIn(props) {
           autoComplete="email"
           error={errors.email}
           className={classes.input}
+          required
         />
 
         <br />
@@ -132,6 +128,7 @@ function LogIn(props) {
           type="password"
           error={errors.password}
           className={classes.input}
+          required
         />
 
         <br /><br />

@@ -1,2 +1,2 @@
 export { default as Login } from './LogIn';
-export { default as FileTests } from './FileTests';
+export { default as Profile } from './Profile';
