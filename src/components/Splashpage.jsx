@@ -9,6 +9,18 @@ import classNames from 'classnames';
 // import useWindowDimensions from './modules/useWindowDimensions';
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  left: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   slogan: {
     margin: 20
   },
@@ -33,8 +45,8 @@ function Splashpage(props) {
     };
 
     return (
-      <div className={classNames('row', 'justify-content-center', 'align-items-center')}>
-        <div className={classNames('align-items-center', 'justify-content-center')}>
+      <div className={classes.root}>
+        <div className={classes.left}>
           <Typography variant="h2" className={classes.slogan}>
             ProAssist
           </Typography>
