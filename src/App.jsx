@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Main from './components/Main';
 import Splashpage from './components/Splashpage';
 import About from './components/About';
-import Careers from './components/Careers';
+import Careers from './components/CareersExpansion';
 import Registration from './components/Registration';
 // import LogIn from './LogIn';
 import { ToastContainer } from 'react-toastify';

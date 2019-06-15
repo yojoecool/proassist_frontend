@@ -6,7 +6,6 @@ import {
 import { Search } from '@material-ui/icons';
 import { splashpage } from '../img';
 import classNames from 'classnames';
-import { Redirect } from 'react-router';
 // import useWindowDimensions from './modules/useWindowDimensions';
 
 const useStyles = makeStyles(theme => ({
