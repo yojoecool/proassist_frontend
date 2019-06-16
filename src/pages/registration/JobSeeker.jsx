@@ -185,12 +185,12 @@ function JobSeeker(props) {
                 Login with Facebook
             </Button> */}
 
-            <div> 
-                <Button size="large" variant="contained" component={Link} to="/register" className={classes.button} >
+<div> 
+                <Button size="large" variant="contained" component={Link} to="/register" className={classes.button}>
                     Back
                 </Button>
 
-                <Button size="large" variant="contained" color="primary" className={classes.button}>
+                <Button size="large" variant="contained" color="primary" className={classes.button} type="submit">
                     Register
                 </Button>
             </div>

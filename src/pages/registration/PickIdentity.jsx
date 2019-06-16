@@ -13,15 +13,25 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',
-        marginTop: 25,
-        flexDirection: 'column'
+        marginTop: '5%',
+        flexDirection: 'column',
+        [theme.breakpoints.up('sm')] : {
+            marginTop: 25
+        }
     },
     formField: {
         width: 400,
+        [theme.breakpoints.down('sm')] : {
+            width: 200
+        }
     },
     button: {
         width: 150,
         margin: 25,
+        [theme.breakpoints.down('sm')] : {
+            width: "80%",
+            margin: 12
+        }
     },
 }));
 
@@ -55,7 +65,7 @@ const useStyles = makeStyles(theme => ({
 
     return (
         <div className={classes.root}>
-         <FormControl component="fieldset" className={classes.formControl}>
+         <FormControl component="fieldset" className={classes.formfield}>
             <FormLabel component="legend">Who are you?</FormLabel>
             <RadioGroup
             name="identity"

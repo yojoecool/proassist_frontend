@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { JobSeeker, Company, PickIdentity } from './registration';
-import { useToken, useWindowDimensions } from '../hooks';
+import { useToken } from '../hooks';
 import { toast } from '../modules';
 
 const useStyles = makeStyles(theme => ({
@@ -14,7 +14,6 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         flexWrap: 'wrap',
         flexDirection: 'column',
-        paddingBottom: 35,
         marginTop: '10%',
         marginBottom: '3%',
     },
@@ -27,15 +26,12 @@ const useStyles = makeStyles(theme => ({
 function Register(props) {
     const { userType } = useToken();
 
-    if (userType != 'Visitor') {
+    if (userType !== 'Visitor') {
         toast('You are already logged in', 'error');
         props.history.replace('/profile');
     }
 
     const classes = useStyles();
-    
-    const { width } = useWindowDimensions();
-    const desktopView = width > 768;
 
     return (
         <div className={classes.root}>
