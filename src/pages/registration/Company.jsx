@@ -8,7 +8,8 @@ import { Link, withRouter } from 'react-router-dom';
 import MaskedInput from 'react-text-mask';
 import PropTypes from 'prop-types';
 import {validateEmail, validatePhoneNumber, validatePassword} from './validations';
-import { toast, useWindowDimensions } from '../../modules/';
+import { toast } from '../../modules';
+import { useWindowDimensions } from '../../hooks'
 
 // TODO: should return error if email already exists in DB
 
@@ -74,10 +75,11 @@ function Company(props) {
         firstName: '',
         lastName: '',
         companyName: '',
+        email: '',
         phoneNumber: '',
         password: '',
         passwordCheck: '',
-        email: ''
+        pocEmail: ''
     });
 
     const handleChange = (name, event) => {
@@ -93,6 +95,10 @@ function Company(props) {
         const newErrors = {errorText:[]};
         if (state.email && !validateEmail(state.email)) {
             newErrors.email = true;
+            newErrors.errorText = [...newErrors.errorText, 'Invalid Company Email'];
+        }
+        if (state.pocEmail && !validateEmail(state.pocEmail)) {
+            newErrors.pocEmail = true;
             newErrors.errorText = [...newErrors.errorText, 'Invalid Email'];
         }
         if (state.password && !validatePassword(state.password, state.passwordCheck)) {
@@ -120,14 +126,16 @@ function Company(props) {
                     password: state.password,
                     firstName: state.firstName,
                     lastName: state.lastName,
-                    phoneNumber: state.phoneNumber
+                    pocEmail: state.pocEmail,
+                    phoneNumber: state.phoneNumber,
+                    userType: "Company"
                 }
             );
           toast('Registration Successful!', 'success');
-          props.history.push('/careers');
+          props.history.push('/login');
         } catch (err) {
-          if (err.response.status === 401) {
-            toast('Invalid Input', 'error');
+          if (err.response.status === 409) {
+            toast('Company with Email Already Exists', 'error');
           } else {
             toast('Error registering. Please try again later.', 'error');
           }
@@ -167,7 +175,7 @@ function Company(props) {
             />
             <TextField
                 required
-                label="Email"
+                label="Company Email"
                 name="email"
                 className={classes.formField}
                 value={state.email}
@@ -219,6 +227,18 @@ function Company(props) {
                 onChange={(e) => {update(e); handleChange('lastName', e)}}
                 margin="normal"
                 error={errors.lastName}
+            />
+            <TextField
+                required
+                label="Email"
+                name="pocEmail"
+                className={classes.formField}
+                value={state.pocEmail}
+                onChange={(e) => {update(e); handleChange('pocEmail', e)}}
+                type="email"
+                autoComplete="email"
+                margin="normal"
+                error={errors.pocEmail}
             />
             <TextField
                 required

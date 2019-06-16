@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography, 
   } from '@material-ui/core';
-import { useWindowDimensions } from '../../modules/';
+import { useWindowDimensions } from '../../hooks'
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({

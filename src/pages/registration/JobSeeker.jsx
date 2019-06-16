@@ -4,7 +4,8 @@ import {
     Button, TextField, Typography, 
   } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { toast, useWindowDimensions } from '../../modules/';
+import { toast } from '../../modules';
+import { useWindowDimensions } from '../../hooks'
 
 
 const useStyles = makeStyles(theme => ({

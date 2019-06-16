@@ -3,11 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { JobSeeker, Company, PickIdentity } from './registration';
-import { useWindowDimensions } from '../modules';
-import classNames from 'classnames';
+import { useToken, useWindowDimensions } from '../hooks';
+import { toast } from '../modules';
 
-// TODO: fix routing so if you are on job seeker or company registration, back button will go back to PickIdentity
-// Nest Switch
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -26,10 +24,14 @@ const useStyles = makeStyles(theme => ({
     }
   }));
 
+function Register(props) {
+    const { userType } = useToken();
 
+    if (userType != 'Visitor') {
+        toast('You are already logged in', 'error');
+        props.history.replace('/profile');
+    }
 
-// If user is already logged in, reroute to profile page?
-function Register() {
     const classes = useStyles();
     
     const { width } = useWindowDimensions();
