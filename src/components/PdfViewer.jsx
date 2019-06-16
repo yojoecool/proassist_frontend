@@ -82,7 +82,7 @@ function PdfViewer(props) {
   const [totalPages, setTotalPages] = React.useState(null);
   const [currPage, setCurrPage] = React.useState(1);
   const [fileObject] = React.useState({
-    url: !!url ? url : `${process.env.REACT_APP_BACKEND_URL}/getResume?user=${userId}`,
+    url: !!url ? url : `${process.env.REACT_APP_BACKEND_URL}/users/getResume?user=${userId}`,
     httpHeaders: { 'authorization': 'Bearer ' + token }
   });
   const [currDisplayed, setDisplayed] = React.useState(1);

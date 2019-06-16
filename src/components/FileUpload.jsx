@@ -90,7 +90,7 @@ function FileUpload() {
     try {
       setLoading(true);
       await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/uploadResume`,
+        `${process.env.REACT_APP_BACKEND_URL}/users/uploadResume`,
         data,
         { headers: { authorization: 'Bearer ' + token } }
       );
