@@ -1,10 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { withRouter } from 'react-router-dom';
-import {
-    Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography, 
-  } from '@material-ui/core';
-import { JobSeeker, Company } from './registration';
+import { Typography } from '@material-ui/core';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import { JobSeeker, Company, PickIdentity } from './registration';
 import { useWindowDimensions } from '../modules';
 import classNames from 'classnames';
 
@@ -22,66 +20,13 @@ const useStyles = makeStyles(theme => ({
         marginTop: '10%',
         marginBottom: '3%',
     },
-    formDisplay: {
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        flexDirection: 'column',
-        paddingBottom: 35,
-        marginTop: '2%',
-        marginBottom: '2%',
-    },
-    pickIdentity: {
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        flexDirection: 'column',
-        paddingBottom: 35,
-        marginTop: '3%'
-    },
     registrationText: {
         color: theme.palette.secondary.main,
         fontWeight: 'bold'
-    },
-    formControl: {
-        minWidth: 120,
-    },  
-    formField: {
-        width: 400,
-    },
-    button: {
-        width: 150,
-        margin: 25,
     }
   }));
 
-function PickIdentity(props) {
-    const classes = useStyles();
-    return (
-        <div className={classes.pickIdentity}>
-         <FormControl component="fieldset" className={classes.formControl}>
-            <FormLabel component="legend">Who are you?</FormLabel>
-            <RadioGroup
-            name="identity"
-            className={classes.formField}
-            value={props.identity}
-            onChange={(e) => props.handleChange('identity', e)}
-            >
-            <FormControlLabel value="jobSeeker" control={<Radio />} label="Job Seeker" />
-            <FormControlLabel value="company" control={<Radio />} label="Company" />
-            </RadioGroup>
-        </FormControl>
 
-        <Button size="large" variant="contained" color="primary" className={classes.button} onClick={props.changeView()}>
-            Continue
-        </Button>
-        </div>
-    )
-}
 
 // If user is already logged in, reroute to profile page?
 function Register() {
@@ -90,84 +35,14 @@ function Register() {
     const { width } = useWindowDimensions();
     const desktopView = width > 768;
 
-    const [state, setState] = React.useState({
-        firstName: '',
-        lastName: '',
-        companyName: '',
-        phoneNumber: '',
-        password: '',
-        passwordCheck: '',
-        email: '',
-        identity: 'jobSeeker',
-        view: 'pickIdentity'
-    });
-
-    const handleChange = (name, event) => {
-        if (name === 'phoneNumber') {
-            console.log(name)
-            console.log(event.target.value)
-        }
-        setState({
-        ...state,
-        [name]: event.target.value,
-        });
-    };
-    
-    let view;
-
-    const changeView = (key) => () => {
-        if (key === "back"){
-            setState({
-                ...state,
-                view: 'pickIdentity'
-            })
-        } else {
-            setState({
-                ...state,
-                view: state.identity
-            })
-        }
-    }
-
-    if (state.view === "company"){
-        view = <Company 
-            firstName={state.firstName} 
-            lastName={state.lastName} 
-            password={state.password}
-            passwordCheck={state.passwordCheck} 
-            companyName={state.companyName} 
-            email={state.email} 
-            handleChange={handleChange} 
-            changeView={changeView}
-            phoneNumber={state.phoneNumber}
-            />
-    } else if (state.view === "jobSeeker"){
-        view = <JobSeeker 
-            firstName={state.firstName} 
-            lastName={state.lastName} 
-            password={state.password} 
-            passwordCheck={state.passwordCheck} 
-            email={state.email} 
-            handleChange={handleChange} 
-            changeView={changeView}
-            />
-    } else {
-        view = <PickIdentity 
-            identity={state.identity} 
-            handleChange={handleChange} 
-            changeView={changeView}
-            />
-    }
-
-    let classToUse = classes.root;
-    if (state.view !== "pickIdentity" && desktopView){
-        classToUse = classes.formDisplay
-    }
-
     return (
-        <div className={classNames(classToUse)}>
+        <div className={classes.root}>
             <Typography variant="h4" className={classes.registrationText}>Registration</Typography>
-            {view}
+            <Switch>
+                <Route exact path="/register" component={PickIdentity} />
+                <Route path="/register/jobseeker" component={JobSeeker} />
+                <Route path="/register/company" component={Company} />
+            </Switch>
         </div>
     );
 }

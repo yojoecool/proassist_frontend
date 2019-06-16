@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     Button, TextField, Typography, 
   } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { toast, useWindowDimensions } from '../../modules/';
 
 
 const useStyles = makeStyles(theme => ({
@@ -24,8 +26,32 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-function JobSeeker(props) {
+function JobSeeker() {
     const classes = useStyles();
+    const { width } = useWindowDimensions();
+    const desktopView = width > 768;
+
+    const [state, setState] = React.useState({
+        firstName: '',
+        lastName: '',
+        companyName: '',
+        phoneNumber: '',
+        password: '',
+        passwordCheck: '',
+        email: ''
+    });
+
+    const handleChange = (name, event) => {
+        if (name === 'phoneNumber') {
+            console.log(name)
+            console.log(event.target.value)
+        }
+        setState({
+        ...state,
+        [name]: event.target.value,
+        });
+    };
+
     return (
         <div className={classes.root}>
             <Typography variant="h5">Job Seeker Application:</Typography>
@@ -34,8 +60,8 @@ function JobSeeker(props) {
                 label="First Name"
                 id="firstName"
                 className={classes.formField}
-                value={props.firstName}
-                onChange={(e) => props.handleChange('firstName', e)}
+                value={state.firstName}
+                onChange={(e) => handleChange('firstName', e)}
                 margin="normal"
             />
             <TextField
@@ -43,8 +69,8 @@ function JobSeeker(props) {
                 label="Last Name"
                 id="lastName"
                 className={classes.formField}
-                value={props.lastName}
-                onChange={(e) => props.handleChange('lastName', e)}
+                value={state.lastName}
+                onChange={(e) => handleChange('lastName', e)}
                 margin="normal"
             />
             <TextField
@@ -52,8 +78,8 @@ function JobSeeker(props) {
                 label="Email"
                 id="email"
                 className={classes.formField}
-                value={props.email}
-                onChange={(e) => props.handleChange('email', e)}
+                value={state.email}
+                onChange={(e) => handleChange('email', e)}
                 margin="normal"
             />
             <TextField
@@ -61,8 +87,8 @@ function JobSeeker(props) {
                 label="Password"
                 id="password"
                 className={classes.formField}
-                value={props.password}
-                onChange={(e) => props.handleChange('password', e)}
+                value={state.password}
+                onChange={(e) => handleChange('password', e)}
                 margin="normal"
                 type="password"
             />
@@ -71,8 +97,8 @@ function JobSeeker(props) {
                 label="Confirm Password"
                 id="passwordCheck"
                 className={classes.formField}
-                value={props.passwordCheck}
-                onChange={(e) => props.handleChange('passwordCheck', e)}
+                value={state.passwordCheck}
+                onChange={(e) => handleChange('passwordCheck', e)}
                 margin="normal"
                 type="password"
             />
@@ -82,7 +108,7 @@ function JobSeeker(props) {
             </Button> */}
 
             <div> 
-                <Button size="large" variant="contained" className={classes.button} onClick={props.changeView("back")}>
+                <Button size="large" variant="contained" component={Link} to="/register" className={classes.button} >
                     Back
                 </Button>
 
