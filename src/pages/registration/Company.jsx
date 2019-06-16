@@ -11,8 +11,6 @@ import {validateEmail, validatePhoneNumber, validatePassword} from './validation
 import { toast } from '../../modules';
 import { useWindowDimensions } from '../../hooks'
 
-// TODO: should return error if email already exists in DB
-
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -135,7 +133,7 @@ function Company(props) {
           props.history.push('/login');
         } catch (err) {
           if (err.response.status === 409) {
-            toast('Company with Email Already Exists', 'error');
+            toast('User with email already exists.', 'error');
           } else {
             toast('Error registering. Please try again later.', 'error');
           }
@@ -145,7 +143,7 @@ function Company(props) {
     const update = (e) => {
         const { [e.target.name]: removed, ...newErrors } = errors;
         setErrors({ ...newErrors, errorText: [] });
-};
+    };
     
 
     return (
