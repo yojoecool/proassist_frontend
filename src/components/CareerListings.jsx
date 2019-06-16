@@ -1,9 +1,9 @@
 import React from 'react';
+import axios from 'axios';
 import { Button, Checkbox, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
 import classNames from 'classnames';
-import CareerSearch from './CareerSearch';
 import mockedJobs from '../mocks/mockedJobs';
 
 const useStyles = makeStyles({
@@ -41,6 +41,18 @@ const useStyles = makeStyles({
 function Careers() {
   const classes = useStyles();
 
+  const [jobListings, setJobListings] = React.useState([]);
+
+  React.useEffect(() => {
+    const getCareers = async () => {
+      const { REACT_APP_BACKEND_URL: backend } = process.env;
+      const listings = await axios.get(`${backend}/careers`);
+      setJobListings(listings.data);
+    };
+
+    getCareers();
+  }, []);
+
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpansion = panel => (e, isExpanded) => {
@@ -60,10 +72,9 @@ function Careers() {
   };
 
   return (
-    <div className={classes.root}>
+    // <div className={classes.root}>
       <div className={classes.listings}>
-        <CareerSearch />
-        {mockedJobs.map((job, index) => {
+        {jobListings.map((job, index) => {
           return <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
               <div className={classes.summary}>
@@ -131,7 +142,7 @@ function Careers() {
           </ExpansionPanel>
         })}
       </div>
-    </div>
+    // </div>
   );
 }
 

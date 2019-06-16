@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, FormControl, FormControlLabel, IconButton, MenuItem, Select, TextField, Typography } from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Search } from '@material-ui/icons';
 import classNames from 'classnames';
@@ -16,6 +16,9 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'spaceEvenly',
     // backgroundColor: 'Goldenrod'
+  },
+  wideWidth: {
+    width: '100%'
   }
 });
 
@@ -52,15 +55,16 @@ function CareerSearch() {
   };
 
   return (
-    <div className={classes.root}>
-      <FormControl>
-        <div>
+    <form className={classes.root}>
+
+        <div className={classes.wideWidth}>
           <TextField
+            // className="w-100"
             id="outlined-full-width"
             variant="outlined"
             label="Title"
             required
-            // fullWidth
+            fullWidth
             value={values.title}
             onChange={handleChange('title')}
           />
@@ -75,35 +79,48 @@ function CareerSearch() {
             // id="outlined-simple-start-adornment"
             variant="outlined"
             label="City"
+            fullWidth
             value={values.city}
             onChange={handleChange('city')}
           />
-          <Select
-            value={values.state}
-            onChange={handleChange('state')}
-          >
-            {mockedSelects.states.map((state, index) => {
-              return <MenuItem key={index} value={state}>{state}</MenuItem>
-            })}
-          </Select>
-          <Select
-            value={values.region}
-            onChange={handleChange('region')}
-          >
-            {mockedSelects.regions.map((region, index) => {
-              return <MenuItem key={index} value={region}>{region}</MenuItem>
-            })}
-          </Select>
+          <FormControl className={classes.wideWidth}>
+            <InputLabel>State</InputLabel>
+            <Select
+              value={values.state}
+              fullWidth
+              onChange={handleChange('state')}
+            >
+              {mockedSelects.states.map((state, index) => {
+                return <MenuItem key={index} value={state}>{state}</MenuItem>
+              })}
+            </Select>
+          </FormControl>
+          <FormControl className={classes.wideWidth}>
+            <InputLabel>Region</InputLabel>
+            <Select
+              value={values.region}
+              fullWidth
+              onChange={handleChange('region')}
+            >
+              {mockedSelects.regions.map((region, index) => {
+                return <MenuItem key={index} value={region}>{region}</MenuItem>
+              })}
+            </Select>
+          </FormControl>
         </div>
-        <div>
-          <Select
-            value={values.type}
-            onChange={handleChange('type')}
-          >
-            {mockedSelects.jobTypes.map((type, index) => {
-              return <MenuItem key={index} value={type}>{type}</MenuItem>
-            })}
-          </Select>
+        <div className={classes.wideWidth}>
+          <FormControl>
+            <InputLabel>Type</InputLabel>
+            <Select
+              value={values.type}
+              fullWidth
+              onChange={handleChange('type')}
+            >
+              {mockedSelects.jobTypes.map((type, index) => {
+                return <MenuItem key={index} value={type}>{type}</MenuItem>
+              })}
+            </Select>
+          </FormControl>
           <FormControlLabel
             control={
               <Checkbox
@@ -127,8 +144,8 @@ function CareerSearch() {
             label='Applied'
           />
         </div>
-      </FormControl>
-    </div>
+
+    </form>
   );
 }
 

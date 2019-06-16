@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Main from './components/Main';
 import Splashpage from './components/Splashpage';
 import About from './components/About';
-import Careers from './components/CareersExpansion';
+import Careers from './components/Careers';
 import Registration from './components/Registration';
 // import LogIn from './LogIn';
 import { Route, Switch, Router } from "react-router-dom";
