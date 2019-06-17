@@ -41,10 +41,9 @@ function CareerSearch({ updateFilters }) {
         [name]: event.target.checked
       });
     } else {
-      console.log(event.target.value, name)
       setFilter({
         ...filters,
-        [name]: event.target.value
+        [name]: event.target.value.toLowerCase()
       });
     }
   };
@@ -91,6 +90,7 @@ function CareerSearch({ updateFilters }) {
               fullWidth
               onChange={handleChange('state')}
             >
+              <MenuItem value=''></MenuItem>
               {mockedSelects.states.map((state, index) => {
                 return <MenuItem key={index} value={state}>{state}</MenuItem>
               })}
@@ -103,6 +103,7 @@ function CareerSearch({ updateFilters }) {
               fullWidth
               onChange={handleChange('region')}
             >
+              <MenuItem value=''></MenuItem>
               {mockedSelects.regions.map((region, index) => {
                 return <MenuItem key={index} value={region}>{region}</MenuItem>
               })}
@@ -117,6 +118,7 @@ function CareerSearch({ updateFilters }) {
               fullWidth
               onChange={handleChange('type')}
             >
+              <MenuItem value=''></MenuItem>
               {mockedSelects.jobTypes.map((type, index) => {
                 return <MenuItem key={index} value={type}>{type}</MenuItem>
               })}

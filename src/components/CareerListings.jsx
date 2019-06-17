@@ -46,12 +46,16 @@ function CareerListings({ filters }) {
   React.useEffect(() => {
     const getCareers = async () => {
       const { REACT_APP_BACKEND_URL: backend } = process.env;
-      const listings = await axios.get(`${backend}/careers`);
+      // const listings = await axios.get(`${backend}/careers`);
+      const filtersString = JSON.stringify(filters);
+      console.log(filtersString);
+      const listings = await axios.get(`${backend}/careers?filters=${filtersString}`);
+      // const listings = await axios.get(`${backend}/careers?title=${filters.title}`);
       setJobListings(listings.data);
     };
 
     getCareers();
-  }, []);
+  }, [filters]);
 
   const [expanded, setExpanded] = React.useState(false);
 
