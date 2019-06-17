@@ -2,9 +2,11 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import { Route, Switch, withRouter } from 'react-router-dom';
+import classNames from 'classnames';
 import { JobSeeker, Company, PickIdentity } from './registration';
-import { useToken } from '../hooks';
+import { useToken, useWindowDimensions } from '../hooks';
 import { toast } from '../modules';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -16,6 +18,9 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         marginTop: '10%',
         marginBottom: '3%',
+    },
+    rootOnForms: {
+        marginTop: '3%',
     },
     registrationText: {
         color: theme.palette.secondary.main,
@@ -33,8 +38,17 @@ function Register(props) {
 
     const classes = useStyles();
 
+    const { width } = useWindowDimensions();
+    const desktopView = width > 768;
+
+    let rootClass = classes.root
+    if (desktopView && props.location.pathname !== "/register") {
+        rootClass = classNames(classes.root, classes.rootOnForms)
+    }
+
+
     return (
-        <div className={classes.root}>
+        <div className={rootClass}>
             <Typography variant="h4" className={classes.registrationText}>Registration</Typography>
             <Switch>
                 <Route exact path="/register" component={PickIdentity} />

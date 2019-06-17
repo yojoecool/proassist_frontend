@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography, 
   } from '@material-ui/core';
-import { useWindowDimensions } from '../../hooks'
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
@@ -25,30 +24,33 @@ const useStyles = makeStyles(theme => ({
             width: 200
         }
     },
+    formLabel: {
+        color: '#000000'
+    },
     button: {
         width: 150,
         margin: 25,
+        '&:hover': {
+            color: theme.palette.blue.light
+        },
         [theme.breakpoints.down('sm')] : {
-            width: "80%",
+            width: "60%",
             margin: 12
+        },
+        [theme.breakpoints.down('xs')] : {
+            width: "80%"
         }
     },
 }));
 
   function PickIdentity() {
     const classes = useStyles();
-    const { width } = useWindowDimensions();
-    const desktopView = width > 768;
 
     const [state, setState] = React.useState({
         identity: 'jobSeeker',
     });
 
     const handleChange = (name, event) => {
-        if (name === 'phoneNumber') {
-            console.log(name)
-            console.log(event.target.value)
-        }
         setState({
         ...state,
         [name]: event.target.value,
@@ -66,7 +68,7 @@ const useStyles = makeStyles(theme => ({
     return (
         <div className={classes.root}>
          <FormControl component="fieldset" className={classes.formfield}>
-            <FormLabel component="legend">Who are you?</FormLabel>
+            <FormLabel className={classes.formLabel}>Who are you?</FormLabel>
             <RadioGroup
             name="identity"
             className={classes.formField}

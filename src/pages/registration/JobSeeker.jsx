@@ -5,11 +5,8 @@ import {
     Button, TextField, Typography, 
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import {validateEmail, validatePhoneNumber, validatePassword} from './validations';
+import {validateEmail, validatePassword} from './validations';
 import { toast } from '../../modules';
-import { useWindowDimensions } from '../../hooks'
-
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,15 +15,34 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',
-        marginTop: 25,
-        flexDirection: 'column'
+        marginTop: '5%',
+        flexDirection: 'column',
+        [theme.breakpoints.up('sm')] : {
+            marginTop: 25
+        }
     },
     formField: {
-        width: 400,
+        width: 450,
+        [theme.breakpoints.down('sm')] : {
+            width: '80%'
+        }
     },
     button: {
+        '&:hover': {
+            color: theme.palette.blue.light
+        },
         width: 150,
         margin: 25,
+        [theme.breakpoints.down('sm')] : {
+            width: "80%",
+            margin: 12
+        }
+    },
+    buttonDiv: {
+        width: '100%',
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center'
     },
     errorText: {
         color: 'red',
@@ -44,9 +60,6 @@ const useStyles = makeStyles(theme => ({
 function JobSeeker(props) {
     const classes = useStyles();
     const [errors, setErrors] = React.useState({ errorText: [] });
-
-    const { width } = useWindowDimensions();
-    const desktopView = width > 768;
 
     const [state, setState] = React.useState({
         firstName: '',
@@ -84,7 +97,6 @@ function JobSeeker(props) {
         }
         try {
           const { REACT_APP_BACKEND_URL } = process.env;
-          console.log(`${REACT_APP_BACKEND_URL}`)
           const response = await axios.post(
                 `${REACT_APP_BACKEND_URL}/users/register`, 
                 { 
@@ -181,11 +193,7 @@ function JobSeeker(props) {
                 error={errors.password}
             />
 
-            {/* <Button size="large" variant="contained" color="primary" className={classes.button}>
-                Login with Facebook
-            </Button> */}
-
-<div> 
+            <div className={classes.buttonDiv}> 
                 <Button size="large" variant="contained" component={Link} to="/register" className={classes.button}>
                     Back
                 </Button>
@@ -199,4 +207,4 @@ function JobSeeker(props) {
     )
 }
 
-export default JobSeeker;
+export default withRouter(JobSeeker);

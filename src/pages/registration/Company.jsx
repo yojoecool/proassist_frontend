@@ -9,7 +9,6 @@ import MaskedInput from 'react-text-mask';
 import PropTypes from 'prop-types';
 import {validateEmail, validatePhoneNumber, validatePassword} from './validations';
 import { toast } from '../../modules';
-import { useWindowDimensions } from '../../hooks'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,18 +17,40 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',
-        marginTop: 25,
-        flexDirection: 'column'
+        marginTop: '5%',
+        flexDirection: 'column',
+        [theme.breakpoints.up('sm')] : {
+            marginTop: 25
+        }
     },
     formField: {
-        width: 400,
+        width: 450,
+        [theme.breakpoints.down('sm')] : {
+            width: '80%'
+        }
     },
     button: {
         width: 150,
         margin: 25,
+        '&:hover': {
+            color: theme.palette.blue.light
+        },
+        [theme.breakpoints.down('sm')] : {
+            width: "80%",
+            margin: 12
+        }
+    },
+    buttonDiv: {
+        width: '100%',
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center'
     },
     subsection: {
         marginTop: 35,
+        [theme.breakpoints.down('sm')] : {
+            marginTop: 20
+        }
     },
     errorText: {
         color: 'red',
@@ -42,7 +63,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         flexWrap: 'wrap'
     },
-  }));
+}));
 
 function PhoneNumberFormat(props) {
     const { inputRef, ...other } = props;
@@ -65,9 +86,6 @@ PhoneNumberFormat.propTypes = {
 function Company(props) {
     const classes = useStyles();
     const [errors, setErrors] = React.useState({ errorText: [] });
-    
-    const { width } = useWindowDimensions();
-    const desktopView = width > 768;
 
     const [state, setState] = React.useState({
         firstName: '',
@@ -115,7 +133,6 @@ function Company(props) {
         }
         try {
           const { REACT_APP_BACKEND_URL } = process.env;
-          console.log(`${REACT_APP_BACKEND_URL}`)
           const response = await axios.post(
                 `${REACT_APP_BACKEND_URL}/users/register`, 
                 { 
@@ -252,7 +269,7 @@ function Company(props) {
                 error={errors.phoneNumber}
             />
             
-            <div> 
+            <div className={classes.buttonDiv}> 
                 <Button size="large" variant="contained" component={Link} to="/register" className={classes.button}>
                     Back
                 </Button>
