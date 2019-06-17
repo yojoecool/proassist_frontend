@@ -5,27 +5,25 @@ import { Search } from '@material-ui/icons';
 import classNames from 'classnames';
 import mockedSelects from '../mocks/mockedSearchSelects';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    // backgroundColor: 'CornflowerBlue',
-    marginTop: 20,
+    backgroundColor: theme.palette.yellow.light,
     marginBottom: 20
   },
   inputs: {
     display: 'flex',
     justifyContent: 'spaceEvenly',
-    // backgroundColor: 'Goldenrod'
   },
   wideWidth: {
     width: '100%'
   }
-});
+}));
 
-function CareerSearch() {
+function CareerSearch({ updateFilters }) {
   const classes = useStyles();
 
-  const [values, setValue] = React.useState({
+  const [filters, setFilter] = React.useState({
     title: '',
     city: '',
     state: '',
@@ -36,22 +34,25 @@ function CareerSearch() {
   });
 
   const handleChange = name => event => {
-    console.log(name, ':', event.target.value);
+    // console.log(name, ':', event.target.value);
     if (name === 'saved' || name === 'applied') {
-      setValue({
-        ...values,
+      setFilter({
+        ...filters,
         [name]: event.target.checked
       });
     } else {
-      setValue({
-        ...values,
+      console.log(event.target.value, name)
+      setFilter({
+        ...filters,
         [name]: event.target.value
       });
     }
   };
 
   const submit = (e) => {
+    e.preventDefault();
     console.log('submitted!');
+    updateFilters(filters);
   };
 
   return (
@@ -65,7 +66,7 @@ function CareerSearch() {
             label="Title"
             required
             fullWidth
-            value={values.title}
+            value={filters.title}
             onChange={handleChange('title')}
           />
           <IconButton
@@ -80,13 +81,13 @@ function CareerSearch() {
             variant="outlined"
             label="City"
             fullWidth
-            value={values.city}
+            value={filters.city}
             onChange={handleChange('city')}
           />
           <FormControl className={classes.wideWidth}>
             <InputLabel>State</InputLabel>
             <Select
-              value={values.state}
+              value={filters.state}
               fullWidth
               onChange={handleChange('state')}
             >
@@ -98,7 +99,7 @@ function CareerSearch() {
           <FormControl className={classes.wideWidth}>
             <InputLabel>Region</InputLabel>
             <Select
-              value={values.region}
+              value={filters.region}
               fullWidth
               onChange={handleChange('region')}
             >
@@ -112,7 +113,7 @@ function CareerSearch() {
           <FormControl>
             <InputLabel>Type</InputLabel>
             <Select
-              value={values.type}
+              value={filters.type}
               fullWidth
               onChange={handleChange('type')}
             >
@@ -124,7 +125,7 @@ function CareerSearch() {
           <FormControlLabel
             control={
               <Checkbox
-                checked={values.saved}
+                checked={filters.saved}
                 color='default'
                 value='saved'
                 onChange={handleChange('saved')}
@@ -135,7 +136,7 @@ function CareerSearch() {
           <FormControlLabel
             control={
               <Checkbox
-                checked={values.applied}
+                checked={filters.applied}
                 color='default'
                 value='applied'
                 onChange={handleChange('applied')}

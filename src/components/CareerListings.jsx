@@ -8,7 +8,7 @@ import mockedJobs from '../mocks/mockedJobs';
 
 const useStyles = makeStyles({
   listings: {
-    width: '80%',
+    width: '100%',
     display: 'flex',
     // justifyContent: 'center',
     flexWrap: 'wrap',
@@ -38,7 +38,7 @@ const useStyles = makeStyles({
   },
 });
 
-function Careers() {
+function CareerListings({ filters }) {
   const classes = useStyles();
 
   const [jobListings, setJobListings] = React.useState([]);
@@ -146,4 +146,4 @@ function Careers() {
   );
 }
 
-export default Careers;
+export default CareerListings;

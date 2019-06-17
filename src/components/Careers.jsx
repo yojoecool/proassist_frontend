@@ -6,24 +6,36 @@ import classNames from 'classnames';
 import CareerSearch from './CareerSearch';
 import CareerListings from './CareerListings';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  container: {
+    width: '80%',
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
-    backgroundColor: 'yellow'
+    marginTop: 20,
+    marginBottom: 20
   }
-});
+}));
 
 function Careers() {
   const classes = useStyles();
 
+  const [filters, setFilter] = React.useState({});
+
+  const updateFilters = (values) => {
+    setFilter(values);
+  };
 
   return (
     <div className={classes.root}>
-      <CareerSearch />
-      <CareerListings />
+      <div className={classes.container}>
+        <CareerSearch updateFilters={updateFilters} />
+        <CareerListings filters={filters} />
+      </div>
     </div>
   );
 }
