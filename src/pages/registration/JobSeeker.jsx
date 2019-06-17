@@ -42,7 +42,8 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         display: 'flex',
         flexWrap: 'wrap',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        paddingTop: 20
     },
     errorText: {
         color: 'red',
