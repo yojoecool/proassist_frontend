@@ -39,7 +39,7 @@ const picSize = "30";
 
 function Footer(props) {
   const { width } = useWindowDimensions();
-  const mobileView = width <= 425;
+  const mobileView = width <= 535;
 
   const classes = useStyles();
 
@@ -50,10 +50,11 @@ function Footer(props) {
       <div className={classNames('row', 'w-100')}>
         <div
           className={classNames(
-              classes.colSection, 'pl-5',
-              { 'col-8': !mobileView }, { 'col-6': mobileView },
+              { [classes.colSection]: !mobileView }, 'pl-5',
+              { 'col-8': !mobileView }, { 'col-12': mobileView },
               'd-flex', 'align-items-start', 
-              'justify-content-center', 'flex-column'
+              'justify-content-center', 'flex-column',
+              { 'mt-3': mobileView }
           )}
         >
           <Typography variant="h6" className={classNames('text-uppercase', 'w-100')}>
@@ -68,13 +69,14 @@ function Footer(props) {
           >
             <div
               className={classNames(
-                  { [classes.colSection2]: !mobileView }, { 'w-100': mobileView },
+                  { [classes.colSection2]: !mobileView },
+                  { 'w-100': mobileView },
                   'd-flex', 'align-items-start', 
                   'justify-content-center', 'flex-column'
               )}
             >
               <Typography variant={bodyType} className={classNames('text-uppercase', 'mt-2')}>
-                PROASSIST HEALTHCARE<br />SOLUTIONS, INC
+                PROASSIST HEALTHCARE{mobileView ? ' ' : <br />}SOLUTIONS, INC
               </Typography>
               <Typography variant={bodyType} className={classNames('text-uppercase', 'mt-2')}>
                 hr@pro-assist.com<br />(866) 664-9119
@@ -104,13 +106,18 @@ function Footer(props) {
         <div
           className={
             classNames('col', 'd-flex', 'align-items-center', 
-              'justify-content-center', classes.colSection,
-              'flex-column'
+              'justify-content-center', { [classes.colSection]: !mobileView },
+              'flex-column', 'col-sm'
           )}
         >
-          <Typography variant="h6" className={classNames('w-100', 'text-center')}>
+          <Typography variant="h6" className={classNames(
+            'w-100',
+            'text-center',
+            { 'd-none': mobileView }
+          )}>
             FOLLOW US
           </Typography>
+          {mobileView && <br />}
           <div className={classNames('mt-2', 'w-100', 'text-center')}>
             <img src={twitter} className="mr-3" alt="twitter" height={picSize} width={picSize} />
             <img src={facebook} className="mr-3" alt="facebook" height={picSize} width={picSize} />

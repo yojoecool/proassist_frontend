@@ -90,7 +90,7 @@ function PdfViewer(props) {
   const { width } = useWindowDimensions();
   const mobileView = width <= 768;
 
-  const pageWidth = mobileView ? width * 0.9 : width * 0.65;
+  const pageWidth = mobileView ? width * 0.8 : width * 0.4;
 
   const downloadFile = async () => {
     try {
@@ -115,7 +115,7 @@ function PdfViewer(props) {
         className={classes.downloadButton}
         variant="outlined"
       >
-        Download PDF
+        {!!url ? 'Download File' : 'Download Resume'}
       </Button>
 
       {!downloadOnly && (
