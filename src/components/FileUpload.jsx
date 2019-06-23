@@ -112,7 +112,7 @@ function FileUpload() {
       <TextField
         value={fileName}
         variant="outlined"
-        label="File Upload"
+        label="Resume Upload"
         className={classes.textInput}
         disabled
       />
