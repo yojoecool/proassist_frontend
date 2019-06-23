@@ -1,3 +1,16 @@
-.App {
-  height: 200vh;
+.react-pdf__Page__canvas {
+  border: 1px solid rgba(33, 33, 33, 0.5);
+}
+
+.react-pdf__Document {
+  display: flex;
+  justify-content: center;
+}
+
+.Toastify__toast--error {
+  background-color: #ce4735;
+}
+
+.Toastify__toast--success {
+  background-color: #2e7d32;
 }
