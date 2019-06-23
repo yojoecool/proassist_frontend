@@ -38,7 +38,7 @@ const useStyles = makeStyles({
   },
 });
 
-function CareerListings({ filters }) {
+function CareerListings({ filters, keyword }) {
   const classes = useStyles();
 
   const [jobListings, setJobListings] = React.useState([]);
@@ -47,6 +47,11 @@ function CareerListings({ filters }) {
     const getCareers = async () => {
       const { REACT_APP_BACKEND_URL: backend } = process.env;
       // const listings = await axios.get(`${backend}/careers`);
+      console.log('actual keyword:', keyword);
+      if (keyword && !filters.title) {
+        console.log('keyword:', keyword.query);
+        filters.title = keyword.query;
+      }
       const filtersString = JSON.stringify(filters);
       console.log(filtersString);
       const listings = await axios.get(`${backend}/careers?filters=${filtersString}`);
@@ -78,73 +83,77 @@ function CareerListings({ filters }) {
   return (
     // <div className={classes.root}>
       <div className={classes.listings}>
-        {jobListings.map((job, index) => {
-          return <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
-            <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-              <div className={classes.summary}>
-                <div>
-                  <Typography className={classes.title} variant="h5" color="textSecondary" gutterBottom>
-                    {job.title}
-                  </Typography>
-                  <Typography color="textSecondary">
-                    {job.city}, {job.state}
-                  </Typography>
+        {jobListings.length > 0 ? (
+          jobListings.map((job, index) => {
+            return <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
+              <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+                <div className={classes.summary}>
+                  <div>
+                    <Typography className={classes.title} variant="h5" color="textSecondary" gutterBottom>
+                      {job.title}
+                    </Typography>
+                    <Typography color="textSecondary">
+                      {job.city}, {job.state}
+                    </Typography>
+                  </div>
+                  {/* <div>
+                    <ExpansionPanelActions>
+                      <IconButton
+                        hidden={saved}
+                        className={classes.star}
+                        onClick={(e) => handleSave(e, index)}
+                      >
+                        <StarBorder />
+                      </IconButton>
+                      <IconButton
+                        hidden={!saved}
+                        className={classes.star}
+                        onClick={(e) => handleSave(e, index)}
+                      >
+                        <Star />
+                      </IconButton>
+                    </ExpansionPanelActions>
+                  </div> */}
                 </div>
-                {/* <div>
-                  <ExpansionPanelActions>
-                    <IconButton
-                      hidden={saved}
-                      className={classes.star}
-                      onClick={(e) => handleSave(e, index)}
-                    >
-                      <StarBorder />
-                    </IconButton>
-                    <IconButton
-                      hidden={!saved}
-                      className={classes.star}
-                      onClick={(e) => handleSave(e, index)}
-                    >
-                      <Star />
-                    </IconButton>
-                  </ExpansionPanelActions>
-                </div> */}
-              </div>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Typography component="p">
-                {job.description}
-              </Typography>
-              <div>
-                Skills: 
-                <ul>
-                  {job.skills.map((skill, index) => {
-                    return <li key={index}>{skill}</li>
-                  })}
-                </ul>  
-              </div>
-            </ExpansionPanelDetails>
-            <ExpansionPanelActions>
-              {/* <IconButton
-                hidden={saved}
-                className={classes.star}
-                onClick={(e) => handleSave(e, index)}
-              >
-                <StarBorder />
-              </IconButton>
-              <IconButton
-                hidden={!saved}
-                className={classes.star}
-                onClick={(e) => handleSave(e, index)}
-              >
-                <Star />
-              </IconButton> */}
-              <FormControlLabel
-                control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} value='saved' />}
-              />
-              <Button size="medium" onClick={(e) => handleApply(e, index)}>Apply</Button>
-            </ExpansionPanelActions>
-          </ExpansionPanel>
-        })}
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Typography component="p">
+                  {job.description}
+                </Typography>
+                <div>
+                  Skills: 
+                  <ul>
+                    {job.skills.map((skill, index) => {
+                      return <li key={index}>{skill}</li>
+                    })}
+                  </ul>  
+                </div>
+              </ExpansionPanelDetails>
+              <ExpansionPanelActions>
+                {/* <IconButton
+                  hidden={saved}
+                  className={classes.star}
+                  onClick={(e) => handleSave(e, index)}
+                >
+                  <StarBorder />
+                </IconButton>
+                <IconButton
+                  hidden={!saved}
+                  className={classes.star}
+                  onClick={(e) => handleSave(e, index)}
+                >
+                  <Star />
+                </IconButton> */}
+                <FormControlLabel
+                  control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} value='saved' />}
+                />
+                <Button size="medium" onClick={(e) => handleApply(e, index)}>Apply</Button>
+              </ExpansionPanelActions>
+            </ExpansionPanel>
+          })
+        ) : ( 
+          <p>No results found :(</p> 
+        )}
       </div>
     // </div>
   );

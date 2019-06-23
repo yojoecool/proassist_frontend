@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Careers() {
+function Careers(props) {
   const classes = useStyles();
 
   const [filters, setFilter] = React.useState({});
@@ -30,11 +30,24 @@ function Careers() {
     setFilter(values);
   };
 
+  React.useEffect(() => {
+    console.log('location.state in Careers:', props.history.location.state);
+    // setFilter({
+    //   title: props.history.location.state),
+    //   city: '',
+    //   state: '',
+    //   region: '',
+    //   type: '',
+    //   saved: false,
+    //   applied: false,
+    // });
+  }, []);
+
   return (
     <div className={classes.root}>
       <div className={classes.container}>
-        <CareerSearch updateFilters={updateFilters} />
-        <CareerListings filters={filters} />
+        <CareerSearch updateFilters={updateFilters} keyword={props.history.location.state} />
+        <CareerListings filters={filters} keyword={props.history.location.state} />
       </div>
     </div>
   );

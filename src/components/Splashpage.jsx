@@ -41,7 +41,8 @@ function Splashpage(props) {
     };
 
     const submit = (e) => {
-      props.history.replace('/careers');
+      e.preventDefault();
+      props.history.replace('/careers', { query });
     };
 
     return (
@@ -55,8 +56,8 @@ function Splashpage(props) {
             Start your career in the medical field today
           </Typography>
 
-          <FormControl className={classes.slogan}>
-            <div className={classNames('row'), classes.search}>
+          <form className={classes.slogan}>
+            <div className={classNames('row')}>
               <TextField
                 // id="outlined-simple-start-adornment"
                 variant="outlined"
@@ -67,6 +68,7 @@ function Splashpage(props) {
               />
 
               <IconButton
+                type="submit"
                 onClick={e => submit(e)}
               >
                 <Search />
@@ -74,7 +76,7 @@ function Splashpage(props) {
               { console.log('query:', query) }
               {/* { console.log('submitted:', submitted) } */}
             </div>
-          </FormControl>
+          </form>
         </div>
 
         <div className={classNames('align-items-center')}>

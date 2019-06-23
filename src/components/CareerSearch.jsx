@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function CareerSearch({ updateFilters }) {
+function CareerSearch({ updateFilters, keyword }) {
   const classes = useStyles();
 
   const [filters, setFilter] = React.useState({
@@ -43,10 +43,20 @@ function CareerSearch({ updateFilters }) {
     } else {
       setFilter({
         ...filters,
-        [name]: event.target.value.toLowerCase()
+        [name]: event.target.value
       });
     }
   };
+
+  React.useEffect(() => {
+    if (keyword) {
+      console.log('keyword:', keyword.query);
+      setFilter({
+        ...filters,
+        title: keyword.query
+      });
+    }
+  }, []);
 
   const submit = (e) => {
     e.preventDefault();
@@ -69,6 +79,7 @@ function CareerSearch({ updateFilters }) {
             onChange={handleChange('title')}
           />
           <IconButton
+            type="submit"
             onClick={e => submit(e)}
           >
             <Search />
