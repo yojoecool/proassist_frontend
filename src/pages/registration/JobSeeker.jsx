@@ -98,7 +98,7 @@ function JobSeeker(props) {
         }
         try {
           const { REACT_APP_BACKEND_URL } = process.env;
-          const response = await axios.post(
+          await axios.post(
                 `${REACT_APP_BACKEND_URL}/users/register`, 
                 { 
                     firstName: state.firstName,
@@ -111,7 +111,7 @@ function JobSeeker(props) {
           toast('Registration Successful!', 'success');
           props.history.push('/login');
         } catch (err) {
-          if (err.response.status === 409) {
+        if (err.response && err.response.status === 409) {
             toast('User with email already exists.', 'error');
           } else {
             toast('Error registering. Please try again later.', 'error');
