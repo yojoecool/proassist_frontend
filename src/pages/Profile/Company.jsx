@@ -32,13 +32,12 @@ const useStyles = makeStyles(theme => ({
 
 function Company(props) {
   const classes = useStyles();
-  const { userId } = useToken();
+  const { userId, email } = useToken();
 
   const [token] = useLocalStorage('proAssistToken');
   //use states to cause rerender
   const [state, setState] = React.useState({
     companyName: '',
-    email: '',
     companyStatus: '',
 
     firstName: '',
@@ -60,17 +59,16 @@ const handleChange = (name, event) => {
         const response = await 
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/companies/getProfile?user=${userId}`, 
         { headers: { 'authorization': 'Bearer ' + token }});
-        
+        console.log(response)
         setState({
           ...state,
           companyName: response.data.companyObject.companyName,
-          email: response.data.companyObject.email,
           companyStatus: response.data.companyObject.companyStatus,
           
           firstName: response.data.companyObject.poc.firstName,
           lastName: response.data.companyObject.poc.lastName,
           phoneNumber: response.data.companyObject.poc.phoneNumber,
-          pocEmail: response.data.companyObject.poc.pocEmail
+          pocEmail: response.data.companyObject.poc.email
         })
         
         
@@ -81,9 +79,30 @@ const handleChange = (name, event) => {
     getProfile()
   }, []);
 
+  let companyStatusMessage;
+
+  if (state.companyStatus === 'Pending') {
+    companyStatusMessage = 'Your profile is awaiting review by the Admin. You cannot post jobs at this time.'
+  } else if (state.companyStatus === 'Rejected') {
+    companyStatusMessage = 'Your profile has been blocked from posting jobs. Please reach out to the Admin.'
+  } else if (state.companyStatus === 'Active') {
+    companyStatusMessage = 'Your profile has been approved to post jobs.'
+  } else {
+    companyStatusMessage = '[Could not fetch profile details]'
+  }
+
   return (
     <React.Fragment>
-      <Typography variant="h4" className={classes.header}>Welcome {state.companyName}</Typography>
+      <Typography variant='h4' className={classes.subheader}>Welcome {state.companyName}</Typography>
+      <Typography variant='h5' className={classes.subheader}>Company Information:</Typography>
+      <p> Company/Login Email: {email} </p>
+      <p> Point of Contact: {state.firstName} {state.lastName} </p>
+      <p> Point of Contact: {state.phoneNumber} </p>
+      <p> Point of Contact: {state.pocEmail} </p>
+      <Typography variant='h5' className={classes.subheader}>Company Status: {state.companyStatus}</Typography>
+      <p> {companyStatusMessage} </p>
+      <Typography variant='h5' className={classes.subheader}>Your Jobs: </Typography>
+
     </React.Fragment>
   );
 }
