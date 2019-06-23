@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Button, TextField, Typography, 
+    Button, TextField, Typography, FormHelperText, 
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
 import MaskedInput from 'react-text-mask';
@@ -191,7 +191,7 @@ function Company(props) {
             />
             <TextField
                 required
-                label="Company Email"
+                label="Company/Login Email"
                 name="email"
                 className={classes.formField}
                 value={state.email}
