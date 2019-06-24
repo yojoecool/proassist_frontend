@@ -7,8 +7,7 @@ import {
 import { Link, withRouter } from 'react-router-dom';
 import MaskedInput from 'react-text-mask';
 import PropTypes from 'prop-types';
-import {validateEmail, validatePhoneNumber, validatePassword} from './validations';
-import { toast } from '../../modules';
+import { toast, validations } from '../../modules';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -108,6 +107,8 @@ function Company(props) {
 
     const submit = async (e) => {
         e.preventDefault();
+
+        const {validateEmail, validatePassword, validatePhoneNumber} = validations;
     
         const newErrors = {errorText:[]};
         if (state.email && !validateEmail(state.email)) {

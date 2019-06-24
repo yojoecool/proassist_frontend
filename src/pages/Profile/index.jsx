@@ -1,17 +1,23 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { toast } from '../../modules';
 import { useToken } from '../../hooks';
 import Company from './Company';
 import JobSeeker from'./JobSeeker';
 import Admin from './Admin';
+import AddJob from '../company/AddJob';
 
 function Profile(props) {
   const { userType } = useToken();
 
   switch (userType) {
     case 'Company':
-      return <Company />;
+      return (
+        <Switch>
+          <Route exact path="/profile" component={Company} />
+          <Route path="/profile/addjob" component={AddJob} />
+        </Switch>
+      );
     case 'JobSeeker':
       return <JobSeeker />;
     case 'Admin':

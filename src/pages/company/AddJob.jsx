@@ -57,18 +57,19 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-function JobSeeker(props) {
+function AddJob(props) {
     const classes = useStyles();
     const [errors, setErrors] = React.useState({ errorText: [] });
 
     const [state, setState] = React.useState({
-        firstName: '',
-        lastName: '',
-        companyName: '',
-        phoneNumber: '',
-        password: '',
-        passwordCheck: '',
-        email: ''
+        description: '',
+        skills: [], //comma separated
+        title: '',
+        city: '',
+        state: '', //dropdown?
+        region: '', //assumed?
+        type: '', //dropdown?
+        qualifications: '',
     });
 
     const handleChange = (name, event) => {
@@ -77,48 +78,49 @@ function JobSeeker(props) {
         [name]: event.target.value,
         });
     };
-    const submit = async (e) => {
-        e.preventDefault();
+    // const submit = async (e) => {
+    //     e.preventDefault();
     
-        const {validateEmail, validatePassword} = validations;
+    //     const newErrors = {errorText:[]};
+    //     if (state.email && !validateEmail(state.email)) {
+    //         newErrors.email = true;
+    //         newErrors.errorText = [...newErrors.errorText, 'Invalid Email'];
+    //     }
+    //     if (state.password && !validatePassword(state.password, state.passwordCheck)) {
+    //         newErrors.password = true;
+    //         newErrors.errorText = [...newErrors.errorText, 'Passwords do not match'];
+    //     }
 
-        const newErrors = {errorText:[]};
-        if (state.email && !validateEmail(state.email)) {
-            newErrors.email = true;
-            newErrors.errorText = [...newErrors.errorText, 'Invalid Email'];
-        }
-        if (state.password && !validatePassword(state.password, state.passwordCheck)) {
-            newErrors.password = true;
-            newErrors.errorText = [...newErrors.errorText, 'Passwords do not match'];
-        }
-
-        setErrors(newErrors);
-        if (newErrors.errorText.length > 0) {
-          toast('Errors on the page.', "error");
-          return;
-        }
-        try {
-          const { REACT_APP_BACKEND_URL } = process.env;
-          const response = await axios.post(
-                `${REACT_APP_BACKEND_URL}/users/register`, 
-                { 
-                    firstName: state.firstName,
-                    lastName: state.lastName,
-                    email: state.email, 
-                    password: state.password,
-                    userType: "JobSeeker"
-                }
-            );
-          toast('Registration Successful!', 'success');
-          props.history.push('/login');
-        } catch (err) {
-          if (err.response.status === 409) {
-            toast('User with email already exists.', 'error');
-          } else {
-            toast('Error registering. Please try again later.', 'error');
-          }
-        }
-    };
+    //     setErrors(newErrors);
+    //     if (newErrors.errorText.length > 0) {
+    //       toast('Errors on the page.', "error");
+    //       return;
+    //     }
+    //     try {
+    //       const { REACT_APP_BACKEND_URL } = process.env;
+    //       const response = await axios.post(
+    //             `${REACT_APP_BACKEND_URL}/companies/addJob`, 
+    //             { 
+    //                 description: state.description,
+    //                 skills: state.skills, //comma separated
+    //                 title: state.title,
+    //                 city: state.city,
+    //                 state: state.state, //dropdown?
+    //                 region: state.region, //assumed?
+    //                 type: state.type, //dropdown?
+    //                 qualifications: state.qualifications,
+    //             }
+    //         );
+    //       toast('Registration Successful!', 'success');
+    //       props.history.push('/login');
+    //     } catch (err) {
+    //       if (err.response.status === 409) {
+    //         toast('User with email already exists.', 'error');
+    //       } else {
+    //         toast('Error registering. Please try again later.', 'error');
+    //       }
+    //     }
+    // };
 
     const update = (e) => {
         const { [e.target.name]: removed, ...newErrors } = errors;
@@ -127,7 +129,7 @@ function JobSeeker(props) {
 
     return (
         <div className={classes.root}>
-            <Typography variant="h5">Job Seeker Application:</Typography>
+            <Typography variant="h5">New Job Form:</Typography>
 
             <div className={classes.errorHeight}>
                 {errors.errorText.map(err => {
@@ -139,7 +141,7 @@ function JobSeeker(props) {
                 })}
             </div>
 
-            <form className={classes.root} onSubmit={submit}>
+            {/* <form className={classes.root} onSubmit={submit}> */}
             <TextField
                 required
                 label="First Name"
@@ -196,17 +198,17 @@ function JobSeeker(props) {
             />
 
             <div className={classes.buttonDiv}> 
-                <Button size="large" variant="contained" component={Link} to="/register" className={classes.button}>
-                    Back
+                <Button size="large" variant="contained" component={Link} to="/profile" className={classes.button}>
+                    Cancel
                 </Button>
 
                 <Button size="large" variant="contained" color="primary" className={classes.button} type="submit">
-                    Register
+                    Submit
                 </Button>
             </div>
-            </form>
+            {/* </form> */}
         </div>
     )
 }
 
-export default withRouter(JobSeeker);
+export default withRouter(AddJob);
