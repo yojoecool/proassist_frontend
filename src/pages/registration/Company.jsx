@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Button, TextField, Typography, 
+    Button, TextField, Typography, FormHelperText, 
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
 import MaskedInput from 'react-text-mask';
@@ -135,7 +135,7 @@ function Company(props) {
         }
         try {
           const { REACT_APP_BACKEND_URL } = process.env;
-          const response = await axios.post(
+          await axios.post(
                 `${REACT_APP_BACKEND_URL}/users/register`, 
                 { 
                     companyName: state.companyName,
@@ -151,7 +151,7 @@ function Company(props) {
           toast('Registration Successful!', 'success');
           props.history.push('/login');
         } catch (err) {
-          if (err.response.status === 409) {
+          if (err.response && err.response.status === 409) {
             toast('User with email already exists.', 'error');
           } else {
             toast('Error registering. Please try again later.', 'error');
@@ -192,7 +192,7 @@ function Company(props) {
             />
             <TextField
                 required
-                label="Company Email"
+                label="Company/Login Email"
                 name="email"
                 className={classes.formField}
                 value={state.email}

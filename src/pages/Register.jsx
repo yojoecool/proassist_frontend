@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.secondary.main,
         fontWeight: 'bold'
     }
-  }));
+}));
 
 function Register(props) {
     const { userType } = useToken();
