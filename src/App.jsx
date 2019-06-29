@@ -4,9 +4,11 @@ import { Route, Switch, Router } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AppBar, Drawer, Footer } from './navigation';
-import { Login, Profile } from './pages';
+import { Login, Register, Home, About, Careers, Profile } from './pages';
+import { PdfViewer } from './components';
 import { history } from './modules';
 import './App.css';
+
 
 const useStyles = makeStyles(theme => ({
   app: {
@@ -36,6 +38,10 @@ function App() {
         <Drawer openDrawer={openDrawer} closeDrawer={closeDrawer} />
         
         <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/about" component={About} />
+          <Route path="/careers" component={Careers} />
+          <Route path="/register" component={Register} />
           <Route path="/login" component={Login} />
           <Route path="/profile" component={Profile} />
         </Switch>
