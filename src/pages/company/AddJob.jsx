@@ -2,16 +2,16 @@ import React from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Button, TextField, Typography, 
+    Button, TextField, Typography, NativeSelect, Input, InputLabel
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
-import { toast, validations } from '../../modules';
+import { toast } from '../../modules';
 
+// TODO Fix Formatting
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
         display: 'flex',
-        justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',
         marginTop: '5%',
@@ -26,6 +26,9 @@ const useStyles = makeStyles(theme => ({
             width: '80%'
         }
     },
+    selectLabel: {
+        margin: '1%',
+    },
     button: {
         '&:hover': {
             color: theme.palette.blue.light
@@ -33,7 +36,7 @@ const useStyles = makeStyles(theme => ({
         width: 150,
         margin: 25,
         [theme.breakpoints.down('sm')] : {
-            width: "80%",
+            width: '80%',
             margin: 12
         }
     },
@@ -55,7 +58,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         flexWrap: 'wrap'
     },
-  }));
+}));
 
 function AddJob(props) {
     const classes = useStyles();
@@ -63,12 +66,12 @@ function AddJob(props) {
 
     const [state, setState] = React.useState({
         description: '',
-        skills: [], //comma separated
+        // skills: [],
         title: '',
         city: '',
-        state: '', //dropdown?
-        region: '', //assumed?
-        type: '', //dropdown?
+        state: 'AL',
+        region: 'Northwest',
+        type: 'Full Time',
         qualifications: '',
     });
 
@@ -78,49 +81,64 @@ function AddJob(props) {
         [name]: event.target.value,
         });
     };
-    // const submit = async (e) => {
-    //     e.preventDefault();
+    const constants = {
+        jobTypes: ['Full Time', 'Part Time', 'Internship', 'Temporary', 'Freelance'],
+        states: [
+            'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC',
+            'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS',
+            'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO',
+            'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP',
+            'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN',
+            'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY',
+        ],
+        regions: ['Northwest', 'Southwest', 'Midwest', 'Northeast', 'Southeast'],
+    }
+    const submit = async (e) => {
+        e.preventDefault();
     
-    //     const newErrors = {errorText:[]};
-    //     if (state.email && !validateEmail(state.email)) {
-    //         newErrors.email = true;
-    //         newErrors.errorText = [...newErrors.errorText, 'Invalid Email'];
-    //     }
-    //     if (state.password && !validatePassword(state.password, state.passwordCheck)) {
-    //         newErrors.password = true;
-    //         newErrors.errorText = [...newErrors.errorText, 'Passwords do not match'];
-    //     }
+        const newErrors = {errorText:[]};
+        if (!constants.states.includes(state.state) ) {
+            newErrors.state = true;
+            newErrors.errorText = [...newErrors.errorText, 'Invalid State'];
+        }
+        if (!constants.jobTypes.includes(state.type) ) {
+            newErrors.type = true;
+            newErrors.errorText = [...newErrors.errorText, 'Invalid Job Type'];
+        }
+        if (!constants.regions.includes(state.region) ) {
+            newErrors.region = true;
+            newErrors.errorText = [...newErrors.errorText, 'Invalid Region'];
+        }
 
-    //     setErrors(newErrors);
-    //     if (newErrors.errorText.length > 0) {
-    //       toast('Errors on the page.', "error");
-    //       return;
-    //     }
-    //     try {
-    //       const { REACT_APP_BACKEND_URL } = process.env;
-    //       const response = await axios.post(
-    //             `${REACT_APP_BACKEND_URL}/companies/addJob`, 
-    //             { 
-    //                 description: state.description,
-    //                 skills: state.skills, //comma separated
-    //                 title: state.title,
-    //                 city: state.city,
-    //                 state: state.state, //dropdown?
-    //                 region: state.region, //assumed?
-    //                 type: state.type, //dropdown?
-    //                 qualifications: state.qualifications,
-    //             }
-    //         );
-    //       toast('Registration Successful!', 'success');
-    //       props.history.push('/login');
-    //     } catch (err) {
-    //       if (err.response.status === 409) {
-    //         toast('User with email already exists.', 'error');
-    //       } else {
-    //         toast('Error registering. Please try again later.', 'error');
-    //       }
-    //     }
-    // };
+        setErrors(newErrors);
+        if (newErrors.errorText.length > 0) {
+          toast('Errors on the page.', 'error');
+          return;
+        }
+        try {
+          const { REACT_APP_BACKEND_URL } = process.env;
+          const response = await axios.post(
+                `${REACT_APP_BACKEND_URL}/companies/addJob`, 
+                { 
+                    description: state.description,
+                    title: state.title,
+                    city: state.city,
+                    state: state.state,
+                    region: state.region,
+                    type: state.type,
+                    qualifications: state.qualifications,
+                }
+            );
+          toast('Registration Successful!', 'success');
+          props.history.push('/login');
+        } catch (err) {
+          if (err.response.status === 409) {
+            toast('User with email already exists.', 'error');
+          } else {
+            toast('Error registering. Please try again later.', 'error');
+          }
+        }
+    };
 
     const update = (e) => {
         const { [e.target.name]: removed, ...newErrors } = errors;
@@ -129,84 +147,124 @@ function AddJob(props) {
 
     return (
         <div className={classes.root}>
-            <Typography variant="h5">New Job Form:</Typography>
+            <Typography variant='h5'>New Job Form:</Typography>
 
             <div className={classes.errorHeight}>
                 {errors.errorText.map(err => {
                 return (
-                    <Typography variant="subtitle1" className={classes.errorText}>
+                    <Typography variant='subtitle1' className={classes.errorText}>
                         {err}
                     </Typography>
                 )
                 })}
             </div>
 
-            {/* <form className={classes.root} onSubmit={submit}> */}
+            <form className={classes.root} onSubmit={submit}>
             <TextField
                 required
-                label="First Name"
-                name="firstName"
+                label='Job Title'
+                name='title'
                 className={classes.formField}
-                value={state.firstName}
-                onChange={(e) => {update(e); handleChange('firstName', e)}}
-                margin="normal"
-                error={errors.firstName}
+                value={state.title}
+                onChange={(e) => {update(e); handleChange('title', e)}}
+                margin='normal'
+                error={errors.title}
             />
             <TextField
                 required
-                label="Last Name"
-                name="lastName"
+                label='City'
+                name='city'
                 className={classes.formField}
-                value={state.lastName}
-                onChange={(e) => {update(e); handleChange('lastName', e)}}
-                margin="normal"
-                error={errors.lastName}
+                value={state.city}
+                onChange={(e) => {update(e); handleChange('city', e)}}
+                margin='normal'
+                error={errors.city}
+            />
+            <InputLabel htmlFor='state-label' className={classes.selectLabel}>State</InputLabel>
+            <NativeSelect
+                value={state.state}
+                onChange={(e) => {update(e); handleChange('state', e)}}
+                input={<Input name='state' 
+                    id='state-label' 
+                    error={errors.state}
+                    className={classes.formField}/>
+                }
+            >
+                {constants.states.map(val => {
+                    return (
+                        <option value={val}> {val} </option>
+                    )
+                })}
+            </NativeSelect>
+            <InputLabel htmlFor='region-label' className={classes.selectLabel}>Region</InputLabel>
+            <NativeSelect
+                value={state.region}
+                onChange={(e) => {update(e); handleChange('region', e)}}
+                input={<Input name='region' 
+                    id='region-label' 
+                    error={errors.region}
+                    className={classes.formField}/>
+                }
+            >
+                {constants.regions.map(val => {
+                    return (
+                        <option value={val}> {val} </option>
+                    )
+                })}
+            </NativeSelect>
+            <InputLabel htmlFor='type-label' className={classes.selectLabel} >Job Type</InputLabel>
+            <NativeSelect
+                value={state.type}
+                onChange={(e) => {update(e); handleChange('type', e)}}
+                input={<Input name='region' 
+                    id='type-label' 
+                    error={errors.type}
+                    className={classes.formField}/>
+                }
+            >
+                {constants.jobTypes.map(val => {
+                    return (
+                        <option value={val}> {val} </option>
+                    )
+                })}
+            </NativeSelect>
+            <TextField
+                required
+                label='Qualifications'
+                name='qualifications'
+                className={classes.formField}
+                value={state.qualifications}
+                onChange={(e) => {update(e); handleChange('qualifications', e)}}
+                margin='normal'
+                multiline
+                rowsMax='10'
+                error={errors.qualifications}
             />
             <TextField
                 required
-                label="Email"
-                name="email"
+                label='Description'
+                name='description'
                 className={classes.formField}
-                value={state.email}
-                onChange={(e) => {update(e); handleChange('email', e)}}
-                type="email"
-                autoComplete="email"
-                margin="normal"
-                error={errors.email}
-            />
-            <TextField
-                required
-                label="Password"
-                name="password"
-                className={classes.formField}
-                value={state.password}
-                onChange={(e) => {update(e); handleChange('password', e)}}
-                margin="normal"
-                type="password"
-                error={errors.password}
-            />
-            <TextField
-                required
-                label="Confirm Password"
-                name="passwordCheck"
-                className={classes.formField}
-                value={state.passwordCheck}
-                onChange={(e) => {update(e); handleChange('passwordCheck', e)}}
-                margin="normal"
-                type="password"
-                error={errors.password}
+                value={state.description}
+                onChange={(e) => {update(e); handleChange('description', e)}}
+                margin='normal'
+                type='description'
+                error={errors.description}
+                multiline
+                rowsMax='10'
+                helperText='Content formatting may not be preserved.'
             />
 
             <div className={classes.buttonDiv}> 
-                <Button size="large" variant="contained" component={Link} to="/profile" className={classes.button}>
+                <Button size='large' variant='contained' component={Link} to='/profile' className={classes.button}>
                     Cancel
                 </Button>
 
-                <Button size="large" variant="contained" color="primary" className={classes.button} type="submit">
+                <Button size='large' variant='contained' color='primary' className={classes.button} type='submit'>
                     Submit
                 </Button>
             </div>
-            {/* </form> */}
+            </form>
         </div>
     )
 }

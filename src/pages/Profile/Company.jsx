@@ -20,15 +20,35 @@ const useStyles = makeStyles(theme => ({
       marginTop: '3%',
       marginBottom: '3%',
   },
+  content: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-around',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    marginTop: '3%',
+    [theme.breakpoints.down('md')] : {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
+  },
+  subcontent: {
+    width: '30%',
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.down('md')] : {
+      width: '80%',
+    },
+  },
+  subheader: {
+    marginBotton: '2%'
+  },
   button: {
-    width: 150,
-    margin: 25,
+    width: '80%',
+    margin: 12,
     '&:hover': {
         color: theme.palette.blue.light
-    },
-    [theme.breakpoints.down('sm')] : {
-        width: "80%",
-        margin: 12
     }
   },
   buttonDiv: {
@@ -141,34 +161,41 @@ function Company(props) {
 
   return (
     <div className={classes.root}>
-      <Typography variant='profile' className={classes.header}>Welcome {userInfo.companyName}</Typography>
-      <div className={classes.profile}>
-        <Typography variant='h5' className={classes.subheader}>Profile Information:</Typography>
-        <p> Company/Login Email: {email} </p>
-        <p> Point of Contact: {userInfo.firstName} {userInfo.lastName} </p>
-        <p> Point of Contact: {userInfo.phoneNumber} </p>
-        <p> Point of Contact: {userInfo.pocEmail} </p>
-        <Typography variant='h5' className={classes.subheader}>Company Status: {userInfo.companyStatus}</Typography>
-        <p> {companyStatusMessage} </p>
-        <div className={classes.buttonDiv}> 
-          <Button size="large" variant="contained" className={classes.button}>
-              Edit
-          </Button>
+      <Typography variant='h4' className={classes.header}>Welcome {userInfo.companyName}</Typography>
+      <div className={classes.content}>
+        <div className={classes.subcontent}>
+          <Typography variant='h5' className={classes.subheader}>Profile Information:</Typography>
+          <p> Company/Login Email: {email} </p>
 
-          <Button size="large" variant="contained" color="secondary" className={classes.button}>
-              Deactivate
-          </Button>
+          <Typography variant='h5' className={classes.subheader}>Point of Contact Information:</Typography>
+          <p> Name: {userInfo.firstName} {userInfo.lastName} </p>
+          <p> Phone Number: {userInfo.phoneNumber} </p>
+          <p> Email: {userInfo.pocEmail} </p>
+          <div className={classes.buttonDiv}> 
+            <Button size='large' variant='contained' className={classes.button}>
+                Edit
+            </Button>
+
+            <Button size='large' variant='contained' color='secondary' className={classes.button}>
+                Deactivate
+            </Button>
+          </div>
         </div>
-      </div>
-      <Typography variant='h5' className={classes.subheader}>Your Jobs: {jobs} </Typography>
-      <div className={classes.buttonDiv}> 
-        <Button size="large" variant="contained" className={classes.button} disabled={!moreJobs}>
-          See More Jobs
-        </Button>
-        <Button size="large" variant="contained" color="primary" component={Link} to="/profile/addjob"  className={classes.button}>
-        Add New Job
-        </Button>
-      </div>
+        <div className={classes.subcontent}>
+          <Typography variant='h5' className={classes.subheader}>Company Status: {userInfo.companyStatus}</Typography>
+          <p> {companyStatusMessage} </p>
+          <Typography variant='h5' className={classes.subheader}>Your Jobs: {jobs} </Typography>
+          <div className={classes.buttonDiv}> 
+            <Button size='large' variant='contained' className={classes.button} disabled={!moreJobs}>
+              See More Jobs
+            </Button>
+            <Button size='large' variant='contained' color='primary' component={Link} to='/profile/addjob' 
+              className={classes.button} disabled={userInfo.companyStatus!=='Active'}>
+            Add New Job
+            </Button>
+          </div>
+          </div>
+        </div>
     </div>
   );
 }
