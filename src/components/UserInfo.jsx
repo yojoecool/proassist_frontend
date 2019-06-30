@@ -6,7 +6,7 @@ import { toast } from '../modules';
 
 function UserInfo(props) {
   const { userType, userId } = useToken();
-  const [token, setToken] = useLocalStorage('proAssistToken');
+  const [token] = useLocalStorage('proAssistToken');
 
   const [userData, setUserData] = React.useState({ });
 
@@ -46,8 +46,29 @@ function UserInfo(props) {
     getUserInfo();
   }, []);
 
+  const normalUserDiv = userData.email
+    ? (
+      <div>
+        Email: {userData.email}
+      </div>
+      ) :
+    <div />;
+
+  switch (userType) {
+    case 'Admin':
+      break;
+    case 'JobSeeker':
+      break;
+    case 'Company':
+      break;
+    default:
+      break;
+  }
+
   return (
-    <div />
+    <>
+      {normalUserDiv}
+    </>
   );
 }
 
