@@ -7,7 +7,6 @@ import { JobSeeker, Company, PickIdentity } from './registration';
 import { useToken, useWindowDimensions } from '../hooks';
 import { toast } from '../modules';
 
-
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
