@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from 'axios';
+import useLocalStorage from 'react-use-localstorage';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Button, TextField, Typography, NativeSelect, Input, InputLabel
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
 import { toast } from '../../modules';
+import { useToken } from '../../hooks';
 
 // TODO Fix Formatting
 const useStyles = makeStyles(theme => ({
@@ -27,7 +29,7 @@ const useStyles = makeStyles(theme => ({
         }
     },
     selectLabel: {
-        margin: '1%',
+        marginTop: '1%',
     },
     button: {
         '&:hover': {
@@ -62,6 +64,8 @@ const useStyles = makeStyles(theme => ({
 
 function AddJob(props) {
     const classes = useStyles();
+    const { userId } = useToken();
+    const [token] = useLocalStorage('proAssistToken');
     const [errors, setErrors] = React.useState({ errorText: [] });
 
     const [state, setState] = React.useState({
@@ -70,7 +74,6 @@ function AddJob(props) {
         title: '',
         city: '',
         state: 'AL',
-        region: 'Northwest',
         type: 'Full Time',
         qualifications: '',
     });
@@ -90,8 +93,7 @@ function AddJob(props) {
             'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP',
             'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN',
             'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY',
-        ],
-        regions: ['Northwest', 'Southwest', 'Midwest', 'Northeast', 'Southeast'],
+        ]
     }
     const submit = async (e) => {
         e.preventDefault();
@@ -105,10 +107,6 @@ function AddJob(props) {
             newErrors.type = true;
             newErrors.errorText = [...newErrors.errorText, 'Invalid Job Type'];
         }
-        if (!constants.regions.includes(state.region) ) {
-            newErrors.region = true;
-            newErrors.errorText = [...newErrors.errorText, 'Invalid Region'];
-        }
 
         setErrors(newErrors);
         if (newErrors.errorText.length > 0) {
@@ -119,7 +117,7 @@ function AddJob(props) {
           const { REACT_APP_BACKEND_URL } = process.env;
           const response = await axios.post(
                 `${REACT_APP_BACKEND_URL}/companies/addJob`, 
-                { 
+                {
                     description: state.description,
                     title: state.title,
                     city: state.city,
@@ -127,15 +125,19 @@ function AddJob(props) {
                     region: state.region,
                     type: state.type,
                     qualifications: state.qualifications,
-                }
+                },
+                {   
+                    headers: { 'authorization': 'Bearer ' + token },
+                    params: { userId },
+                },
             );
-          toast('Registration Successful!', 'success');
-          props.history.push('/login');
+          toast('Posted Job Successfully!', 'success');
+          props.history.push('/profile');
         } catch (err) {
-          if (err.response.status === 409) {
-            toast('User with email already exists.', 'error');
+          if (err.response.status === 403) {
+            toast('Authorization error. Please try loging in again', 'error');
           } else {
-            toast('Error registering. Please try again later.', 'error');
+            toast('Error Posting Job. Please try again later.', 'error');
           }
         }
     };
@@ -191,22 +193,6 @@ function AddJob(props) {
                 }
             >
                 {constants.states.map(val => {
-                    return (
-                        <option value={val}> {val} </option>
-                    )
-                })}
-            </NativeSelect>
-            <InputLabel htmlFor='region-label' className={classes.selectLabel}>Region</InputLabel>
-            <NativeSelect
-                value={state.region}
-                onChange={(e) => {update(e); handleChange('region', e)}}
-                input={<Input name='region' 
-                    id='region-label' 
-                    error={errors.region}
-                    className={classes.formField}/>
-                }
-            >
-                {constants.regions.map(val => {
                     return (
                         <option value={val}> {val} </option>
                     )

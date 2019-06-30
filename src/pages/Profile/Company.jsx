@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   subheader: {
-    marginBotton: '2%'
+    marginBotton: '4%'
   },
   button: {
     width: '80%',
@@ -81,26 +81,42 @@ function Company(props) {
 
   const [jobs, updateJobs] = React.useState([]);
   let offset = 0;
+  const getJobs = async (offset) => {
+    try {
+      const response = await 
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/companies/getJobs`, 
+      { headers: { 'authorization': 'Bearer ' + token },
+        params: { userId, offset }
+      });
+      
+      if (response.data.jobs.length < 10) {
+        updateMoreJobs(false);
+        return;
+      }
 
-  // const handleChange = (name, event) => {
-  //     setState({
-  //     ...state,
-  //     [name]: event.target.value,
-  //     });
-  // };
+      updateJobs([
+        ...jobs,
+        ...response.data.jobs
+      ])
+      offset += 10;
+      
+    } catch (err) {
+      console.log(err);
+      toast('Unable to load jobs', 'error');
+    }
+  };
 
   React.useEffect(() => {
     const getProfile = async () => {
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_BACKEND_URL}/companies/getProfile`, 
-          { headers: { 'authorization': 'Bearer ' + token },
+          { 
+            headers: { 'authorization': 'Bearer ' + token },
             params: { userId }
           }
         );
 
-        console.log(response) //TODO REMOVE
-        console.log(response.data.companyObject.companyName)
         setUserState({
           companyName: response.data.companyObject.companyName,
           companyStatus: response.data.companyObject.companyStatus,
@@ -120,31 +136,6 @@ function Company(props) {
   }, []);
 
   React.useEffect(() => {
-    const getJobs = async (offset) => {
-      try {
-        const response = await 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/companies/getJobs`, 
-        { headers: { 'authorization': 'Bearer ' + token },
-          params: { userId, offset }
-        });
-        console.log(response) //TODO REMOVE
-
-        if (response.data.jobs.length === 0) {
-          updateMoreJobs(false);
-          return;
-        }
-
-        updateJobs([
-          ...jobs,
-          ...response.data.jobs
-        ])
-        offset += 10;
-        
-      } catch (err) {
-        console.log(err);
-        toast('Unable to load jobs', 'error');
-      }
-    };
     getJobs(offset);
   }, []);
 
@@ -184,9 +175,9 @@ function Company(props) {
         <div className={classes.subcontent}>
           <Typography variant='h5' className={classes.subheader}>Company Status: {userInfo.companyStatus}</Typography>
           <p> {companyStatusMessage} </p>
-          <Typography variant='h5' className={classes.subheader}>Your Jobs: {jobs} </Typography>
+          <Typography variant='h5' className={classes.subheader}>Your Jobs: </Typography>
           <div className={classes.buttonDiv}> 
-            <Button size='large' variant='contained' className={classes.button} disabled={!moreJobs}>
+            <Button size='large' variant='contained' className={classes.button} onClick={getJobs} disabled={!moreJobs}>
               See More Jobs
             </Button>
             <Button size='large' variant='contained' color='primary' component={Link} to='/profile/addjob' 
