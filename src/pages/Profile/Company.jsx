@@ -2,7 +2,7 @@ import React from 'react';
 import useLocalStorage from 'react-use-localstorage';
 import axios from 'axios';
 import {
-  Typography, TextField, Button
+  Typography, Button
 } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   subheader: {
-    marginBotton: '4%'
+    marginBottom: '1%'
   },
   button: {
     width: '80%',
@@ -66,7 +66,6 @@ function Company(props) {
   const { userId, email } = useToken();
 
   const [token] = useLocalStorage('proAssistToken');
-  //use states to cause rerender
   const [userInfo, setUserState] = React.useState({
     companyName: '',
     companyStatus: '',
@@ -157,18 +156,18 @@ function Company(props) {
         <div className={classes.subcontent}>
           <Typography variant='h5' className={classes.subheader}>Profile Information:</Typography>
           <p> Company/Login Email: {email} </p>
-
+          <div className={classes.buttonDiv}> 
+            <Button size="large" variant="contained" component={Link} to='/profile/password' className={classes.button}>
+                Change Password
+            </Button>
+          </div>
           <Typography variant='h5' className={classes.subheader}>Point of Contact Information:</Typography>
           <p> Name: {userInfo.firstName} {userInfo.lastName} </p>
-          <p> Phone Number: {userInfo.phoneNumber} </p>
           <p> Email: {userInfo.pocEmail} </p>
+          <p> Phone Number: {userInfo.phoneNumber} </p>
           <div className={classes.buttonDiv}> 
-            <Button size='large' variant='contained' className={classes.button}>
-                Edit
-            </Button>
-
-            <Button size='large' variant='contained' color='secondary' className={classes.button}>
-                Deactivate
+            <Button size='large' variant='contained' component={Link} to='/profile/edit' className={classes.button}>
+                Edit Profile
             </Button>
           </div>
         </div>
@@ -177,7 +176,7 @@ function Company(props) {
           <p> {companyStatusMessage} </p>
           <Typography variant='h5' className={classes.subheader}>Your Jobs: </Typography>
           <div className={classes.buttonDiv}> 
-            <Button size='large' variant='contained' className={classes.button} onClick={getJobs} disabled={!moreJobs}>
+            <Button size='large' variant='contained' className={classes.button} onClick={getJobs} hidden={!moreJobs}>
               See More Jobs
             </Button>
             <Button size='large' variant='contained' color='primary' component={Link} to='/profile/addjob' 

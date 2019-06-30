@@ -115,7 +115,7 @@ function AddJob(props) {
         }
         try {
           const { REACT_APP_BACKEND_URL } = process.env;
-          const response = await axios.post(
+          await axios.post(
                 `${REACT_APP_BACKEND_URL}/companies/addJob`, 
                 {
                     description: state.description,

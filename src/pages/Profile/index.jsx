@@ -5,7 +5,9 @@ import { useToken } from '../../hooks';
 import Company from './Company';
 import JobSeeker from'./JobSeeker';
 import Admin from './Admin';
-import AddJob from '../company/AddJob';
+import EditProfile from './EditProfile'
+import EditPassword from './EditPassword'
+import { AddJob } from '../company';
 
 function Profile(props) {
   const { userType } = useToken();
@@ -16,6 +18,8 @@ function Profile(props) {
         <Switch>
           <Route exact path="/profile" component={Company} />
           <Route path="/profile/addjob" component={AddJob} />
+          <Route path="/profile/edit" component={EditProfile} />
+          <Route path="/profile/password" component={EditPassword} />
         </Switch>
       );
     case 'JobSeeker':

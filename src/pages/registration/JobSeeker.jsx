@@ -114,6 +114,7 @@ function JobSeeker(props) {
         } catch (err) {
         if (err.response && err.response.status === 409) {
             toast('User with email already exists.', 'error');
+            setErrors({email: true, errorText: []});
           } else {
             toast('Error registering. Please try again later.', 'error');
           }
@@ -149,6 +150,7 @@ function JobSeeker(props) {
                 onChange={(e) => {update(e); handleChange('firstName', e)}}
                 margin="normal"
                 error={errors.firstName}
+                autoFocus
             />
             <TextField
                 required
