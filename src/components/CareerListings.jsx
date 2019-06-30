@@ -1,8 +1,11 @@
 import React from 'react';
 import axios from 'axios';
+import useLocalStorage from 'react-use-localstorage';
 import { Button, Checkbox, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
+import { useToken } from '../hooks';
+import { toast } from '../modules';
 import classNames from 'classnames';
 import mockedJobs from '../mocks/mockedJobs';
 
@@ -35,28 +38,34 @@ const useStyles = makeStyles({
     color: "black",
     // flexBasis: "33.33%",
     // flexShrink: 0
-  },
+  }
 });
 
 function CareerListings({ filters, keyword }) {
   const classes = useStyles();
+  const { userType, userId } = useToken();
+  const [token] = useLocalStorage('proAssistToken');
+  const { REACT_APP_BACKEND_URL: backend } = process.env;
 
   const [jobListings, setJobListings] = React.useState([]);
+  const [appliedJobs, setAppliedJobs] = React.useState([]);
+  const [savedJobs, setSavedJobs] = React.useState([]);
 
   React.useEffect(() => {
     const getCareers = async () => {
-      const { REACT_APP_BACKEND_URL: backend } = process.env;
-      // const listings = await axios.get(`${backend}/careers`);
-      console.log('actual keyword:', keyword);
       if (keyword && !filters.title) {
-        console.log('keyword:', keyword.query);
         filters.title = keyword.query;
       }
+      let user = '';
+      if (userId) {
+        user = `&userId=${userId}`;
+      }
       const filtersString = JSON.stringify(filters);
-      console.log(filtersString);
-      const listings = await axios.get(`${backend}/careers?filters=${filtersString}`);
-      // const listings = await axios.get(`${backend}/careers?title=${filters.title}`);
-      setJobListings(listings.data);
+      const listings = await axios.get(`${backend}/careers?filters=${filtersString}${user}`);
+      console.log('listings data', listings.data);
+      setJobListings(listings.data.all);
+      setAppliedJobs(listings.data.applied);
+      setSavedJobs(listings.data.saved);
     };
 
     getCareers();
@@ -68,92 +77,134 @@ function CareerListings({ filters, keyword }) {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const [saved, setSaved] = React.useState(false);
+  const handleApply = async (e, jobIndex) => {
+    e.preventDefault()
+    console.log('jobIndex applied:', jobIndex);
 
-  const handleSave = isSaved => event => {
-    console.log('isSaved:', isSaved);
-    setSaved(event.target.checked);
+    if (userType === 'Visitor') {
+      toast('You need to be logged in to apply', 'error');
+      return;
+    }
+    const job = jobListings[jobIndex];
+    const jobId = job.jobId;
+    const data = {
+      jobSeekerId: userId,
+      jobId
+    };
+    console.log('applying for jobId in fe:', jobId);
+    const response = await axios.post(
+      `${backend}/careers/apply`,
+      data, 
+      { headers: { authorization: 'Bearer ' + token } }
+    );
+    // if response is 200, toast success
+    if (response.status === 200) {
+      toast(`Application sent for ${job.title}`, 'success');
+      setAppliedJobs([
+        ...appliedJobs,
+        job
+      ]);
+      console.log('appliedJobs state:', appliedJobs);
+    } else {
+      toast(`Error sending application for ${job.title}`, 'error');
+    }
   };
 
-  const handleApply = (e, jobIndex) => {
-    console.log('jobIndex applied:', jobIndex);
-    // setSelected(null);
+  const handleSave = async (e, jobIndex) => {
+    e.preventDefault();
+    console.log('jobIndex saved:', jobIndex);
+
+    if (userType === 'Visitor') {
+      e.target.checked = false;
+      toast('You need to be logged in to save', 'error');
+      return;
+    }
+
+    const job = jobListings[jobIndex];
+    const jobId = jobListings[jobIndex].jobId;
+    const data = {
+      jobSeekerId: userId,
+      jobId
+    };
+    if (e.target.checked) {
+      console.log('saving for jobId in fe:', jobId);
+      const response = await axios.post(
+        `${backend}/careers/save`,
+        data, 
+        { headers: { authorization: 'Bearer ' + token } }
+      );
+      // if response is 200, toast success
+      if (response.status === 200) {
+        setSavedJobs([
+          ...savedJobs,
+          job
+        ]);
+        toast(`Job ${job.title} saved!`, 'success');
+        // console.log('savedJobs length:', savedJobs.length);
+      } else {
+        toast(`Error saving job ${job.title}`, 'error');
+      }
+    } else {
+      console.log('unsaving');
+      const response = await axios.post(
+        `${backend}/careers/unsave`,
+        data, 
+        { headers: { authorization: 'Bearer ' + token } }
+      );
+      // if response is 200, toast success
+      if (response.status === 200) {
+        const savedJobsCopy = savedJobs;
+        const index = savedJobsCopy.indexOf(job);
+        savedJobsCopy.splice(index, 1);
+        setSavedJobs(savedJobsCopy);
+        toast(`Job ${job.title} unsaved!`, 'success');
+      } else {
+        toast(`Error saving job ${job.title}`, 'error');
+      }
+    }
+    
   };
 
   return (
     // <div className={classes.root}>
       <div className={classes.listings}>
-        {jobListings.length > 0 ? (
-          jobListings.map((job, index) => {
-            return <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
-              <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-                <div className={classes.summary}>
-                  <div>
-                    <Typography className={classes.title} variant="h5" color="textSecondary" gutterBottom>
-                      {job.title}
-                    </Typography>
-                    <Typography color="textSecondary">
-                      {job.city}, {job.state}
-                    </Typography>
-                  </div>
-                  {/* <div>
-                    <ExpansionPanelActions>
-                      <IconButton
-                        hidden={saved}
-                        className={classes.star}
-                        onClick={(e) => handleSave(e, index)}
-                      >
-                        <StarBorder />
-                      </IconButton>
-                      <IconButton
-                        hidden={!saved}
-                        className={classes.star}
-                        onClick={(e) => handleSave(e, index)}
-                      >
-                        <Star />
-                      </IconButton>
-                    </ExpansionPanelActions>
-                  </div> */}
-                </div>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Typography component="p">
-                  {job.description}
+        <p>{jobListings.length === 1 ? jobListings.length + ' result' : jobListings.length + ' results'}</p>
+        { jobListings.map((job, index) => {
+        return <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
+          <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+            <div className={classes.summary}>
+              <div>
+                <Typography className={classes.title} variant="h5" color="textSecondary" gutterBottom>
+                  {job.title}
                 </Typography>
-                <div>
-                  Skills: 
-                  <ul>
-                    {job.skills.map((skill, index) => {
-                      return <li key={index}>{skill}</li>
-                    })}
-                  </ul>  
-                </div>
-              </ExpansionPanelDetails>
-              <ExpansionPanelActions>
-                {/* <IconButton
-                  hidden={saved}
-                  className={classes.star}
-                  onClick={(e) => handleSave(e, index)}
-                >
-                  <StarBorder />
-                </IconButton>
-                <IconButton
-                  hidden={!saved}
-                  className={classes.star}
-                  onClick={(e) => handleSave(e, index)}
-                >
-                  <Star />
-                </IconButton> */}
-                <FormControlLabel
-                  control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} value='saved' />}
-                />
-                <Button size="medium" onClick={(e) => handleApply(e, index)}>Apply</Button>
-              </ExpansionPanelActions>
-            </ExpansionPanel>
-          })
-        ) : ( 
-          <p>No results found :(</p> 
-        )}
+                <Typography color="textSecondary">
+                  {job.city}, {job.state}
+                </Typography>
+              </div>
+            </div>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Typography component="p">
+              {job.description}
+            </Typography>
+            <div>
+              Skills: 
+              <ul>
+                {job.skills.map((skill, index) => {
+                  return <li key={index}>{skill}</li>
+                })}
+              </ul>  
+            </div>
+          </ExpansionPanelDetails>
+          <ExpansionPanelActions>
+            <FormControlLabel
+              control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} value='saved' checked={savedJobs.includes(jobListings[index])} onClick={(e) => handleSave(e, index)} />}
+            />
+            <Button hidden={appliedJobs.includes(jobListings[index])} size="medium" onClick={(e) => handleApply(e, index)}>Apply</Button>
+            <Button hidden={!appliedJobs.includes(jobListings[index])} size="medium" disabled>Applied</Button>
+          </ExpansionPanelActions>
+        </ExpansionPanel>
+      })}
       </div>
     // </div>
   );

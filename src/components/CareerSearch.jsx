@@ -1,7 +1,8 @@
 import React from 'react';
-import { Checkbox, FormControl, FormControlLabel, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core';
+import { Card, Checkbox, FormControl, FormControlLabel, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Search } from '@material-ui/icons';
+import { useToken } from '../hooks';
 import classNames from 'classnames';
 import mockedSelects from '../mocks/mockedSearchSelects';
 
@@ -10,6 +11,10 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     backgroundColor: theme.palette.yellow.light,
     marginBottom: 20
+  },
+  headingsText: {
+    color: theme.palette.secondary.main,
+    fontWeight: 'bold'
   },
   inputs: {
     display: 'flex',
@@ -22,6 +27,7 @@ const useStyles = makeStyles(theme => ({
 
 function CareerSearch({ updateFilters, keyword }) {
   const classes = useStyles();
+  const { userType } = useToken();
 
   const [filters, setFilter] = React.useState({
     title: '',
@@ -65,8 +71,9 @@ function CareerSearch({ updateFilters, keyword }) {
   };
 
   return (
-    <form className={classes.root}>
-
+    <Card className={classes.root}>
+      <form>
+        <Typography variant="h5" className={classes.headingsText}>Search</Typography>
         <div className={classes.wideWidth}>
           <TextField
             // className="w-100"
@@ -74,7 +81,7 @@ function CareerSearch({ updateFilters, keyword }) {
             variant="outlined"
             label="Title"
             required
-            fullWidth
+            // fullWidth
             value={filters.title}
             onChange={handleChange('title')}
           />
@@ -145,6 +152,7 @@ function CareerSearch({ updateFilters, keyword }) {
               />
             }
             label='Saved'
+            hidden={userType === 'Visitor'}
           />
           <FormControlLabel
             control={
@@ -156,10 +164,11 @@ function CareerSearch({ updateFilters, keyword }) {
               />
             }
             label='Applied'
+            hidden={userType === 'Visitor'}
           />
         </div>
-
-    </form>
+      </form>
+    </Card>
   );
 }
 

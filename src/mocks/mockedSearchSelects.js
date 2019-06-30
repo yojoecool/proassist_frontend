@@ -1,5 +1,5 @@
 module.exports = {
-  jobTypes: ['FullTime', 'PartTime', 'Internship', 'Temp', 'Freelance'],
+  jobTypes: ['Full Time', 'Part Time', 'Internship', 'Temp', 'Freelance'],
   states: [
    'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC',
    'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS',
