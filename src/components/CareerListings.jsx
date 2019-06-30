@@ -64,8 +64,8 @@ function CareerListings({ filters, keyword }) {
       const listings = await axios.get(`${backend}/careers?filters=${filtersString}${user}`);
       console.log('listings data', listings.data);
       setJobListings(listings.data.all);
-      setAppliedJobs(listings.data.applied);
-      setSavedJobs(listings.data.saved);
+      setAppliedJobs(listings.data.applied.map(job => JSON.stringify(job)));
+      setSavedJobs(listings.data.saved.map(job => JSON.stringify(job)));
     };
 
     getCareers();
@@ -198,10 +198,11 @@ function CareerListings({ filters, keyword }) {
           </ExpansionPanelDetails>
           <ExpansionPanelActions>
             <FormControlLabel
-              control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} value='saved' checked={savedJobs.includes(jobListings[index])} onClick={(e) => handleSave(e, index)} />}
+              control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} value='saved' checked={savedJobs.includes(JSON.stringify(jobListings[index]))} onClick={(e) => handleSave(e, index)} />}
             />
-            <Button hidden={appliedJobs.includes(jobListings[index])} size="medium" onClick={(e) => handleApply(e, index)}>Apply</Button>
-            <Button hidden={!appliedJobs.includes(jobListings[index])} size="medium" disabled>Applied</Button>
+            {console.log(`jobIndex ${index} should be checked ${savedJobs.includes(JSON.stringify(jobListings[index]))}`)}
+            <Button hidden={appliedJobs.includes(JSON.stringify(jobListings[index]))} size="medium" onClick={(e) => handleApply(e, index)}>Apply</Button>
+            <Button hidden={!appliedJobs.includes(JSON.stringify(jobListings[index]))} size="medium" disabled>Applied</Button>
           </ExpansionPanelActions>
         </ExpansionPanel>
       })}

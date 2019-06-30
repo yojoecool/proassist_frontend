@@ -9,7 +9,7 @@ import mockedSelects from '../mocks/mockedSearchSelects';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    backgroundColor: theme.palette.yellow.light,
+    // backgroundColor: theme.palette.yellow.light,
     marginBottom: 20
   },
   headingsText: {
@@ -22,6 +22,9 @@ const useStyles = makeStyles(theme => ({
   },
   wideWidth: {
     width: '100%'
+  },
+  spacing: {
+    margin: 5
   }
 }));
 
@@ -47,6 +50,9 @@ function CareerSearch({ updateFilters, keyword }) {
         [name]: event.target.checked
       });
     } else {
+      if (name === 'title') {
+        keyword = null;
+      }
       setFilter({
         ...filters,
         [name]: event.target.value
@@ -56,6 +62,9 @@ function CareerSearch({ updateFilters, keyword }) {
 
   React.useEffect(() => {
     if (keyword) {
+      if (!keyword.query) {
+        keyword.query = '';
+      }
       console.log('keyword:', keyword.query);
       setFilter({
         ...filters,
@@ -74,17 +83,31 @@ function CareerSearch({ updateFilters, keyword }) {
     <Card className={classes.root}>
       <form>
         <Typography variant="h5" className={classes.headingsText}>Search</Typography>
-        <div className={classes.wideWidth}>
+        <div className={classes.inputs}>
           <TextField
             // className="w-100"
             id="outlined-full-width"
             variant="outlined"
             label="Title"
             required
-            // fullWidth
+            fullWidth
             value={filters.title}
+            className={classes.spacing}
             onChange={handleChange('title')}
           />
+          <FormControl className={classNames(classes.wideWidth, classes.spacing)}>
+            <InputLabel>Type</InputLabel>
+            <Select
+              value={filters.type}
+              fullWidth
+              onChange={handleChange('type')}
+            >
+              <MenuItem value=''></MenuItem>
+              {mockedSelects.jobTypes.map((type, index) => {
+                return <MenuItem key={index} value={type}>{type}</MenuItem>
+              })}
+            </Select>
+          </FormControl>
           <IconButton
             type="submit"
             onClick={e => submit(e)}
@@ -129,19 +152,6 @@ function CareerSearch({ updateFilters, keyword }) {
           </FormControl>
         </div>
         <div className={classes.wideWidth}>
-          <FormControl>
-            <InputLabel>Type</InputLabel>
-            <Select
-              value={filters.type}
-              fullWidth
-              onChange={handleChange('type')}
-            >
-              <MenuItem value=''></MenuItem>
-              {mockedSelects.jobTypes.map((type, index) => {
-                return <MenuItem key={index} value={type}>{type}</MenuItem>
-              })}
-            </Select>
-          </FormControl>
           <FormControlLabel
             control={
               <Checkbox
