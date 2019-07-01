@@ -8,6 +8,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { useToken } from '../../hooks';
 import { toast } from '../../modules';
+import { JobListing } from '../company';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     flexWrap: 'wrap',
     flexDirection: 'row',
     marginTop: '3%',
@@ -43,6 +44,10 @@ const useStyles = makeStyles(theme => ({
   },
   subheader: {
     marginBottom: '1%'
+  },
+  jobList: {
+    maxHeight: 600,
+    overflowY: 'scroll'
   },
   button: {
     width: '80%',
@@ -77,27 +82,26 @@ function Company(props) {
   });
 
   const [moreJobs, updateMoreJobs] = React.useState(true)
-
   const [jobs, updateJobs] = React.useState([]);
-  let offset = 0;
-  const getJobs = async (offset) => {
+  const [offset, incrementOffset] = React.useState(0);
+  const limit = 5;
+
+  const getJobs = async () => {
     try {
       const response = await 
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/companies/getJobs`, 
-      { headers: { 'authorization': 'Bearer ' + token },
-        params: { userId, offset }
-      });
-      
-      if (response.data.jobs.length < 10) {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/companies/getJobs`, 
+        { headers: { 'authorization': 'Bearer ' + token },
+          params: { userId, offset, limit }
+        });
+      if (response.data.jobs.length < 5) {
         updateMoreJobs(false);
-        return;
       }
 
       updateJobs([
         ...jobs,
         ...response.data.jobs
-      ])
-      offset += 10;
+      ]);
+      incrementOffset(offset + 5);
       
     } catch (err) {
       console.log(err);
@@ -135,7 +139,7 @@ function Company(props) {
   }, []);
 
   React.useEffect(() => {
-    getJobs(offset);
+    getJobs();
   }, []);
 
   let companyStatusMessage;
@@ -153,6 +157,7 @@ function Company(props) {
     <div className={classes.root}>
       <Typography variant='h4' className={classes.header}>Welcome {userInfo.companyName}</Typography>
       <div className={classes.content}>
+
         <div className={classes.subcontent}>
           <Typography variant='h5' className={classes.subheader}>Profile Information:</Typography>
           <p> Company/Login Email: {email} </p>
@@ -161,6 +166,7 @@ function Company(props) {
                 Change Password
             </Button>
           </div>
+
           <Typography variant='h5' className={classes.subheader}>Point of Contact Information:</Typography>
           <p> Name: {userInfo.firstName} {userInfo.lastName} </p>
           <p> Email: {userInfo.pocEmail} </p>
@@ -171,12 +177,18 @@ function Company(props) {
             </Button>
           </div>
         </div>
+
         <div className={classes.subcontent}>
           <Typography variant='h5' className={classes.subheader}>Company Status: {userInfo.companyStatus}</Typography>
           <p> {companyStatusMessage} </p>
+
           <Typography variant='h5' className={classes.subheader}>Your Jobs: </Typography>
+          <div className={classes.jobList}>
+            <JobListing jobs={jobs} />
+          </div>
+          
           <div className={classes.buttonDiv}> 
-            <Button size='large' variant='contained' className={classes.button} onClick={getJobs} hidden={!moreJobs}>
+            <Button size='large' variant='contained' className={classes.button} onClick={getJobs} disabled={!moreJobs}>
               See More Jobs
             </Button>
             <Button size='large' variant='contained' color='primary' component={Link} to='/profile/addjob' 
@@ -184,8 +196,9 @@ function Company(props) {
             Add New Job
             </Button>
           </div>
-          </div>
         </div>
+
+      </div>
     </div>
   );
 }
