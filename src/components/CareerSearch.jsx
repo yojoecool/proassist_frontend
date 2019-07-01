@@ -43,7 +43,6 @@ function CareerSearch({ updateFilters, keyword }) {
   });
 
   const handleChange = name => event => {
-    // console.log(name, ':', event.target.value);
     if (name === 'saved' || name === 'applied') {
       setFilter({
         ...filters,
@@ -65,7 +64,6 @@ function CareerSearch({ updateFilters, keyword }) {
       if (!keyword.query) {
         keyword.query = '';
       }
-      console.log('keyword:', keyword.query);
       setFilter({
         ...filters,
         title: keyword.query
@@ -75,7 +73,6 @@ function CareerSearch({ updateFilters, keyword }) {
 
   const submit = (e) => {
     e.preventDefault();
-    console.log('submitted!');
     updateFilters(filters);
   };
 
