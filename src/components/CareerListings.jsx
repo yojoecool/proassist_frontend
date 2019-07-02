@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import useLocalStorage from 'react-use-localstorage';
-import { Button, Checkbox, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
+import { Button, Checkbox, Divider, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
 import { useToken } from '../hooks';
@@ -24,13 +24,13 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
   },
-  star: {
-    display: 'flex',
-    justifyContent: 'flexStart'
-  },
-  summary: {
+  column: {
     display: 'flex',
     flexDirection: 'column'
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row'
   },
   title: {
     color: "black"
@@ -147,47 +147,74 @@ function CareerListings({ filters, keyword }) {
   };
 
   return (
-    // <div className={classes.root}>
-      <div className={classes.listings}>
-        <p>{jobListings.length === 1 ? jobListings.length + ' result' : jobListings.length + ' results'}</p>
-        { jobListings.map((job, index) => {
-        return <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
-          <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-            <div className={classes.summary}>
-              <div>
-                <Typography className={classes.title} variant="h5" color="textSecondary" gutterBottom>
-                  {job.title}
-                </Typography>
-                <Typography color="textSecondary">
-                  {job.city}, {job.state}
-                </Typography>
-              </div>
-            </div>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography component="p">
-              {job.description}
-            </Typography>
+    <div className={classes.listings}>
+      <p>{jobListings.length === 1 ? jobListings.length + ' result' : jobListings.length + ' results'}</p>
+      { jobListings.map((job, index) => {
+      return <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
+        <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+          <div className={classes.column}>
             <div>
+              <Typography className={classes.title} variant="h5" color="textSecondary" gutterBottom>
+                {job.title}
+              </Typography>
+              <Typography color="textSecondary">
+                {job.city}, {job.state}
+              </Typography>
+            </div>
+          </div>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <div className={classes.column}>
+            <div className={classes.row}>
+              <Typography color="textSecondary">
+                Type:&nbsp;
+              </Typography>
+              <Typography component="p">
+                {job.type}
+              </Typography>
+            </div>
+            <br />
+            <div className={classes.row}>
+              <Typography color="textSecondary">
+                Description:&nbsp;
+              </Typography>
+              <Typography component="p">
+                {job.description}
+              </Typography>
+            </div>
+            <br />
+            <Typography color="textSecondary">
               Skills: 
+            </Typography>
+            <Typography component="p">
               <ul>
                 {job.skills.map((skill, index) => {
                   return <li key={index}>{skill}</li>
                 })}
               </ul>  
+            </Typography>
+            <br />
+            <div className={classes.row}>
+              <Typography color="textSecondary">
+                Qualifications:&nbsp;
+              </Typography>
+              <Typography component="p">
+                  {job.qualifications}
+              </Typography>
             </div>
-          </ExpansionPanelDetails>
-          <ExpansionPanelActions>
-            <FormControlLabel
-              control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} value='saved' checked={savedJobs.has(jobListings[index].jobId)} onChange={(e) => handleSave(e, index)} />}
-            />
-            <Button hidden={appliedJobs.has(jobListings[index].jobId)} size="medium" onClick={(e) => handleApply(e, index)}>Apply</Button>
-            <Button hidden={!appliedJobs.has(jobListings[index].jobId)} size="medium" disabled>Applied</Button>
-          </ExpansionPanelActions>
-        </ExpansionPanel>
-      })}
-      </div>
-    // </div>
+          </div>
+        </ExpansionPanelDetails>
+        <Divider />
+        <ExpansionPanelActions>
+          <FormControlLabel
+            control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} value='saved' checked={savedJobs.has(jobListings[index].jobId)} onChange={(e) => handleSave(e, index)} />}
+          />
+          <Button hidden={appliedJobs.has(jobListings[index].jobId)} size="medium" onClick={(e) => handleApply(e, index)}>Apply</Button>
+          <Button hidden={!appliedJobs.has(jobListings[index].jobId)} size="medium" disabled>Applied</Button>
+        </ExpansionPanelActions>
+      </ExpansionPanel>
+    })}
+  </div>
   );
 }
 
