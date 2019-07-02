@@ -33,9 +33,7 @@ const useStyles = makeStyles({
     flexDirection: 'column'
   },
   title: {
-    color: "black",
-    // flexBasis: "33.33%",
-    // flexShrink: 0
+    color: "black"
   }
 });
 
@@ -59,7 +57,10 @@ function CareerListings({ filters, keyword }) {
         user = `&userId=${userId}`;
       }
       const filtersString = JSON.stringify(filters);
-      const listings = await axios.get(`${backend}/careers?filters=${filtersString}${user}`);
+      const listings = await axios.get(
+        `${backend}/careers?filters=${filtersString}${user}`,
+        { headers: { authorization: 'Bearer ' + token } }
+      );
       setJobListings(listings.data.all);
       setAppliedJobs(new Set(listings.data.applied));
       setSavedJobs(new Set(listings.data.saved));

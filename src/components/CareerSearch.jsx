@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     // backgroundColor: theme.palette.yellow.light,
     marginBottom: 20
   },
-  headingsText: {
+  heading: {
     color: theme.palette.secondary.main,
     fontWeight: 'bold'
   },
@@ -24,7 +24,11 @@ const useStyles = makeStyles(theme => ({
     width: '100%'
   },
   spacing: {
-    margin: 5
+    margin: 10
+  },
+  spacingBetween: {
+    marginLeft: 10,
+    marginRight: 10
   }
 }));
 
@@ -79,8 +83,8 @@ function CareerSearch({ updateFilters, keyword }) {
   return (
     <Card className={classes.root}>
       <form>
-        <Typography variant="h5" className={classes.headingsText}>Search</Typography>
-        <div className={classes.inputs}>
+        <Typography variant="h4" className={classNames(classes.heading, classes.spacing)}>Search</Typography>
+        <div className={classNames(classes.inputs, classes.spacing)}>
           <TextField
             // className="w-100"
             id="outlined-full-width"
@@ -89,22 +93,8 @@ function CareerSearch({ updateFilters, keyword }) {
             required
             fullWidth
             value={filters.title}
-            className={classes.spacing}
             onChange={handleChange('title')}
           />
-          <FormControl className={classNames(classes.wideWidth, classes.spacing)}>
-            <InputLabel>Type</InputLabel>
-            <Select
-              value={filters.type}
-              fullWidth
-              onChange={handleChange('type')}
-            >
-              <MenuItem value=''></MenuItem>
-              {mockedSelects.jobTypes.map((type, index) => {
-                return <MenuItem key={index} value={type}>{type}</MenuItem>
-              })}
-            </Select>
-          </FormControl>
           <IconButton
             type="submit"
             onClick={e => submit(e)}
@@ -112,16 +102,17 @@ function CareerSearch({ updateFilters, keyword }) {
             <Search />
           </IconButton>
         </div>
-        <div className={classes.inputs}>
+        <div className={classNames(classes.inputs, classes.spacing)}>
           <TextField
             // id="outlined-simple-start-adornment"
             variant="outlined"
             label="City"
             fullWidth
             value={filters.city}
+            // className={classes.spacing}
             onChange={handleChange('city')}
           />
-          <FormControl className={classes.wideWidth}>
+          <FormControl className={classNames(classes.wideWidth, classes.spacingBetween)}>
             <InputLabel>State</InputLabel>
             <Select
               value={filters.state}
@@ -148,7 +139,20 @@ function CareerSearch({ updateFilters, keyword }) {
             </Select>
           </FormControl>
         </div>
-        <div className={classes.wideWidth}>
+        <div className={classNames(classes.wideWidth, classes.inputs, classes.spacing)}>
+          <FormControl className={classes.wideWidth}>
+            <InputLabel>Type</InputLabel>
+            <Select
+              value={filters.type}
+              fullWidth
+              onChange={handleChange('type')}
+            >
+              <MenuItem value=''></MenuItem>
+              {mockedSelects.jobTypes.map((type, index) => {
+                return <MenuItem key={index} value={type}>{type}</MenuItem>
+              })}
+            </Select>
+          </FormControl>
           <FormControlLabel
             control={
               <Checkbox
@@ -159,6 +163,7 @@ function CareerSearch({ updateFilters, keyword }) {
               />
             }
             label='Saved'
+            className={classes.spacingBetween}
             hidden={userType === 'Visitor'}
           />
           <FormControlLabel
