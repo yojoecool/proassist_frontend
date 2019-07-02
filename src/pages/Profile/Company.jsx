@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '1%'
   },
   jobList: {
-    maxHeight: 600,
+    height: 500,
     overflowY: 'scroll'
   },
   button: {
@@ -176,12 +176,13 @@ function Company(props) {
                 Edit Profile
             </Button>
           </div>
-        </div>
 
-        <div className={classes.subcontent}>
           <Typography variant='h5' className={classes.subheader}>Company Status: {userInfo.companyStatus}</Typography>
           <p> {companyStatusMessage} </p>
 
+        </div>
+
+        <div className={classes.subcontent}>
           <Typography variant='h5' className={classes.subheader}>Your Jobs: </Typography>
           <div className={classes.jobList}>
             <JobListing jobs={jobs} />

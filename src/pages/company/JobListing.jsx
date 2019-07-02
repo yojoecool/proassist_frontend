@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import useLocalStorage from 'react-use-localstorage';
+import { Link } from 'react-router-dom';
 import { Button, Checkbox, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
@@ -68,7 +69,7 @@ function JobListing({ jobs }) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpansion = panel => (e, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+    setExpanded(isExpanded ? panel : false);   
   };
 
 //   const handleApply = async (e, jobIndex) => {
@@ -162,7 +163,7 @@ function JobListing({ jobs }) {
       <div className={classes.listings}>
         { jobs.map((job, index) => {
           return (
-        <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
+        <ExpansionPanel key={index} id={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
           <ExpansionPanelSummary expandIcon={<ExpandMore />}>
             <div className={classes.summary}>
               <div>
@@ -188,14 +189,17 @@ function JobListing({ jobs }) {
               </ul>  
             </div> */}
           </ExpansionPanelDetails>
-          {/* <ExpansionPanelActions>
-            <FormControlLabel
+          <ExpansionPanelActions>
+            {/* <FormControlLabel
               control={<Checkbox icon={<StarBorder />} checkedIcon={<Star />} value='saved' checked={savedJobs.includes(JSON.stringify(jobListings[index]))} onClick={(e) => handleSave(e, index)} />}
             />
             {console.log(`jobIndex ${index} should be checked ${savedJobs.includes(JSON.stringify(jobListings[index]))}`)}
             <Button hidden={appliedJobs.includes(JSON.stringify(jobListings[index]))} size="medium" onClick={(e) => handleApply(e, index)}>Apply</Button>
-            <Button hidden={!appliedJobs.includes(JSON.stringify(jobListings[index]))} size="medium" disabled>Applied</Button>
-          </ExpansionPanelActions> */}
+            <Button hidden={!appliedJobs.includes(JSON.stringify(jobListings[index]))} size="medium" disabled>Applied</Button> */}
+            
+            <Button size="medium" component={Link} to={{pathname: '/profile/editjob', jobId: job.jobId}}>Edit</Button>
+
+          </ExpansionPanelActions>
         </ExpansionPanel>
           )
         })}

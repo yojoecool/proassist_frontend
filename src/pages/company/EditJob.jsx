@@ -62,15 +62,16 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function AddJob(props) {
+function EditJob(props) {
+    const jobId = props.location.jobId
     const classes = useStyles();
-    const { userId } = useToken();
+    const { userId, userType } = useToken();
     const [token] = useLocalStorage('proAssistToken');
     const [errors, setErrors] = React.useState({ errorText: [] });
 
     const [state, setState] = React.useState({
         description: '',
-        // skills: [],
+        skills: [],
         title: '',
         city: '',
         state: 'AL',
@@ -95,6 +96,42 @@ function AddJob(props) {
             'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY',
         ]
     }
+    React.useEffect(() => {
+        //kick if user is not job owner or admin
+        const getJob = async (jobId) => {
+          try {
+            if (userType !== "Company" && userType !== "Admin") {
+                toast('You are not able to edit this job.', 'error'); 
+                props.history.push('/profile');
+            }
+
+            const response = await axios.get(
+              `${process.env.REACT_APP_BACKEND_URL}/companies/getJob`, 
+              { 
+                headers: { 'authorization': 'Bearer ' + token },
+                params: { userId, jobId }
+              }
+            );
+    
+            setState({
+                description: response.data.job.description,
+                skills: response.data.job.skills,
+                title: response.data.job.title,
+                city: response.data.job.city,
+                state: response.data.job.state,
+                type: response.data.job.type,
+                qualifications: response.data.job.qualifications,
+            });
+            
+          } catch (err) {
+            console.log(err)
+            toast('Unable to load Job. Please try again later.', 'error');
+            props.history.push('/profile');
+          }
+        };
+        getJob(jobId);
+    }, []);
+
     const submit = async (e) => {
         e.preventDefault();
     
@@ -115,8 +152,8 @@ function AddJob(props) {
         }
         try {
           const { REACT_APP_BACKEND_URL } = process.env;
-          await axios.post(
-                `${REACT_APP_BACKEND_URL}/companies/addJob`, 
+          await axios.put(
+                `${REACT_APP_BACKEND_URL}/companies/editJob`, 
                 {
                     description: state.description,
                     title: state.title,
@@ -128,16 +165,16 @@ function AddJob(props) {
                 },
                 {   
                     headers: { 'authorization': 'Bearer ' + token },
-                    params: { userId },
+                    params: { userId, jobId },
                 },
             );
-          toast('Posted Job Successfully!', 'success');
+          toast('Edited Job Successfully!', 'success');
           props.history.push('/profile');
         } catch (err) {
           if (err.response.status === 403) {
             toast('Authorization error. Please try loging in again', 'error');
           } else {
-            toast('Error Posting Job. Please try again later.', 'error');
+            toast('Error Editing Job. Please try again later.', 'error');
           }
         }
     };
@@ -149,7 +186,7 @@ function AddJob(props) {
 
     return (
         <div className={classes.root}>
-            <Typography variant='h5'>New Job Form:</Typography>
+            <Typography variant='h5'>Edit Job Form:</Typography>
 
             <div className={classes.errorHeight}>
                 {errors.errorText.map(err => {
@@ -208,7 +245,7 @@ function AddJob(props) {
                     className={classes.formField}/>
                 }
             >
-                {constants.states.map((val, index) => {
+                {constants.jobTypes.map((val, index) => {
                     return (
                         <option value={val} key={index}> {val} </option>
                     )
@@ -255,4 +292,4 @@ function AddJob(props) {
     )
 }
 
-export default withRouter(AddJob);
+export default withRouter(EditJob);
