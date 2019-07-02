@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { Divider } from '@material-ui/core';
 import { toast } from '../../modules';
 import { useToken } from '../../hooks';
@@ -7,6 +7,9 @@ import Company from './Company';
 import JobSeeker from'./JobSeeker';
 import Admin from './Admin';
 import { UserInfo } from '../../components';
+import EditProfile from './EditProfile'
+import EditPassword from './EditPassword'
+import { AddJob } from '../company';
 
 function Profile(props) {
   const { userType } = useToken();
@@ -14,8 +17,14 @@ function Profile(props) {
   let userView = '';
   switch (userType) {
     case 'Company':
-      userView = <Company />;
-      break;
+      return (
+        <Switch>
+          <Route exact path="/profile" component={Company} />
+          <Route path="/profile/addjob" component={AddJob} />
+          <Route path="/profile/edit" component={EditProfile} />
+          <Route path="/profile/password" component={EditPassword} />
+        </Switch>
+      );
     case 'JobSeeker':
       userView = <JobSeeker />;
       break;

@@ -3,8 +3,8 @@ import { Button, Card, CardActions, CardContent, IconButton, Typography } from '
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import classNames from 'classnames';
-import { CareerListings, CareerSearch } from '../components';
-import { useToken } from '../hooks';
+import CareerSearch from '../components/CareerSearch';
+import CareerListings from '../components/CareerListings';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,13 +23,25 @@ const useStyles = makeStyles(theme => ({
 
 function Careers(props) {
   const classes = useStyles();
-  const { userType } = useToken();
 
   const [filters, setFilter] = React.useState({});
 
   const updateFilters = (values) => {
     setFilter(values);
   };
+
+  React.useEffect(() => {
+    // console.log('location.state in Careers:', props.history.location.state);
+    // setFilter({
+    //   title: props.history.location.state),
+    //   city: '',
+    //   state: '',
+    //   region: '',
+    //   type: '',
+    //   saved: false,
+    //   applied: false,
+    // });
+  }, []);
 
   return (
     <div className={classes.root}>
