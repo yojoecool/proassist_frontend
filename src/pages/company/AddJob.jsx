@@ -3,7 +3,7 @@ import axios from 'axios';
 import useLocalStorage from 'react-use-localstorage';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Button, TextField, Typography, NativeSelect, Input, InputLabel, Chip
+    Button, TextField, Typography, NativeSelect, Input, InputLabel
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
 import ChipInput from 'material-ui-chip-input';
@@ -262,7 +262,6 @@ function AddJob(props) {
                 helperText='Content formatting may not be preserved.'
             />
             <ChipInput
-                // required
                 label='Skills'
                 name='skills'
                 className={classes.formField}

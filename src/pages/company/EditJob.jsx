@@ -6,6 +6,7 @@ import {
     Button, TextField, Typography, NativeSelect, Input, InputLabel, FormControlLabel, FormLabel, Switch
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
+import ChipInput from 'material-ui-chip-input';
 import { toast } from '../../modules';
 import { useToken } from '../../hooks';
 
@@ -94,6 +95,26 @@ function EditJob(props) {
         [name]: event.target.value,
         });
     };
+
+    const handleAddChip = (chip) => {
+        setState({
+            ...state,
+            skills: [
+                ...state.skills,
+                chip
+            ]
+        });
+    };
+
+    const handleDeleteChip = (chip, index) => {
+        let skillsCopy = state.skills;
+        skillsCopy.splice(index, 1);
+        setState({
+            ...state,
+            skills: skillsCopy
+        });
+    };
+
     const constants = {
         jobTypes: ['Full Time', 'Part Time', 'Internship', 'Temporary', 'Freelance'],
         states: [
@@ -168,6 +189,7 @@ function EditJob(props) {
                 `${REACT_APP_BACKEND_URL}/companies/editJob`, 
                 {
                     description: state.description,
+                    skills: state.skills,
                     title: state.title,
                     city: state.city,
                     state: state.state,
@@ -310,6 +332,15 @@ function EditJob(props) {
                 multiline
                 rowsMax='10'
                 helperText='Content formatting may not be preserved.'
+                disabled={!activeState.active}
+            />
+            <ChipInput
+                label='Skills'
+                name='skills'
+                className={classes.formField}
+                value={state.skills}
+                onAdd={(chip) => handleAddChip(chip)}
+                onDelete={(chip, index) => handleDeleteChip(chip, index)}
                 disabled={!activeState.active}
             />
 
