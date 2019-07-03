@@ -9,7 +9,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { toast } from '../../modules';
 import { useToken } from '../../hooks';
 
-// TODO Fix Formatting
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -208,7 +207,7 @@ function AddJob(props) {
                     className={classes.formField}/>
                 }
             >
-                {constants.states.map((val, index) => {
+                {constants.jobTypes.map((val, index) => {
                     return (
                         <option value={val} key={index}> {val} </option>
                     )
