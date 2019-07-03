@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import useLocalStorage from 'react-use-localstorage';
-import { Button, Checkbox, Divider, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
+import { Button, Checkbox, Chip, Divider, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
 import { useToken } from '../hooks';
@@ -169,7 +169,7 @@ function CareerListings({ filters, keyword }) {
               <Typography color="textSecondary">
                 Type:&nbsp;
               </Typography>
-              <Typography component="p">
+              <Typography component="pre">
                 {job.type}
               </Typography>
             </div>
@@ -178,7 +178,7 @@ function CareerListings({ filters, keyword }) {
               <Typography color="textSecondary">
                 Description:&nbsp;
               </Typography>
-              <Typography component="p">
+              <Typography component="pre">
                 {job.description}
               </Typography>
             </div>
@@ -186,19 +186,19 @@ function CareerListings({ filters, keyword }) {
             <Typography color="textSecondary">
               Skills: 
             </Typography>
-            {/* <Typography> */}
+            <Typography component="pre">
               <ul>
                 {job.skills.map((skill, index) => {
                   return <li key={index}>{skill}</li>
                 })}
               </ul>  
-            {/* </Typography> */}
+            </Typography>
             <br />
             <div className={classes.row}>
               <Typography color="textSecondary">
                 Qualifications:&nbsp;
               </Typography>
-              <Typography component="p">
+              <Typography component="pre">
                   {job.qualifications}
               </Typography>
             </div>
