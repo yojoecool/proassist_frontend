@@ -50,9 +50,6 @@ function CareerSearch({ updateFilters, keyword }) {
         [name]: event.target.checked
       });
     } else {
-      if (name === 'title') {
-        keyword = null;
-      }
       setFilter({
         ...filters,
         [name]: event.target.value
@@ -62,13 +59,9 @@ function CareerSearch({ updateFilters, keyword }) {
 
   React.useEffect(() => {
     if (keyword) {
-      if (!keyword.query) {
-        keyword.query = '';
-      }
-      console.log('keyword:', keyword.query);
       setFilter({
         ...filters,
-        title: keyword.query
+        title: keyword
       });
     }
   }, []);
