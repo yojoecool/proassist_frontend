@@ -26,7 +26,13 @@ function Profile(props) {
     case 'JobSeeker':
       return <JobSeeker />;
     case 'Admin':
-      return <Admin />;
+      return (
+        <Switch>
+          <Route exact path="/profile" component={Admin} />
+          <Route path="/profile/editJob" component={EditJob} />
+          <Route path="/profile/password" component={EditPassword} />
+        </Switch>
+      );
     default:
       toast('You must be logged in to view this page', 'error');
       props.history.replace('/login');
