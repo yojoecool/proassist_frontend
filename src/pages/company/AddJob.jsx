@@ -6,10 +6,10 @@ import {
     Button, TextField, Typography, NativeSelect, Input, InputLabel
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
+import ChipInput from 'material-ui-chip-input';
 import { toast } from '../../modules';
 import { useToken } from '../../hooks';
 
-// TODO Fix Formatting
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -70,7 +70,7 @@ function AddJob(props) {
 
     const [state, setState] = React.useState({
         description: '',
-        // skills: [],
+        skills: [],
         title: '',
         city: '',
         state: 'AL',
@@ -84,6 +84,26 @@ function AddJob(props) {
         [name]: event.target.value,
         });
     };
+
+    const handleAddChip = (chip) => {
+        setState({
+            ...state,
+            skills: [
+                ...state.skills,
+                chip
+            ]
+        });
+    };
+
+    const handleDeleteChip = (chip, index) => {
+        let skillsCopy = state.skills;
+        skillsCopy.splice(index, 1);
+        setState({
+            ...state,
+            skills: skillsCopy
+        });
+    };
+
     const constants = {
         jobTypes: ['Full Time', 'Part Time', 'Internship', 'Temporary', 'Freelance'],
         states: [
@@ -119,6 +139,7 @@ function AddJob(props) {
                 `${REACT_APP_BACKEND_URL}/companies/addJob`, 
                 {
                     description: state.description,
+                    skills: state.skills,
                     title: state.title,
                     city: state.city,
                     state: state.state,
@@ -208,7 +229,7 @@ function AddJob(props) {
                     className={classes.formField}/>
                 }
             >
-                {constants.states.map((val, index) => {
+                {constants.jobTypes.map((val, index) => {
                     return (
                         <option value={val} key={index}> {val} </option>
                     )
@@ -239,6 +260,14 @@ function AddJob(props) {
                 multiline
                 rowsMax='10'
                 helperText='Content formatting may not be preserved.'
+            />
+            <ChipInput
+                label='Skills'
+                name='skills'
+                className={classes.formField}
+                value={state.skills}
+                onAdd={(chip) => handleAddChip(chip)}
+                onDelete={(chip, index) => handleDeleteChip(chip, index)}
             />
 
             <div className={classes.buttonDiv}> 
