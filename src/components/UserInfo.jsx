@@ -8,7 +8,7 @@ function UserInfo(props) {
   const { userType, userId } = useToken();
   const [token] = useLocalStorage('proAssistToken');
 
-  const [, setUserData] = React.useState({ });
+  const [userData, setUserData] = React.useState({ });
 
   React.useEffect(() => {
     const getUserInfo = async () => {
