@@ -3,12 +3,13 @@ import axios from 'axios';
 import useLocalStorage from 'react-use-localstorage';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Button, TextField, Typography, NativeSelect, Input, InputLabel
+    Button, TextField, Typography, NativeSelect, Input, InputLabel, FormControlLabel, FormLabel, Switch
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
 import ChipInput from 'material-ui-chip-input';
 import { toast } from '../../modules';
 import { useToken } from '../../hooks';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -60,11 +61,15 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         flexWrap: 'wrap'
     },
+    center: {
+        textAlign: 'center'
+    }
 }));
 
-function AddJob(props) {
+function EditJob(props) {
+    const jobId = props.location.jobId
     const classes = useStyles();
-    const { userId } = useToken();
+    const { userId, userType } = useToken();
     const [token] = useLocalStorage('proAssistToken');
     const [errors, setErrors] = React.useState({ errorText: [] });
 
@@ -77,6 +82,12 @@ function AddJob(props) {
         type: 'Full Time',
         qualifications: '',
     });
+    const [activeState, changeActive] = React.useState({
+        active: true
+    });
+    const toggleDisable = _ => {
+        changeActive({active: !activeState.active});
+    }
 
     const handleChange = (name, event) => {
         setState({
@@ -115,6 +126,45 @@ function AddJob(props) {
             'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY',
         ]
     }
+    React.useEffect(() => {
+        //kick if user is not job owner or admin
+        const getJob = async (jobId) => {
+          try {
+            if (userType !== "Company" && userType !== "Admin") {
+                toast('You are not able to edit this job.', 'error'); 
+                props.history.push('/profile');
+            }
+
+            const response = await axios.get(
+              `${process.env.REACT_APP_BACKEND_URL}/companies/getJob`, 
+              { 
+                headers: { 'authorization': 'Bearer ' + token },
+                params: { userId, jobId }
+              }
+            );
+    
+            setState({
+                description: response.data.job.description,
+                skills: response.data.job.skills,
+                title: response.data.job.title,
+                city: response.data.job.city,
+                state: response.data.job.state,
+                type: response.data.job.type,
+                qualifications: response.data.job.qualifications,
+            });
+            changeActive({
+                active: response.data.job.active
+            });
+            
+          } catch (err) {
+            console.log(err)
+            toast('Unable to load Job. Please try again later.', 'error');
+            props.history.push('/profile');
+          }
+        };
+        getJob(jobId);
+    }, []);
+
     const submit = async (e) => {
         e.preventDefault();
     
@@ -135,8 +185,8 @@ function AddJob(props) {
         }
         try {
           const { REACT_APP_BACKEND_URL } = process.env;
-          await axios.post(
-                `${REACT_APP_BACKEND_URL}/companies/addJob`, 
+          await axios.put(
+                `${REACT_APP_BACKEND_URL}/companies/editJob`, 
                 {
                     description: state.description,
                     skills: state.skills,
@@ -146,19 +196,20 @@ function AddJob(props) {
                     region: state.region,
                     type: state.type,
                     qualifications: state.qualifications,
+                    active: activeState.active
                 },
                 {   
                     headers: { 'authorization': 'Bearer ' + token },
-                    params: { userId },
+                    params: { userId, jobId },
                 },
             );
-          toast('Posted Job Successfully!', 'success');
+          toast('Edited Job Successfully!', 'success');
           props.history.push('/profile');
         } catch (err) {
           if (err.response.status === 403) {
             toast('Authorization error. Please try loging in again', 'error');
           } else {
-            toast('Error Posting Job. Please try again later.', 'error');
+            toast('Error Editing Job. Please try again later.', 'error');
           }
         }
     };
@@ -170,7 +221,7 @@ function AddJob(props) {
 
     return (
         <div className={classes.root}>
-            <Typography variant='h5'>New Job Form:</Typography>
+            <Typography variant='h5'>Edit Job Form:</Typography>
 
             <div className={classes.errorHeight}>
                 {errors.errorText.map(err => {
@@ -183,6 +234,20 @@ function AddJob(props) {
             </div>
 
             <form className={classes.root} onSubmit={submit}>
+            <FormControlLabel
+                control={
+                <Switch
+                    checked={!activeState.active}
+                    onChange={toggleDisable}
+                    value="active"
+                    color="secondary"
+                />
+                }
+                label="Disable Job"
+            />
+            <FormLabel className={classes.center} component="legend">
+                Disabled jobs will no longer be searchable nor able to be applied to.
+            </FormLabel>
             <TextField
                 required
                 label='Job Title'
@@ -192,6 +257,7 @@ function AddJob(props) {
                 onChange={(e) => {update(e); handleChange('title', e)}}
                 margin='normal'
                 error={errors.title}
+                disabled={!activeState.active}
             />
             <TextField
                 required
@@ -202,6 +268,7 @@ function AddJob(props) {
                 onChange={(e) => {update(e); handleChange('city', e)}}
                 margin='normal'
                 error={errors.city}
+                disabled={!activeState.active}
             />
             <InputLabel htmlFor='state-label' className={classes.selectLabel}>State</InputLabel>
             <NativeSelect
@@ -210,7 +277,9 @@ function AddJob(props) {
                 input={<Input name='state' 
                     id='state-label' 
                     error={errors.state}
-                    className={classes.formField}/>
+                    className={classes.formField}
+                    disabled={!activeState.active}
+                    />
                 }
             >
                 {constants.states.map((val, index) => {
@@ -226,7 +295,9 @@ function AddJob(props) {
                 input={<Input name='region' 
                     id='type-label' 
                     error={errors.type}
-                    className={classes.formField}/>
+                    className={classes.formField}
+                    disabled={!activeState.active}
+                    />
                 }
             >
                 {constants.jobTypes.map((val, index) => {
@@ -246,6 +317,7 @@ function AddJob(props) {
                 multiline
                 rowsMax='10'
                 error={errors.qualifications}
+                disabled={!activeState.active}
             />
             <TextField
                 required
@@ -260,6 +332,7 @@ function AddJob(props) {
                 multiline
                 rowsMax='10'
                 helperText='Content formatting may not be preserved.'
+                disabled={!activeState.active}
             />
             <ChipInput
                 label='Skills'
@@ -268,6 +341,7 @@ function AddJob(props) {
                 value={state.skills}
                 onAdd={(chip) => handleAddChip(chip)}
                 onDelete={(chip, index) => handleDeleteChip(chip, index)}
+                disabled={!activeState.active}
             />
 
             <div className={classes.buttonDiv}> 
@@ -284,4 +358,4 @@ function AddJob(props) {
     )
 }
 
-export default withRouter(AddJob);
+export default withRouter(EditJob);

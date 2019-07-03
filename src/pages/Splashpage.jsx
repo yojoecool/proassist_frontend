@@ -74,8 +74,6 @@ function Splashpage(props) {
               >
                 <Search />
               </IconButton>
-              { console.log('query:', query) }
-              {/* { console.log('submitted:', submitted) } */}
             </div>
           </form>
         </div>

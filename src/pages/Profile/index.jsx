@@ -9,7 +9,7 @@ import Admin from './Admin';
 import { UserInfo } from '../../components';
 import EditProfile from './EditProfile'
 import EditPassword from './EditPassword'
-import { AddJob } from '../company';
+import { AddJob, EditJob } from '../company';
 
 function Profile(props) {
   const { userType } = useToken();
@@ -21,6 +21,7 @@ function Profile(props) {
         <Switch>
           <Route exact path="/profile" component={Company} />
           <Route path="/profile/addjob" component={AddJob} />
+          <Route path="/profile/editJob" component={EditJob} />
           <Route path="/profile/edit" component={EditProfile} />
           <Route path="/profile/password" component={EditPassword} />
         </Switch>
