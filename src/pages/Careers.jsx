@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Card, CardActions, CardContent, IconButton, Typography } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { NavigateBefore, NavigateNext } from '@material-ui/icons';
 import classNames from 'classnames';
 import { CareerListings, CareerSearch } from '../components';
 import { useToken } from '../hooks';
@@ -9,7 +9,7 @@ import { useToken } from '../hooks';
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   container: {
     width: '80%',
@@ -18,6 +18,13 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     marginTop: 20,
     marginBottom: 20
+  },
+  pagination: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: 15,
+    marginLeft: 15,
+    marginRight: 15
   }
 }));
 
@@ -36,6 +43,20 @@ function Careers(props) {
       <div className={classes.container}>
         <CareerSearch updateFilters={updateFilters} keyword={props.history.location.state} />
         <CareerListings filters={filters} keyword={props.history.location.state} />
+        <div className={classes.pagination}>
+          <IconButton
+            type="submit"
+            // onClick={e => submit(e)}
+          >
+            <NavigateBefore />
+          </IconButton>
+          <IconButton
+            type="submit"
+            // onClick={e => submit(e)}
+          >
+            <NavigateNext />
+          </IconButton>
+        </div>
       </div>
     </div>
   );

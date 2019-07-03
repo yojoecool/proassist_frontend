@@ -186,13 +186,13 @@ function CareerListings({ filters, keyword }) {
             <Typography color="textSecondary">
               Skills: 
             </Typography>
-            <Typography component="p">
+            {/* <Typography> */}
               <ul>
                 {job.skills.map((skill, index) => {
                   return <li key={index}>{skill}</li>
                 })}
               </ul>  
-            </Typography>
+            {/* </Typography> */}
             <br />
             <div className={classes.row}>
               <Typography color="textSecondary">
