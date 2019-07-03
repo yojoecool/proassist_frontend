@@ -6,8 +6,6 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link, withRouter } from 'react-router-dom';
-import MaskedInput from 'react-text-mask';
-import PropTypes from 'prop-types';
 import { useToken } from '../../hooks';
 import { toast, validations } from '../../modules';
 
@@ -64,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 
 function EditPassword(props) {
   const classes = useStyles();
-  const { userType, userId } = useToken();
+  const { userId } = useToken();
   const [token] = useLocalStorage('proAssistToken');
   const [errors, setErrors] = React.useState({ errorText: [] });
 

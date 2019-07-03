@@ -3,13 +3,13 @@ import axios from 'axios';
 import useLocalStorage from 'react-use-localstorage';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Button, TextField, Typography, NativeSelect, Input, InputLabel
+    Button, TextField, Typography, NativeSelect, Input, InputLabel, FormControlLabel, FormLabel, Switch
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
 import { toast } from '../../modules';
 import { useToken } from '../../hooks';
 
-// TODO Fix Formatting
+
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -60,6 +60,9 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         flexWrap: 'wrap'
     },
+    center: {
+        textAlign: 'center'
+    }
 }));
 
 function EditJob(props) {
@@ -78,6 +81,12 @@ function EditJob(props) {
         type: 'Full Time',
         qualifications: '',
     });
+    const [activeState, changeActive] = React.useState({
+        active: true
+    });
+    const toggleDisable = _ => {
+        changeActive({active: !activeState.active});
+    }
 
     const handleChange = (name, event) => {
         setState({
@@ -122,6 +131,9 @@ function EditJob(props) {
                 type: response.data.job.type,
                 qualifications: response.data.job.qualifications,
             });
+            changeActive({
+                active: response.data.job.active
+            });
             
           } catch (err) {
             console.log(err)
@@ -162,6 +174,7 @@ function EditJob(props) {
                     region: state.region,
                     type: state.type,
                     qualifications: state.qualifications,
+                    active: activeState.active
                 },
                 {   
                     headers: { 'authorization': 'Bearer ' + token },
@@ -199,6 +212,20 @@ function EditJob(props) {
             </div>
 
             <form className={classes.root} onSubmit={submit}>
+            <FormControlLabel
+                control={
+                <Switch
+                    checked={!activeState.active}
+                    onChange={toggleDisable}
+                    value="active"
+                    color="secondary"
+                />
+                }
+                label="Disable Job"
+            />
+            <FormLabel className={classes.center} component="legend">
+                Disabled jobs will no longer be searchable nor able to be applied to.
+            </FormLabel>
             <TextField
                 required
                 label='Job Title'
@@ -208,6 +235,7 @@ function EditJob(props) {
                 onChange={(e) => {update(e); handleChange('title', e)}}
                 margin='normal'
                 error={errors.title}
+                disabled={!activeState.active}
             />
             <TextField
                 required
@@ -218,6 +246,7 @@ function EditJob(props) {
                 onChange={(e) => {update(e); handleChange('city', e)}}
                 margin='normal'
                 error={errors.city}
+                disabled={!activeState.active}
             />
             <InputLabel htmlFor='state-label' className={classes.selectLabel}>State</InputLabel>
             <NativeSelect
@@ -226,7 +255,9 @@ function EditJob(props) {
                 input={<Input name='state' 
                     id='state-label' 
                     error={errors.state}
-                    className={classes.formField}/>
+                    className={classes.formField}
+                    disabled={!activeState.active}
+                    />
                 }
             >
                 {constants.states.map((val, index) => {
@@ -242,7 +273,9 @@ function EditJob(props) {
                 input={<Input name='region' 
                     id='type-label' 
                     error={errors.type}
-                    className={classes.formField}/>
+                    className={classes.formField}
+                    disabled={!activeState.active}
+                    />
                 }
             >
                 {constants.jobTypes.map((val, index) => {
@@ -262,6 +295,7 @@ function EditJob(props) {
                 multiline
                 rowsMax='10'
                 error={errors.qualifications}
+                disabled={!activeState.active}
             />
             <TextField
                 required
@@ -276,6 +310,7 @@ function EditJob(props) {
                 multiline
                 rowsMax='10'
                 helperText='Content formatting may not be preserved.'
+                disabled={!activeState.active}
             />
 
             <div className={classes.buttonDiv}> 

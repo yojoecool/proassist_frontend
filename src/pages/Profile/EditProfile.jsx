@@ -82,7 +82,7 @@ PhoneNumberFormat.propTypes = {
 
 function EditProfile(props) {
   const classes = useStyles();
-  const { userType, email, userId } = useToken();
+  const { userType, userId } = useToken();
   const [token] = useLocalStorage('proAssistToken');
   const [errors, setErrors] = React.useState({ errorText: [] });
 
@@ -225,6 +225,8 @@ const update = (e) => {
           margin="normal"
           error={errors.lastName}
       />
+      {userType === "Company" &&
+      
       <TextField
           required
           label="Email"
@@ -237,6 +239,7 @@ const update = (e) => {
           margin="normal"
           error={errors.email}
       />
+        }
       <TextField
         required
         label="Phone Number"
