@@ -9,15 +9,14 @@ import { toast } from '../modules';
 import classNames from 'classnames';
 import mockedJobs from '../mocks/mockedJobs';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   listings: {
     width: '100%',
     display: 'flex',
-    // justifyContent: 'center',
     flexWrap: 'wrap',
   },
   listing: {
-    width: '100%'
+    width: '100%',
   },
   root: {
     width: '100%',
@@ -34,8 +33,11 @@ const useStyles = makeStyles({
   },
   title: {
     color: "black"
-  }
-});
+  },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
+}));
 
 function CareerListings({ filters, keyword }) {
   const classes = useStyles();
@@ -174,24 +176,29 @@ function CareerListings({ filters, keyword }) {
               </Typography>
             </div>
             <br />
-            <div className={classes.row}>
-              <Typography color="textSecondary">
-                Description:&nbsp;
-              </Typography>
-              <Typography component="pre">
-                {job.description}
-              </Typography>
-            </div>
+            <Typography color="textSecondary">
+              Description:&nbsp;
+            </Typography>
+            <Typography component="pre">
+              {job.description}
+            </Typography>
             <br />
             <Typography color="textSecondary">
               Skills: 
             </Typography>
             <Typography component="pre">
-              <ul>
+              {job.skills.map((skill, index) => {
+                return <Chip
+                  key={index}
+                  label={skill}
+                  className={classes.chip}
+                />
+              })}
+              {/* <ul>
                 {job.skills.map((skill, index) => {
                   return <li key={index}>{skill}</li>
                 })}
-              </ul>  
+              </ul>   */}
             </Typography>
             <br />
             <div className={classes.row}>
