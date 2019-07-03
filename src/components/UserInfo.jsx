@@ -8,12 +8,12 @@ function UserInfo(props) {
   const { userType, userId } = useToken();
   const [token] = useLocalStorage('proAssistToken');
 
-  const [userData, setUserData] = React.useState({ });
+  const [, setUserData] = React.useState({ });
 
   React.useEffect(() => {
     const getUserInfo = async () => {
       const { REACT_APP_BACKEND_URL } = process.env;
-      const { userId: propsUserId } = props;
+      const propsUserId = props.userId;
 
       let user = userId;
       if (propsUserId) {
@@ -44,7 +44,7 @@ function UserInfo(props) {
     };
 
     getUserInfo();
-  }, []);
+  }, [props.userId]);
 
   const normalUserDiv = userData.email
     ? (
