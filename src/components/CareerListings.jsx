@@ -138,20 +138,16 @@ function CareerListings({ filters, keyword }) {
         { headers: { authorization: 'Bearer ' + token } }
       );
       
-      let toastMessage = '';
       let updatedJobs = new Set(savedJobs);
       if (checked) {
         updatedJobs.add(job.jobId); 
-        toastMessage = 'Save Successful!';
       } else {
         updatedJobs.delete(job.jobId);
-        toastMessage = `Successfully removed ${job.title} from saved list!`;
       }
 
       setSavedJobs(updatedJobs);
-      toast(toastMessage, 'success');
     } catch (err) {
-      toast(`Error saving job ${job.title}`, 'error');
+      toast(`Error saving ${job.title}`, 'error');
     }
   };
 
