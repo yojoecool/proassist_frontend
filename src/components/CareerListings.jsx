@@ -2,23 +2,22 @@ import React from 'react';
 import axios from 'axios';
 import useLocalStorage from 'react-use-localstorage';
 import {
-  Button, Checkbox, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails,
-  ExpansionPanelSummary, FormControlLabel, Typography
+  Button, Checkbox, Chip, Divider, ExpansionPanel, ExpansionPanelActions,
+  ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
 import { useToken } from '../hooks';
 import { toast } from '../modules';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   listings: {
     width: '100%',
     display: 'flex',
-    // justifyContent: 'center',
     flexWrap: 'wrap',
   },
   listing: {
-    width: '100%'
+    width: '100%',
   },
   root: {
     width: '100%',
@@ -35,8 +34,11 @@ const useStyles = makeStyles({
   },
   title: {
     color: "black"
-  }
-});
+  },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
+}));
 
 function CareerListings({ filters, keyword }) {
   const classes = useStyles();
@@ -155,17 +157,17 @@ function CareerListings({ filters, keyword }) {
   return (
     <div className={classes.listings}>
       <p>{jobsToShow.length === 1 ? jobsToShow.length + ' result' : jobsToShow.length + ' results'}</p>
-      {
+      { 
         jobsToShow.map((job, index) => {
           return (
             <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
               <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-                <div className={classes.summary}>
+                <div className={classes.column}>
                   <div>
                     <Typography
-                      className={classes.title}
-                      variant="h5"
-                      color="textSecondary"
+                      className={classes.title} 
+                      variant="h5" 
+                      color="textSecondary" 
                       gutterBottom
                     >
                       {job.title}
@@ -177,40 +179,68 @@ function CareerListings({ filters, keyword }) {
                 </div>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <Typography component="p">
-                  {job.description}
-                </Typography>
-                <div>
-                  Skills: 
-                  <ul>
+                <div className={classes.column}>
+                  <div className={classes.row}>
+                    <Typography color="textSecondary">
+                      Type:&nbsp;
+                    </Typography>
+                    <Typography component="pre">
+                      {job.type}
+                    </Typography>
+                  </div>
+                  <br />
+                  <Typography color="textSecondary">
+                    Description:&nbsp;
+                  </Typography>
+                  <Typography component="pre">
+                    {job.description}
+                  </Typography>
+                  <br />
+                  <Typography color="textSecondary">
+                    Skills: 
+                  </Typography>
+                  <Typography component="pre">
                     {job.skills.map((skill, index) => {
-                      return <li key={index}>{skill}</li>
+                      return <Chip
+                        key={index}
+                        label={skill}
+                        className={classes.chip}
+                        />
                     })}
-                  </ul>  
+                  </Typography>
+                  <br />
+                  <div className={classes.row}>
+                    <Typography color="textSecondary">
+                      Qualifications:&nbsp;
+                    </Typography>
+                    <Typography component="pre">
+                      {job.qualifications}
+                    </Typography>
+                  </div>
                 </div>
               </ExpansionPanelDetails>
+              <Divider />
               <ExpansionPanelActions>
                 <FormControlLabel
                   control={
-                    <Checkbox
-                      icon={<StarBorder />}
-                      checkedIcon={<Star />}
-                      value='saved'
-                      checked={savedJobs.has(job.jobId)}
-                      onClick={(e) => handleSave(e, job)}
-                    />
-                  }
+                    <Checkbox 
+                      icon={<StarBorder />} 
+                      checkedIcon={<Star />} 
+                      value='saved' 
+                      checked={savedJobs.has(job.jobId)} 
+                      onChange={(e) => handleSave(e, job)} 
+                    />}
                 />
-                <Button
-                  hidden={appliedJobs.has(job.jobId)}
-                  size="medium"
+                <Button 
+                  hidden={appliedJobs.has(job.jobId)} 
+                  size="medium" 
                   onClick={(e) => handleApply(e, job)}
                 >
                   Apply
                 </Button>
-                <Button
-                  hidden={!appliedJobs.has(job.jobId)}
-                  size="medium"
+                <Button 
+                  hidden={!appliedJobs.has(job.jobId)} 
+                  size="medium" 
                   disabled
                 >
                   Applied
