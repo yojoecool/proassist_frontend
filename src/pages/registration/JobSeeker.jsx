@@ -5,8 +5,7 @@ import {
     Button, TextField, Typography, 
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
-import {validateEmail, validatePassword} from './validations';
-import { toast } from '../../modules';
+import { toast, validations } from '../../modules';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -81,6 +80,8 @@ function JobSeeker(props) {
     const submit = async (e) => {
         e.preventDefault();
     
+        const {validateEmail, validatePassword} = validations;
+
         const newErrors = {errorText:[]};
         if (state.email && !validateEmail(state.email)) {
             newErrors.email = true;
@@ -113,6 +114,7 @@ function JobSeeker(props) {
         } catch (err) {
         if (err.response && err.response.status === 409) {
             toast('User with email already exists.', 'error');
+            setErrors({email: true, errorText: []});
           } else {
             toast('Error registering. Please try again later.', 'error');
           }
@@ -148,6 +150,7 @@ function JobSeeker(props) {
                 onChange={(e) => {update(e); handleChange('firstName', e)}}
                 margin="normal"
                 error={errors.firstName}
+                autoFocus
             />
             <TextField
                 required

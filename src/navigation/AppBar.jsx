@@ -85,6 +85,7 @@ function ProAssistAppBar(props) {
   switch (userType) {
     case 'Company':
     case 'JobSeeker':
+    case 'Admin':
       menu = JSMenu(closeMenu);
       break;
     default:

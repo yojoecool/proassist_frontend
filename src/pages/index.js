@@ -1,4 +1,4 @@
-export { default as Home } from './Home';
+export { default as Splashpage } from './Splashpage';
 export { default as About } from './About';
 export { default as Careers } from './Careers';
 export { default as Login } from './LogIn';

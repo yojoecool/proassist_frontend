@@ -2,13 +2,12 @@ import React from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Button, TextField, Typography, FormHelperText, 
+    Button, TextField, Typography, 
   } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
 import MaskedInput from 'react-text-mask';
 import PropTypes from 'prop-types';
-import {validateEmail, validatePhoneNumber, validatePassword} from './validations';
-import { toast } from '../../modules';
+import { toast, validations } from '../../modules';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -108,6 +107,8 @@ function Company(props) {
 
     const submit = async (e) => {
         e.preventDefault();
+
+        const {validateEmail, validatePassword, validatePhoneNumber} = validations;
     
         const newErrors = {errorText:[]};
         if (state.email && !validateEmail(state.email)) {
@@ -152,6 +153,7 @@ function Company(props) {
         } catch (err) {
           if (err.response && err.response.status === 409) {
             toast('User with email already exists.', 'error');
+            setErrors({email: true, errorText: []});
           } else {
             toast('Error registering. Please try again later.', 'error');
           }
@@ -188,6 +190,7 @@ function Company(props) {
                 onChange={(e) => {update(e); handleChange('companyName', e)}}
                 margin="normal"
                 error={errors.companyName}
+                autoFocus
             />
             <TextField
                 required

@@ -16,4 +16,4 @@ function validatePassword(password,check)
 }
 
 
-export {validateEmail, validatePhoneNumber, validatePassword};
+export default {validateEmail, validatePhoneNumber, validatePassword};

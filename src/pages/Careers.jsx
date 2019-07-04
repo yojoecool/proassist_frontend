@@ -1,43 +1,65 @@
 import React from 'react';
-import Card from '@material-ui/core/Card';
+import { IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import { NavigateBefore, NavigateNext } from '@material-ui/icons';
+import { CareerListings, CareerSearch } from '../components';
 
-const useStyles = makeStyles({
-  card: {
-    minWidth: 275,
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center'
   },
-  title: {
-    color: "black",
+  container: {
+    width: '80%',
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginTop: 20,
+    marginBottom: 20
   },
-});
+  pagination: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: 15,
+    marginLeft: 15,
+    marginRight: 15
+  }
+}));
 
-function Careers() {
+function Careers(props) {
   const classes = useStyles();
 
+  const [filters, setFilter] = React.useState(() => {
+    if (props.history && props.history.location && props.history.location.state) {
+      return { title: props.history.location.state.query || '' }
+    }
+    return {};
+  });
+
+  const updateFilters = (values) => {
+    setFilter(values);
+  };
+
   return (
-    <div className="Careers">
-      <p>Welcome to ProAssist Careers Page!</p>
-      <Card className={classes.card}>
-      <CardContent>
-        <Typography className={classes.title} variant="h5" color="textSecondary" gutterBottom>
-          Nuclear Pathologist Assistant
-        </Typography>
-        <Typography color="textSecondary">
-          New York City, NY
-        </Typography>
-        <Typography component="p">
-          Seeking a Nuclear Pathologist Assistant with minimal experience and MRI imaging certifications.
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="medium">Save</Button>
-        <Button size="medium">Apply</Button>
-      </CardActions>
-    </Card>
+    <div className={classes.root}>
+      <div className={classes.container}>
+        <CareerSearch updateFilters={updateFilters} keyword={filters.title} />
+        <CareerListings filters={filters} />
+        <div className={classes.pagination}>
+          <IconButton
+            type="submit"
+            // onClick={e => submit(e)}
+          >
+            <NavigateBefore />
+          </IconButton>
+          <IconButton
+            type="submit"
+            // onClick={e => submit(e)}
+          >
+            <NavigateNext />
+          </IconButton>
+        </div>
+      </div>
     </div>
   );
 }
