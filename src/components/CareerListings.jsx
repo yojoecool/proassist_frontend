@@ -160,7 +160,8 @@ function CareerListings({ filters, keyword, offset, updateLength }) {
   return (
     <div className={classes.listings}>
       <p>
-        {offset}-{offset + limit > jobsToShow.length ? jobsToShow.length : offset + limit} of {jobsToShow.length}
+        { jobsToShow.length === 0 ? "0 results" : `${offset}-${offset + limit > jobsToShow.length ? 
+          jobsToShow.length : offset + limit} of ${jobsToShow.length}` }
       </p>
       { 
         jobsToShowPaginated.map((job, index) => {
