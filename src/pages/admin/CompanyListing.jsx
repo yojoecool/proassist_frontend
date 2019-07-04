@@ -62,7 +62,8 @@ function CompanyListing({ companies }) {
       <div className={classes.listings}>
         { companies.map((company, index) => {
           return (
-        <ExpansionPanel key={index} id={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
+        <ExpansionPanel key={index} id={index} expanded={expanded === index} 
+          className={classes.listing} onChange={handleExpansion(index)}>
           <ExpansionPanelSummary expandIcon={<ExpandMore />}>
           <div className={classes.column}>
             <div>

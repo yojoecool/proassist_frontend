@@ -101,6 +101,12 @@ function Admin(props) {
   const [companyOffset, incrementCompanyOffset] = React.useState(0);
   const limit = 5;
 
+  const refreshCompanies = async () => {
+    await incrementCompanyOffset(0);
+    await updateCompanies([]);
+    await getPendingCompanies();
+  }
+
   const getPendingCompanies = async () => {
     try {
       const response = await 
@@ -172,15 +178,19 @@ function Admin(props) {
 
         <div className={classes.subcontent}>
           <Typography variant='h5' className={classes.subheader}>Pending Companies: </Typography>
+          <Typography variant='p'> Approved or Rejected companies will be removed upon page refresh</Typography>
           {(companies.length) > 0 &&
             <React.Fragment>
             <div className={classes.companyList}>
               <CompanyListing companies={companies} />
             </div>
             <div className={classNames(classes.buttonDiv, classes.center)}> 
-            <Button size='large' variant='contained' className={classes.button} onClick={getPendingCompanies} disabled={!moreCompanies}>
-              See More Pending Companies
-            </Button>
+              <Button size='large' variant='contained' className={classes.button} onClick={getPendingCompanies} disabled={!moreCompanies}>
+                See More Pending Companies
+              </Button>
+              <Button size='large' variant='contained' className={classes.button} onClick={refreshCompanies}>
+                Save Changes and Refresh
+              </Button>
             </div>
             </React.Fragment>
           }
