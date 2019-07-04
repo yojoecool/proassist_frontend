@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Chip, Divider, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
+import {
+  Button, Chip, Divider, ExpansionPanel, ExpansionPanelActions,
+  ExpansionPanelDetails, ExpansionPanelSummary, Typography
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
+import { ExpandMore } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
   listings: {
@@ -39,8 +42,6 @@ const useStyles = makeStyles(theme => ({
 
 function JobListing({ jobs }) {
   const classes = useStyles();
-  const [jobListings, setJobListings] = React.useState([]);
-
 
   const [expanded, setExpanded] = React.useState(false);
 

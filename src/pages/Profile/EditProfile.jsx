@@ -115,10 +115,10 @@ function EditProfile(props) {
         );
 
         setState({
-          firstName: response.data.companyObject.poc.firstName,
-          lastName: response.data.companyObject.poc.lastName,
-          phoneNumber: response.data.companyObject.poc.phoneNumber,
-          email: response.data.companyObject.poc.email
+          firstName: response.data.companyObject.poc.firstName || '',
+          lastName: response.data.companyObject.poc.lastName || '',
+          phoneNumber: response.data.companyObject.poc.phoneNumber || '',
+          email: response.data.companyObject.poc.email || ''
         });
         } else {
         //   TODO: Add Call to set User/Admin edits like above 
@@ -130,7 +130,7 @@ function EditProfile(props) {
       }
     };
     getProfile(userType);
-  }, []);
+  }, [props.history, userType, userId, token]);
 
   const submit = async (e) => {
     e.preventDefault();

@@ -44,7 +44,7 @@ function UserInfo(props) {
     };
 
     getUserInfo();
-  }, [props.userId]);
+  }, [props.userId, userId, token]);
 
   const normalUserDiv = userData.email
     ? (

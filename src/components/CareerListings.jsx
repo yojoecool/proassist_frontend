@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 
 function CareerListings({ filters, keyword }) {
   const classes = useStyles();
-  const { userType, userId } = useToken();
+  const { userType } = useToken();
   const [token] = useLocalStorage('proAssistToken');
   const { REACT_APP_BACKEND_URL: backend } = process.env;
 
@@ -60,7 +60,7 @@ function CareerListings({ filters, keyword }) {
     };
 
     getCareers();
-  }, [filters]);
+  }, [filters, backend, keyword]);
 
   React.useEffect(() => {
     const getUserJobs = async () => {
@@ -77,7 +77,7 @@ function CareerListings({ filters, keyword }) {
     if (userType === 'JobSeeker') {
       getUserJobs();
     }
-  }, [userType]);
+  }, [userType, token]);
 
   const [expanded, setExpanded] = React.useState(false);
 

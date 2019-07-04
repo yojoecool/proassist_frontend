@@ -163,7 +163,7 @@ function EditJob(props) {
           }
         };
         getJob(jobId);
-    }, []);
+    }, [jobId, userId, userType, token, props.history]);
 
     const submit = async (e) => {
         e.preventDefault();
