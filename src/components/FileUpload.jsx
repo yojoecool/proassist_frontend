@@ -131,7 +131,6 @@ function FileUpload() {
 
       <input type="file" name="blah" onChange={onChangeFile} hidden ref={fileInput} accept=".pdf" />
 
-
       <div className={classes.buttonWrapper}>
         <Button
           variant="contained"

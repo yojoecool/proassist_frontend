@@ -95,10 +95,7 @@ function CareerListings({ filters, keyword }) {
       return;
     }
     try {
-      const data = {
-        jobSeekerId: userId,
-        jobId: job.jobId
-      };
+      const data = { jobId: job.jobId };
       await axios.post(
         `${backend}/careers/apply`,
         data,
@@ -126,11 +123,8 @@ function CareerListings({ filters, keyword }) {
 
     try {
       const { checked } = e.target;
-      const data = {
-        jobSeekerId: userId,
-        jobId: job.jobId
-      };
 
+      const data = { jobId: job.jobId };
       const url = checked ? `${backend}/careers/save` : `${backend}/careers/unsave`;
       await axios.post(
         url,
