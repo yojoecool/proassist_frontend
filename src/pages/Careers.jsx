@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 function Careers(props) {
   const classes = useStyles();
+  const limit = 10;
 
   const [filters, setFilter] = React.useState(() => {
     if (props.history && props.history.location && props.history.location.state) {
@@ -61,13 +62,13 @@ function Careers(props) {
         <div className={classes.pagination}>
           <IconButton
             disabled={offset <= 0}
-            onClick={e => updateOffset(e, -10)}
+            onClick={e => updateOffset(e, -limit)}
           >
             <NavigateBefore />
           </IconButton>
           <IconButton
-            disabled={offset + 10 >= length}
-            onClick={e => updateOffset(e, 10)}
+            disabled={offset + limit >= length}
+            onClick={e => updateOffset(e, limit)}
           >
             <NavigateNext />
           </IconButton>

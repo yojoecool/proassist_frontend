@@ -9,7 +9,6 @@ import mockedSelects from '../mocks/mockedSearchSelects';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    // backgroundColor: theme.palette.yellow.light,
     marginBottom: 20
   },
   heading: {
@@ -62,12 +61,12 @@ function CareerSearch({ updateFilters, keyword }) {
 
   React.useEffect(() => {
     if (keyword) {
-      setFilter(currFilters => ({
-        ...currFilters,
+      setFilter({
+        ...filters,
         title: keyword
-      }));
+      });
     }
-  }, [filters, keyword]);
+  }, []);
 
   const submit = (e) => {
     e.preventDefault();
@@ -80,7 +79,6 @@ function CareerSearch({ updateFilters, keyword }) {
         <Typography variant="h4" className={classNames(classes.heading, classes.spacing)}>Search</Typography>
         <div className={classNames(classes.inputs, classes.spacing)}>
           <TextField
-            // className="w-100"
             id="outlined-full-width"
             variant="outlined"
             label="Title"
@@ -98,12 +96,10 @@ function CareerSearch({ updateFilters, keyword }) {
         </div>
         <div className={classNames(classes.inputs, classes.spacing)}>
           <TextField
-            // id="outlined-simple-start-adornment"
             variant="outlined"
             label="City"
             fullWidth
             value={filters.city}
-            // className={classes.spacing}
             onChange={handleChange('city')}
           />
           <FormControl className={classNames(classes.wideWidth, classes.spacingBetween)}>
