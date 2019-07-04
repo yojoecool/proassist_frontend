@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  FormControl, IconButton, TextField, Typography
+  IconButton, TextField, Typography
 } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
 import { splashpage } from '../img';
@@ -13,7 +13,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: 20
   },
   left: {
     display: 'flex',

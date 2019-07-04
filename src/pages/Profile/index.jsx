@@ -1,10 +1,12 @@
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
+import { Divider } from '@material-ui/core';
 import { toast } from '../../modules';
 import { useToken } from '../../hooks';
 import Company from './Company';
 import JobSeeker from'./JobSeeker';
 import Admin from './Admin';
+import { UserInfo } from '../../components';
 import EditProfile from './EditProfile'
 import EditPassword from './EditPassword'
 import { AddJob, EditJob } from '../company';
@@ -12,6 +14,7 @@ import { AddJob, EditJob } from '../company';
 function Profile(props) {
   const { userType } = useToken();
 
+  let userView = '';
   switch (userType) {
     case 'Company':
       return (
@@ -24,7 +27,8 @@ function Profile(props) {
         </Switch>
       );
     case 'JobSeeker':
-      return <JobSeeker />;
+      userView = <JobSeeker />;
+      break;
     case 'Admin':
       return (
         <Switch>
@@ -39,7 +43,15 @@ function Profile(props) {
       break;
   }
 
-  return <div />;
+  return (
+    <React.Fragment>
+      <UserInfo />
+
+      <Divider />
+
+      {userView}
+    </React.Fragment>
+  );
 }
 
 export default withRouter(Profile);

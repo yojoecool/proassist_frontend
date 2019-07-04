@@ -100,29 +100,6 @@ function Company(props) {
   const [offset, incrementOffset] = React.useState(0);
   const limit = 5;
 
-  const getJobs = async () => {
-    try {
-      const response = await 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/companies/getJobs`, 
-        { headers: { 'authorization': 'Bearer ' + token },
-          params: { userId, offset, limit }
-        });
-      if (response.data.jobs.length < 5) {
-        updateMoreJobs(false);
-      }
-
-      updateJobs([
-        ...jobs,
-        ...response.data.jobs
-      ]);
-      incrementOffset(offset + 5);
-      
-    } catch (err) {
-      console.log(err);
-      toast('Unable to load jobs', 'error');
-    }
-  };
-
   React.useEffect(() => {
     const getProfile = async () => {
       try {
@@ -135,13 +112,13 @@ function Company(props) {
         );
 
         setUserState({
-          companyName: response.data.companyObject.companyName,
-          companyStatus: response.data.companyObject.companyStatus,
+          companyName: response.data.companyObject.companyName || '',
+          companyStatus: response.data.companyObject.companyStatus || '',
           
-          firstName: response.data.companyObject.poc.firstName,
-          lastName: response.data.companyObject.poc.lastName,
-          phoneNumber: response.data.companyObject.poc.phoneNumber,
-          pocEmail: response.data.companyObject.poc.email
+          firstName: response.data.companyObject.poc.firstName || '',
+          lastName: response.data.companyObject.poc.lastName || '',
+          phoneNumber: response.data.companyObject.poc.phoneNumber || '',
+          pocEmail: response.data.companyObject.poc.email || ''
         });
         
       } catch (err) {
@@ -150,11 +127,34 @@ function Company(props) {
       }
     };
     getProfile();
-  }, []);
+  }, [userId, token]);
 
   React.useEffect(() => {
+    const getJobs = async () => {
+      try {
+        const response = await
+          axios.get(`${process.env.REACT_APP_BACKEND_URL}/companies/getJobs`,
+            {
+              headers: { 'authorization': 'Bearer ' + token },
+              params: { userId, offset, limit }
+            });
+        if (response.data.jobs.length < 5) {
+          updateMoreJobs(currMoreJobs => !currMoreJobs);
+        }
+
+        updateJobs(currJobs => [
+          ...currJobs,
+          ...response.data.jobs
+        ]);
+
+      } catch (err) {
+        console.log(err);
+        toast('Unable to load jobs', 'error');
+      }
+    };
+
     getJobs();
-  }, []);
+  }, [token, userId, limit, offset]);
 
   let companyStatusMessage;
   if (userInfo.companyStatus === 'Pending') {
@@ -203,7 +203,13 @@ function Company(props) {
           </div>
           
           <div className={classNames(classes.buttonDiv, classes.center)}> 
-            <Button size='large' variant='contained' className={classes.button} onClick={getJobs} disabled={!moreJobs}>
+            <Button
+              size='large'
+              variant='contained'
+              className={classes.button}
+              onClick={() => incrementOffset(currOffset => currOffset + 5)}
+              disabled={!moreJobs}
+            >
               See More Jobs
             </Button>
             <Button size='large' variant='contained' color='primary' component={Link} to='/profile/addjob' 
