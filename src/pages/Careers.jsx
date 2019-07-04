@@ -2,9 +2,7 @@ import React from 'react';
 import { IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavigateBefore, NavigateNext } from '@material-ui/icons';
-import classNames from 'classnames';
 import { CareerListings, CareerSearch } from '../components';
-import { useToken } from '../hooks';
 
 const useStyles = makeStyles(theme => ({
   root: {

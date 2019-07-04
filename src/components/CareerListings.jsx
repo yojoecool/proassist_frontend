@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 
 function CareerListings({ filters, keyword, offset, updateLength }) {
   const classes = useStyles();
-  const { userType, userId } = useToken();
+  const { userType } = useToken();
   const [token] = useLocalStorage('proAssistToken');
   const { REACT_APP_BACKEND_URL: backend } = process.env;
   const limit = 10;
@@ -61,7 +61,7 @@ function CareerListings({ filters, keyword, offset, updateLength }) {
     };
 
     getCareers();
-  }, [filters]);
+  }, [filters, backend, keyword]);
 
   React.useEffect(() => {
     const getUserJobs = async () => {
@@ -78,7 +78,7 @@ function CareerListings({ filters, keyword, offset, updateLength }) {
     if (userType === 'JobSeeker') {
       getUserJobs();
     }
-  }, [userType]);
+  }, [userType, token]);
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -94,10 +94,7 @@ function CareerListings({ filters, keyword, offset, updateLength }) {
       return;
     }
     try {
-      const data = {
-        jobSeekerId: userId,
-        jobId: job.jobId
-      };
+      const data = { jobId: job.jobId };
       await axios.post(
         `${backend}/careers/apply`,
         data,
@@ -125,11 +122,8 @@ function CareerListings({ filters, keyword, offset, updateLength }) {
 
     try {
       const { checked } = e.target;
-      const data = {
-        jobSeekerId: userId,
-        jobId: job.jobId
-      };
 
+      const data = { jobId: job.jobId };
       const url = checked ? `${backend}/careers/save` : `${backend}/careers/unsave`;
       await axios.post(
         url,

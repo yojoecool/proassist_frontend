@@ -62,12 +62,12 @@ function CareerSearch({ updateFilters, keyword }) {
 
   React.useEffect(() => {
     if (keyword) {
-      setFilter({
-        ...filters,
+      setFilter(currFilters => ({
+        ...currFilters,
         title: keyword
-      });
+      }));
     }
-  }, []);
+  }, [filters, keyword]);
 
   const submit = (e) => {
     e.preventDefault();
