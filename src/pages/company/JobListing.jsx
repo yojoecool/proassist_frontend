@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Divider, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
+import { Button, Chip, Divider, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   listings: {
     width: '100%',
     display: 'flex',
@@ -31,10 +31,11 @@ const useStyles = makeStyles({
   },
   title: {
     color: "black",
-    // flexBasis: "33.33%",
-    // flexShrink: 0
-  }
-});
+  },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
+}));
 
 function JobListing({ jobs }) {
   const classes = useStyles();
@@ -88,11 +89,13 @@ function JobListing({ jobs }) {
               Skills: 
             </Typography>
             <Typography component="pre">
-              <ul>
-                {job.skills.map((skill, index) => {
-                  return <li key={index}>{skill}</li>
-                })}
-              </ul>  
+              {job.skills.map((skill, index) => {
+                return <Chip
+                  key={index}
+                  label={skill}
+                  className={classes.chip}
+                  />
+              })}
             </Typography>
             <br />
             <div className={classes.row}>
