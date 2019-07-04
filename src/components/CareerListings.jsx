@@ -16,7 +16,6 @@ const useStyles = makeStyles({
     display: 'flex',
     // justifyContent: 'center',
     flexWrap: 'wrap',
-    // backgroundColor: 'pink'
   },
   listing: {
     width: '100%'
@@ -25,20 +24,17 @@ const useStyles = makeStyles({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    // backgroundColor: 'yellow'
   },
-  star: {
-    display: 'flex',
-    justifyContent: 'flexStart'
-  },
-  summary: {
+  column: {
     display: 'flex',
     flexDirection: 'column'
   },
+  row: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
   title: {
-    color: "black",
-    // flexBasis: "33.33%",
-    // flexShrink: 0
+    color: "black"
   }
 });
 

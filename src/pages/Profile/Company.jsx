@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
 import { useToken } from '../../hooks';
 import { toast } from '../../modules';
 import { JobListing } from '../company';
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     flexWrap: 'wrap',
     flexDirection: 'row',
     marginTop: '3%',
@@ -35,34 +36,47 @@ const useStyles = makeStyles(theme => ({
     }
   },
   subcontent: {
-    width: '30%',
+    width: '40%',
     display: 'flex',
     flexDirection: 'column',
     [theme.breakpoints.down('md')] : {
       width: '80%',
     },
   },
+  header: {
+    textAlign: 'center'
+  },
   subheader: {
+    marginTop: '1%',
     marginBottom: '1%'
   },
   jobList: {
-    maxHeight: 600,
+    height: 550,
     overflowY: 'scroll'
   },
   button: {
-    width: '80%',
-    margin: 12,
+    width: 215,
+    margin: 25,
     '&:hover': {
         color: theme.palette.blue.light
-    }
+    },
+    [theme.breakpoints.down('md')] : {
+      width: '80%',
+      margin: 20,
+    },
   },
   buttonDiv: {
       width: '100%',
       display: 'flex',
       flexWrap: 'wrap',
-      justifyContent: 'center',
-      paddingTop: 20
+      paddingTop: 20,
+      [theme.breakpoints.down('md')] : {
+        justifyContent: 'center'
+      },
   },
+  center: {
+    justifyContent: 'center'
+  }
 }));
 
 
@@ -176,18 +190,19 @@ function Company(props) {
                 Edit Profile
             </Button>
           </div>
-        </div>
 
-        <div className={classes.subcontent}>
           <Typography variant='h5' className={classes.subheader}>Company Status: {userInfo.companyStatus}</Typography>
           <p> {companyStatusMessage} </p>
 
+        </div>
+
+        <div className={classes.subcontent}>
           <Typography variant='h5' className={classes.subheader}>Your Jobs: </Typography>
           <div className={classes.jobList}>
             <JobListing jobs={jobs} />
           </div>
           
-          <div className={classes.buttonDiv}> 
+          <div className={classNames(classes.buttonDiv, classes.center)}> 
             <Button size='large' variant='contained' className={classes.button} onClick={getJobs} disabled={!moreJobs}>
               See More Jobs
             </Button>
