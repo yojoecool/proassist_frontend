@@ -40,11 +40,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function CareerListings({ filters, keyword }) {
+function CareerListings({ filters, keyword, offset, updateLength }) {
   const classes = useStyles();
   const { userType, userId } = useToken();
   const [token] = useLocalStorage('proAssistToken');
   const { REACT_APP_BACKEND_URL: backend } = process.env;
+  const limit = 10;
 
   const [jobListings, setJobListings] = React.useState([]);
   const [appliedJobs, setAppliedJobs] = React.useState(new Set());
@@ -159,12 +160,16 @@ function CareerListings({ filters, keyword }) {
   } else {
     jobsToShow = jobListings;
   }
+  updateLength(jobsToShow.length);
+  const jobsToShowPaginated = jobsToShow.slice(offset, offset + limit);
 
   return (
     <div className={classes.listings}>
-      <p>{jobsToShow.length === 1 ? jobsToShow.length + ' result' : jobsToShow.length + ' results'}</p>
+      <p>
+        {offset}-{offset + limit > jobsToShow.length ? jobsToShow.length : offset + limit} of {jobsToShow.length}
+      </p>
       { 
-        jobsToShow.map((job, index) => {
+        jobsToShowPaginated.map((job, index) => {
           return (
             <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
               <ExpansionPanelSummary expandIcon={<ExpandMore />}>

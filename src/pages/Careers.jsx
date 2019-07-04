@@ -38,25 +38,38 @@ function Careers(props) {
     return {};
   });
 
+  const [offset, setOffset] = React.useState(0);
+
+  const [length, setLength] = React.useState(0);
+
   const updateFilters = (values) => {
     setFilter(values);
+    setOffset(0);
+  };
+
+  const updateOffset = (e, num) => {
+    setOffset(offset + num);
+  };
+
+  const updateLength = (newLength) => {
+    setLength(newLength);
   };
 
   return (
     <div className={classes.root}>
       <div className={classes.container}>
         <CareerSearch updateFilters={updateFilters} keyword={filters.title} />
-        <CareerListings filters={filters} />
+        <CareerListings filters={filters} offset={offset} updateLength={updateLength} />
         <div className={classes.pagination}>
           <IconButton
-            type="submit"
-            // onClick={e => submit(e)}
+            disabled={offset <= 0}
+            onClick={e => updateOffset(e, -10)}
           >
             <NavigateBefore />
           </IconButton>
           <IconButton
-            type="submit"
-            // onClick={e => submit(e)}
+            disabled={offset + 10 >= length}
+            onClick={e => updateOffset(e, 10)}
           >
             <NavigateNext />
           </IconButton>
