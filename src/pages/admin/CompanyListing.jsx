@@ -1,16 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Divider, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, IconButton, Typography } from '@material-ui/core';
+import axios from 'axios';
+import useLocalStorage from 'react-use-localstorage';
+import { Button, Divider, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandMore } from '@material-ui/icons';
+import { useToken } from '../../hooks';
+import { toast } from '../../modules';
 
 const useStyles = makeStyles({
   listings: {
     width: '100%',
     display: 'flex',
-    // justifyContent: 'center',
     flexWrap: 'wrap',
-    // backgroundColor: 'pink'
   },
   listing: {
     width: '100%'
@@ -19,7 +20,6 @@ const useStyles = makeStyles({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    // backgroundColor: 'yellow'
   },
   star: {
     display: 'flex',
@@ -31,13 +31,13 @@ const useStyles = makeStyles({
   },
   title: {
     color: "black",
-    // flexBasis: "33.33%",
-    // flexShrink: 0
   }
 });
 
-function JobListing({ jobs }) {
+function CompanyListing({ companies }) {
   const classes = useStyles();
+  const { userId } = useToken();
+  const [token] = useLocalStorage('proAssistToken');
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -45,19 +45,29 @@ function JobListing({ jobs }) {
     setExpanded(isExpanded ? panel : false);   
   };
 
+  const updateCompanyStatus = async (companyId, status) => {
+    try {
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/admin/updateCompanyStatus`, 
+        { companyId, status },
+        { headers: { 'authorization': 'Bearer ' + token },
+          params: { userId }
+        });      
+    } catch (err) {
+      console.log(err);
+      toast('Error sending response', 'error');
+    }
+  };
+
   return (
       <div className={classes.listings}>
-        { jobs.map((job, index) => {
+        { companies.map((company, index) => {
           return (
         <ExpansionPanel key={index} id={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
           <ExpansionPanelSummary expandIcon={<ExpandMore />}>
           <div className={classes.column}>
             <div>
               <Typography className={classes.title} variant="h5" color="textSecondary" gutterBottom>
-                {job.title}
-              </Typography>
-              <Typography color="textSecondary">
-                {job.city}, {job.state}
+                {company.name}
               </Typography>
             </div>
           </div>
@@ -66,46 +76,28 @@ function JobListing({ jobs }) {
           <div className={classes.column}>
             <div className={classes.row}>
               <Typography color="textSecondary">
-                Type:&nbsp;
+                Point of Contact:&nbsp;
               </Typography>
               <Typography component="pre">
-                {job.type}
-              </Typography>
-            </div>
-            <br />
-            <div className={classes.row}>
-              <Typography color="textSecondary">
-                Description:&nbsp;
+                {company.poc.firstName} {company.poc.lastName}
               </Typography>
               <Typography component="pre">
-                {job.description}
-              </Typography>
-            </div>
-            <br />
-            <Typography color="textSecondary">
-              Skills: 
-            </Typography>
-            <Typography component="pre">
-              <ul>
-                {job.skills.map((skill, index) => {
-                  return <li key={index}>{skill}</li>
-                })}
-              </ul>  
-            </Typography>
-            <br />
-            <div className={classes.row}>
-              <Typography color="textSecondary">
-                Qualifications:&nbsp;
+                {company.poc.phoneNumber}
               </Typography>
               <Typography component="pre">
-                  {job.qualifications}
+                {company.poc.email}
               </Typography>
             </div>
-          </div>
+        </div>
         </ExpansionPanelDetails>
         <Divider />
         <ExpansionPanelActions>
-            <Button size="medium" component={Link} to={{pathname: '/profile/editjob', jobId: job.jobId}}>Edit</Button>
+            <Button size="medium" color="primary" onClick={() => updateCompanyStatus(company.userId, 'Active')}>
+                Approve
+            </Button>
+             <Button size="medium" color="secondary" onClick={() => updateCompanyStatus(company.userId, 'Rejected')}>
+                Reject
+            </Button>
           </ExpansionPanelActions>
         </ExpansionPanel>
           )
@@ -114,4 +106,4 @@ function JobListing({ jobs }) {
   );
 }
 
-export default JobListing;
+export default CompanyListing;

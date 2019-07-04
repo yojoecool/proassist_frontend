@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { useToken } from '../../hooks';
 import { toast } from '../../modules';
 import { JobListing } from '../company';
+import { CompanyListing } from '../admin';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,6 +51,10 @@ const useStyles = makeStyles(theme => ({
     marginTop: '1%',
     marginBottom: '1%'
   },
+  companyList: {
+    height: 350,
+    overflowY: 'scroll'
+  },
   jobList: {
     height: 550,
     overflowY: 'scroll'
@@ -82,32 +87,64 @@ const useStyles = makeStyles(theme => ({
 
 function Admin(props) {
   const classes = useStyles();
-  const { userId, email } = useToken();
+  const { email } = useToken();
 
   const [token] = useLocalStorage('proAssistToken');
 
 
   const [moreJobs, updateMoreJobs] = React.useState(true)
   const [jobs, updateJobs] = React.useState([]);
-  const [offset, incrementOffset] = React.useState(0);
+  const [jobOffset, incrementJobOffset] = React.useState(0);
+
+  const [moreCompanies, updateMoreCompanies] = React.useState(true)
+  const [companies, updateCompanies] = React.useState([]);
+  const [companyOffset, incrementCompanyOffset] = React.useState(0);
   const limit = 5;
 
-  const getJobs = async () => {
+  const getPendingCompanies = async () => {
     try {
       const response = await 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/companies/getJobs`, 
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/getPendingCompanies`, 
         { headers: { 'authorization': 'Bearer ' + token },
-          params: { userId, offset, limit }
+          params: { companyOffset, limit }
         });
-      if (response.data.jobs.length < 5) {
+      console.log(response)
+      if (response.data.pendingCompanies.length < 5) {
+        updateMoreCompanies(false);
+      }
+
+      updateCompanies([
+        ...companies,
+        ...response.data.pendingCompanies
+      ]);
+      incrementCompanyOffset(companyOffset + 5);
+      
+    } catch (err) {
+      console.log(err);
+      toast('Unable to load companies', 'error');
+    }
+  };
+
+  React.useEffect(() => {
+    getPendingCompanies();
+  }, []);
+
+  const getAppliedJobs = async () => {
+    try {
+      const response = await 
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/getAppliedJobs`, 
+        { headers: { 'authorization': 'Bearer ' + token },
+          params: { jobOffset, limit }
+        });
+      if (response.data.appliedJobs.length < 5) {
         updateMoreJobs(false);
       }
 
       updateJobs([
         ...jobs,
-        ...response.data.jobs
+        ...response.data.appliedJobs
       ]);
-      incrementOffset(offset + 5);
+      incrementJobOffset(jobOffset + 5);
       
     } catch (err) {
       console.log(err);
@@ -116,7 +153,7 @@ function Admin(props) {
   };
 
   React.useEffect(() => {
-    getJobs();
+    getAppliedJobs();
   }, []);
 
   return (
@@ -134,10 +171,43 @@ function Admin(props) {
           </div>
 
         <div className={classes.subcontent}>
-          <Typography variant='h5' className={classes.subheader}>Notifications: </Typography>
-          <div className={classes.jobList}>
-            <JobListing jobs={jobs} />
-          </div>
+          <Typography variant='h5' className={classes.subheader}>Pending Companies: </Typography>
+          {(companies.length) > 0 &&
+            <React.Fragment>
+            <div className={classes.companyList}>
+              <CompanyListing companies={companies} />
+            </div>
+            <div className={classNames(classes.buttonDiv, classes.center)}> 
+            <Button size='large' variant='contained' className={classes.button} onClick={getPendingCompanies} disabled={!moreCompanies}>
+              See More Pending Companies
+            </Button>
+            </div>
+            </React.Fragment>
+          }
+          {(companies.length) === 0 &&
+            <Typography variant='p' className={classes.noResults}>There are no Pending Companies</Typography>
+          }
+          
+        </div>
+        
+        <div className={classes.subcontent}>
+          <Typography variant='h5' className={classes.subheader}> Recently Applied Jobs: </Typography>
+          {(jobs.length) > 0 &&
+            <React.Fragment>
+            <div className={classes.jobList}>
+              <JobListing jobs={jobs} />
+            </div>
+            <div className={classNames(classes.buttonDiv, classes.center)}> 
+            <Button size='large' variant='contained' className={classes.button} onClick={getAppliedJobs} disabled={!moreJobs}>
+              See More Applied Jobs
+            </Button>
+            </div>
+            </React.Fragment>
+          }
+          {(jobs.length) === 0 &&
+            <Typography variant='p' className={classes.noResults}>There are no Jobs with Applicants</Typography>
+          }
+          
         </div>
 
         </div>
