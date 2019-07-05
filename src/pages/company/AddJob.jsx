@@ -259,7 +259,6 @@ function AddJob(props) {
                 error={errors.description}
                 multiline
                 rowsMax='10'
-                helperText='Content formatting may not be preserved.'
             />
             <ChipInput
                 label='Skills'
@@ -268,6 +267,7 @@ function AddJob(props) {
                 value={state.skills}
                 onAdd={(chip) => handleAddChip(chip)}
                 onDelete={(chip, index) => handleDeleteChip(chip, index)}
+                helperText='Press Return to save skill.'
             />
 
             <div className={classes.buttonDiv}> 

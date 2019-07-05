@@ -52,6 +52,8 @@ function CompanyListing({ companies }) {
         { headers: { 'authorization': 'Bearer ' + token },
           params: { userId }
         });      
+        //add toast
+        //add function from admin to remove job from company list
     } catch (err) {
       console.log(err);
       toast('Error sending response', 'error');

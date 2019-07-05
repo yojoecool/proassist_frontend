@@ -331,7 +331,6 @@ function EditJob(props) {
                 error={errors.description}
                 multiline
                 rowsMax='10'
-                helperText='Content formatting may not be preserved.'
                 disabled={!activeState.active}
             />
             <ChipInput

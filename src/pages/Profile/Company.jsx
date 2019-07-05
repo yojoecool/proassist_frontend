@@ -138,7 +138,7 @@ function Company(props) {
               headers: { 'authorization': 'Bearer ' + token },
               params: { userId, offset, limit }
             });
-        if (response.data.jobs.length < 5) {
+        if (response.data.jobs.length < limit) {
           updateMoreJobs(currMoreJobs => !currMoreJobs);
         }
 
@@ -207,7 +207,7 @@ function Company(props) {
               size='large'
               variant='contained'
               className={classes.button}
-              onClick={() => incrementOffset(currOffset => currOffset + 5)}
+              onClick={() => incrementOffset(currOffset => currOffset + limit)}
               disabled={!moreJobs}
             >
               See More Jobs

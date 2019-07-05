@@ -98,69 +98,65 @@ function Admin(props) {
 
   const [moreCompanies, updateMoreCompanies] = React.useState(true)
   const [companies, updateCompanies] = React.useState([]);
-  const [companyOffset, incrementCompanyOffset] = React.useState(0);
+  const [companyOffset, updateCompanyOffset] = React.useState(0);
   const limit = 5;
+  
 
-  const refreshCompanies = async () => {
-    await incrementCompanyOffset(0);
-    await updateCompanies([]);
-    await getPendingCompanies();
-  }
-
-  const getPendingCompanies = async () => {
-    try {
-      const response = await 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/getPendingCompanies`, 
-        { headers: { 'authorization': 'Bearer ' + token },
-          params: { companyOffset, limit }
-        });
-      console.log(response)
-      if (response.data.pendingCompanies.length < 5) {
-        updateMoreCompanies(false);
-      }
-
-      updateCompanies([
-        ...companies,
-        ...response.data.pendingCompanies
-      ]);
-      incrementCompanyOffset(companyOffset + 5);
-      
-    } catch (err) {
-      console.log(err);
-      toast('Unable to load companies', 'error');
-    }
-  };
+  //fxn to be passed to company listings ,rerendering companies list
 
   React.useEffect(() => {
+    const getPendingCompanies = async () => {
+      try {
+        const response = await 
+          axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/getPendingCompanies`, 
+          { 
+            headers: { 'authorization': 'Bearer ' + token },
+            params: { companyOffset, limit }
+          });
+        if (response.data.pendingCompanies.length < limit) {
+          updateMoreCompanies(moreCompanies => !moreCompanies);
+        }
+  
+        updateCompanies([
+          ...companies,
+          ...response.data.pendingCompanies
+        ]);
+        
+      } catch (err) {
+        console.log(err);
+        toast('Unable to load companies', 'error');
+      }
+    };
+
     getPendingCompanies();
-  }, []);
+  }, [token, limit, companyOffset]);
 
-  const getAppliedJobs = async () => {
-    try {
-      const response = await 
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/getAppliedJobs`, 
-        { headers: { 'authorization': 'Bearer ' + token },
-          params: { jobOffset, limit }
-        });
-      if (response.data.appliedJobs.length < 5) {
-        updateMoreJobs(false);
-      }
+  // const getAppliedJobs = async () => {
+  //   try {
+  //     const response = await 
+  //       axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/getAppliedJobs`, 
+  //       { headers: { 'authorization': 'Bearer ' + token },
+  //         params: { jobOffset, limit }
+  //       });
+  //     if (response.data.appliedJobs.length < 5) {
+  //       updateMoreJobs(false);
+  //     }
 
-      updateJobs([
-        ...jobs,
-        ...response.data.appliedJobs
-      ]);
-      incrementJobOffset(jobOffset + 5);
+  //     updateJobs([
+  //       ...jobs,
+  //       ...response.data.appliedJobs
+  //     ]);
+  //     incrementJobOffset(jobOffset + 5);
       
-    } catch (err) {
-      console.log(err);
-      toast('Unable to load jobs', 'error');
-    }
-  };
+  //   } catch (err) {
+  //     console.log(err);
+  //     toast('Unable to load jobs', 'error');
+  //   }
+  // };
 
-  React.useEffect(() => {
-    getAppliedJobs();
-  }, []);
+  // React.useEffect(() => {
+  //   getAppliedJobs();
+  // }, []);
 
   return (
     <div className={classes.root}>
@@ -185,10 +181,14 @@ function Admin(props) {
               <CompanyListing companies={companies} />
             </div>
             <div className={classNames(classes.buttonDiv, classes.center)}> 
-              <Button size='large' variant='contained' className={classes.button} onClick={getPendingCompanies} disabled={!moreCompanies}>
+              <Button 
+                size='large' variant='contained' className={classes.button} disabled={!moreCompanies} 
+                onClick={() => updateCompanyOffset(currOffset => currOffset + limit)} >
                 See More Pending Companies
               </Button>
-              <Button size='large' variant='contained' className={classes.button} onClick={refreshCompanies}>
+              <Button 
+                size='large' variant='contained' className={classes.button} 
+                onClick={() => {updateCompanies([]); updateCompanyOffset(0);}}>
                 Save Changes and Refresh
               </Button>
             </div>
@@ -200,7 +200,7 @@ function Admin(props) {
           
         </div>
         
-        <div className={classes.subcontent}>
+        {/* <div className={classes.subcontent}>
           <Typography variant='h5' className={classes.subheader}> Recently Applied Jobs: </Typography>
           {(jobs.length) > 0 &&
             <React.Fragment>
@@ -218,7 +218,7 @@ function Admin(props) {
             <Typography variant='p' className={classes.noResults}>There are no Jobs with Applicants</Typography>
           }
           
-        </div>
+        </div> */}
 
         </div>
       </div>
