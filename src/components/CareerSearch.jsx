@@ -1,7 +1,17 @@
 import React from 'react';
-import { Card, Checkbox, FormControl, FormControlLabel, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core';
+import {
+  Card,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Button,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Search } from '@material-ui/icons';
 import { useToken } from '../hooks';
 import classNames from 'classnames';
 import mockedSelects from '../mocks/mockedSearchSelects';
@@ -9,7 +19,6 @@ import mockedSelects from '../mocks/mockedSearchSelects';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    // backgroundColor: theme.palette.yellow.light,
     marginBottom: 20
   },
   heading: {
@@ -18,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   },
   inputs: {
     display: 'flex',
-    justifyContent: 'spaceEvenly',
+    justifyContent: 'space-evenly'
   },
   wideWidth: {
     width: '100%'
@@ -29,6 +38,9 @@ const useStyles = makeStyles(theme => ({
   spacingBetween: {
     marginLeft: 10,
     marginRight: 10
+  },
+  button: {
+    marginLeft: 10
   }
 }));
 
@@ -67,7 +79,7 @@ function CareerSearch({ updateFilters, keyword }) {
         title: keyword
       }));
     }
-  }, [filters, keyword]);
+  }, [keyword]);
 
   const submit = (e) => {
     e.preventDefault();
@@ -82,28 +94,26 @@ function CareerSearch({ updateFilters, keyword }) {
           <TextField
             // className="w-100"
             id="outlined-full-width"
-            variant="outlined"
             label="Title"
             required
             fullWidth
             value={filters.title}
             onChange={handleChange('title')}
           />
-          <IconButton
-            type="submit"
+          <Button
+            variant="outlined"
+            color="primary"
             onClick={e => submit(e)}
+            className={classes.button}
           >
-            <Search />
-          </IconButton>
+            Search
+          </Button>
         </div>
         <div className={classNames(classes.inputs, classes.spacing)}>
           <TextField
-            // id="outlined-simple-start-adornment"
-            variant="outlined"
             label="City"
             fullWidth
             value={filters.city}
-            // className={classes.spacing}
             onChange={handleChange('city')}
           />
           <FormControl className={classNames(classes.wideWidth, classes.spacingBetween)}>
@@ -133,7 +143,7 @@ function CareerSearch({ updateFilters, keyword }) {
             </Select>
           </FormControl>
         </div>
-        <div className={classNames(classes.wideWidth, classes.inputs, classes.spacing)}>
+        <div className={classNames(classes.inputs, classes.spacing)}>
           <FormControl className={classes.wideWidth}>
             <InputLabel>Type</InputLabel>
             <Select

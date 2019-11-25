@@ -97,7 +97,7 @@ function ProAssistAppBar(props) {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
-          <Link to="/" className={classes.linkItems}>ProAssist</Link>
+          <Link to="/" className={classes.linkItems}>ProAssist, Inc</Link>
         </Typography>
 
         <Tabs className={classes.navTab} value={page} hidden={mobileView}>

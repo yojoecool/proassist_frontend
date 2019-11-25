@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import { useToken } from '../../hooks';
 import { toast } from '../../modules';
+import { UserInfo } from '../../components';
 import { JobListing } from '../company';
 
 const useStyles = makeStyles(theme => ({
@@ -82,52 +83,14 @@ const useStyles = makeStyles(theme => ({
 
 function Company(props) {
   const classes = useStyles();
-  const { userId, email } = useToken();
+  const { userId, name, companyStatus } = useToken();
 
   const [token] = useLocalStorage('proAssistToken');
-  const [userInfo, setUserState] = React.useState({
-    companyName: '',
-    companyStatus: '',
-
-    firstName: '',
-    lastName: '',
-    phoneNumber: '',
-    pocEmail: ''
-  });
 
   const [moreJobs, updateMoreJobs] = React.useState(true)
   const [jobs, updateJobs] = React.useState([]);
   const [offset, incrementOffset] = React.useState(0);
   const limit = 5;
-
-  React.useEffect(() => {
-    const getProfile = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/companies/getProfile`, 
-          { 
-            headers: { 'authorization': 'Bearer ' + token },
-            params: { userId }
-          }
-        );
-
-        setUserState({
-          companyName: response.data.companyObject.companyName || '',
-          companyStatus: response.data.companyObject.companyStatus || '',
-          
-          firstName: response.data.companyObject.poc.firstName || '',
-          lastName: response.data.companyObject.poc.lastName || '',
-          phoneNumber: response.data.companyObject.poc.phoneNumber || '',
-          pocEmail: response.data.companyObject.poc.email || ''
-        });
-        
-      } catch (err) {
-        console.log(err)
-        toast('Unable to load profile', 'error');
-      }
-    };
-    getProfile();
-  }, [userId, token]);
 
   React.useEffect(() => {
     const getJobs = async () => {
@@ -156,44 +119,12 @@ function Company(props) {
     getJobs();
   }, [token, userId, limit, offset]);
 
-  let companyStatusMessage;
-  if (userInfo.companyStatus === 'Pending') {
-    companyStatusMessage = 'Your profile is awaiting review by the Admin. You cannot post jobs at this time.'
-  } else if (userInfo.companyStatus === 'Rejected') {
-    companyStatusMessage = 'Your profile has been blocked from posting jobs. Please reach out to the Admin.'
-  } else if (userInfo.companyStatus === 'Active') {
-    companyStatusMessage = 'Your profile has been approved to post jobs.'
-  } else {
-    companyStatusMessage = '[Could not fetch profile details]'
-  }
-
   return (
     <div className={classes.root}>
-      <Typography variant='h4' className={classes.header}>Welcome {userInfo.companyName}</Typography>
+      <Typography variant='h4' className={classes.header}>Welcome {name}</Typography>
       <div className={classes.content}>
-
         <div className={classes.subcontent}>
-          <Typography variant='h5' className={classes.subheader}>Profile Information:</Typography>
-          <p> Company/Login Email: {email} </p>
-          <div className={classes.buttonDiv}> 
-            <Button size="large" variant="contained" component={Link} to='/profile/password' className={classes.button}>
-                Change Password
-            </Button>
-          </div>
-
-          <Typography variant='h5' className={classes.subheader}>Point of Contact Information:</Typography>
-          <p> Name: {userInfo.firstName} {userInfo.lastName} </p>
-          <p> Email: {userInfo.pocEmail} </p>
-          <p> Phone Number: {userInfo.phoneNumber} </p>
-          <div className={classes.buttonDiv}> 
-            <Button size='large' variant='contained' component={Link} to='/profile/edit' className={classes.button}>
-                Edit Profile
-            </Button>
-          </div>
-
-          <Typography variant='h5' className={classes.subheader}>Company Status: {userInfo.companyStatus}</Typography>
-          <p> {companyStatusMessage} </p>
-
+          <UserInfo />
         </div>
 
         <div className={classes.subcontent}>
@@ -213,8 +144,8 @@ function Company(props) {
               See More Jobs
             </Button>
             <Button size='large' variant='contained' color='primary' component={Link} to='/profile/addjob' 
-              className={classes.button} disabled={userInfo.companyStatus!=='Active'}>
-            Add New Job
+              className={classes.button} disabled={companyStatus !== 'Active'}>
+              Add New Job
             </Button>
           </div>
         </div>

@@ -55,7 +55,7 @@ function CareerListings({ filters, keyword }) {
       if (keyword && !filters.title) {
         filters.title = keyword.query;
       }
-      const listings = await axios.get(`${backend}/careers`, { params: { filters } });
+      const listings = await axios.get(`${backend}/careers`, { params: { ...filters } });
       setJobListings(listings.data.all);
     };
 

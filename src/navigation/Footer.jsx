@@ -76,10 +76,10 @@ function Footer(props) {
               )}
             >
               <Typography variant={bodyType} className={classNames('text-uppercase', 'mt-2')}>
-                PROASSIST HEALTHCARE{mobileView ? ' ' : <br />}SOLUTIONS, INC
+                proassist, inc
               </Typography>
               <Typography variant={bodyType} className={classNames('text-uppercase', 'mt-2')}>
-                hr@pro-assist.com<br />(866) 664-9119
+                hr@proassist.careers<br />(866) 664-9119
               </Typography>
             </div>
 
@@ -92,12 +92,7 @@ function Footer(props) {
               )}
             >
               <Typography variant={bodyType} className={classNames('text-uppercase', 'mt-2')}>
-                2212 jordan lane sw<br />huntsville, al 35805
-              </Typography>
-              <Typography variant={bodyType} className={classNames('text-uppercase', 'mt-2')}>
-                m - f&nbsp;&nbsp;&nbsp;&nbsp;8am - 5pm cst
-                <br />
-                sat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10am - 3pm cst
+                7193 hwy 22 w suite e<br />madison, al 35758
               </Typography>
             </div>
           </div>

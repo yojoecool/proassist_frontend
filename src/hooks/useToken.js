@@ -11,8 +11,8 @@ function useToken() {
         return;
       }
 
-      const { userType, email, userId } = decodeToken();
-      setToken({ userType, email, userId });
+      const { userType, email, userId, name, companyStatus } = decodeToken();
+      setToken({ userType, email, userId, name, companyStatus });
     }
 
     const unlisten = history.listen(something);
