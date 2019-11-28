@@ -3,8 +3,10 @@ import axios from 'axios';
 import useLocalStorage from 'react-use-localstorage';
 import {
   Button, Checkbox, Chip, Divider, ExpansionPanel, ExpansionPanelActions,
-  ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, Typography
+  ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, Typography,
+  IconButton, CircularProgress
 } from '@material-ui/core';
+import { NavigateBefore, NavigateNext } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
 import { useToken } from '../hooks';
@@ -38,6 +40,12 @@ const useStyles = makeStyles(theme => ({
   chip: {
     margin: theme.spacing(0.5),
   },
+  page: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
 }));
 
 function CareerListings({ filters, keyword }) {
@@ -49,14 +57,33 @@ function CareerListings({ filters, keyword }) {
   const [jobListings, setJobListings] = React.useState([]);
   const [appliedJobs, setAppliedJobs] = React.useState(new Set());
   const [savedJobs, setSavedJobs] = React.useState(new Set());
+  const [page, setPage] = React.useState(0);
+  const [top, setTop] = React.useState(0);
+  const [loading, setLoad] = React.useState(true);
+  const [expanded, setExpanded] = React.useState(false);
 
   React.useEffect(() => {
     const getCareers = async () => {
-      if (keyword && !filters.title) {
-        filters.title = keyword.query;
+      try {
+        setLoad(true);
+        if (keyword && !filters.title) {
+          filters.title = keyword.query;
+        }
+        const listings = await axios.get(`${backend}/careers`, { params: { ...filters } });
+        setLoad(false);
+        setPage(0);
+
+        if (listings.data.all.length <= 10) {
+          setTop(listings.data.all.length);
+        } else {
+          setTop(10);
+        }
+
+        setJobListings(listings.data.all);
+      } catch (err) {
+        setLoad(true);
+        toast('Error during search. No applicable listings found.', 'error');
       }
-      const listings = await axios.get(`${backend}/careers`, { params: { ...filters } });
-      setJobListings(listings.data.all);
     };
 
     getCareers();
@@ -78,8 +105,6 @@ function CareerListings({ filters, keyword }) {
       getUserJobs();
     }
   }, [userType, token]);
-
-  const [expanded, setExpanded] = React.useState(false);
 
   const handleExpansion = panel => (e, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -108,6 +133,23 @@ function CareerListings({ filters, keyword }) {
     } catch (err) {
       toast(`Error sending application for ${job.title}`, 'error');
     }
+  };
+
+  const changePage = (next) => {
+    let newPage;
+    let newTop;
+    if (next) {
+      newPage = page + 10;
+      newTop = top + 10 >= jobListings.length
+        ? jobListings.length : top + 10;
+    } else {
+      newPage = page - 10;
+      newTop = top - 10 <= 10 ? 10 : top - 10;
+    }
+
+    setExpanded(false);
+    setPage(newPage);
+    setTop(newTop);
   };
 
   const handleSave = async (e, job) => {
@@ -154,11 +196,45 @@ function CareerListings({ filters, keyword }) {
     jobsToShow = jobListings;
   }
 
+  const pageComponent = () => {
+    let returnComp;
+    if (loading) {
+      returnComp = (<CircularProgress color="secondary" />);
+    } else {
+      const currPage = jobListings.length > 0 ? page + 1 : 0;
+      returnComp = (
+        <>
+          <IconButton
+            onClick={() => changePage(false)}
+            disabled={page === 0}
+          >
+            <NavigateBefore />
+          </IconButton>
+
+          {!loading && (<div>{currPage} - {top} of {jobListings.length}</div>)}
+
+          <IconButton
+            onClick={() => changePage(true)}
+            disabled={top >= jobListings.length || jobListings.length <= 10}
+          >
+            <NavigateNext />
+          </IconButton>
+        </>
+      );
+    }
+
+    return (
+      <div className={classes.page}>
+        {returnComp}
+      </div>
+    )
+  }
+
   return (
     <div className={classes.listings}>
-      <p>{jobsToShow.length === 1 ? jobsToShow.length + ' result' : jobsToShow.length + ' results'}</p>
+      {pageComponent()}
       { 
-        jobsToShow.map((job, index) => {
+        jobsToShow.slice(page, top + 1).map((job, index) => {
           return (
             <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
               <ExpansionPanelSummary expandIcon={<ExpandMore />}>
@@ -250,6 +326,7 @@ function CareerListings({ filters, keyword }) {
           )
         })
       }
+      {pageComponent()}
     </div>
   );
 }

@@ -92,10 +92,8 @@ function CareerSearch({ updateFilters, keyword }) {
         <Typography variant="h4" className={classNames(classes.heading, classes.spacing)}>Search</Typography>
         <div className={classNames(classes.inputs, classes.spacing)}>
           <TextField
-            // className="w-100"
             id="outlined-full-width"
             label="Title"
-            required
             fullWidth
             value={filters.title}
             onChange={handleChange('title')}
@@ -168,7 +166,7 @@ function CareerSearch({ updateFilters, keyword }) {
             }
             label='Saved'
             className={classes.spacingBetween}
-            hidden={userType === 'Visitor'}
+            hidden={userType !== 'JobSeeker'}
           />
           <FormControlLabel
             control={
@@ -180,7 +178,7 @@ function CareerSearch({ updateFilters, keyword }) {
               />
             }
             label='Applied'
-            hidden={userType === 'Visitor'}
+            hidden={userType !== 'JobSeeker'}
           />
         </div>
       </form>

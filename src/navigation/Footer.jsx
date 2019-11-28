@@ -76,9 +76,6 @@ function Footer(props) {
               )}
             >
               <Typography variant={bodyType} className={classNames('text-uppercase', 'mt-2')}>
-                proassist, inc
-              </Typography>
-              <Typography variant={bodyType} className={classNames('text-uppercase', 'mt-2')}>
                 hr@proassist.careers<br />(866) 664-9119
               </Typography>
             </div>
