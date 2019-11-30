@@ -28,7 +28,8 @@ function Profile(props) {
       break;
     case 'Admin':
       addlRoutes = [
-        (<Route exact path="/profile" component={Admin} key={4} />)
+        (<Route exact path="/profile" component={Admin} key={4} />),
+        (<Route path="/profile/addjob" component={AddJob} key={5} />),
       ];
       break;
     default:

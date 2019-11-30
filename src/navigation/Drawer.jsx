@@ -158,6 +158,7 @@ function ProAssistDrawer(props) {
   switch (userType) {
     case 'Company':
     case 'JobSeeker':
+    case 'Admin':
       menu = <JSMenu page={page} onClick={props.closeDrawer} />
       break;
     default:

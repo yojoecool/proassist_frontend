@@ -66,10 +66,11 @@ function CareerListings({ filters, keyword }) {
     const getCareers = async () => {
       try {
         setLoad(true);
+
         if (keyword && !filters.title) {
           filters.title = keyword.query;
         }
-        const listings = await axios.get(`${backend}/careers`, { params: { ...filters } });
+        const listings = await axios.get(`${backend}/careers`, { params: { filters } });
         setLoad(false);
         setPage(0);
 

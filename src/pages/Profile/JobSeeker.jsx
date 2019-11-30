@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Divider } from '@material-ui/core';
+import { Button, Divider, Typography } from '@material-ui/core';
 import { FileUpload, PdfViewer } from '../../components';
 import { useToken } from '../../hooks';
 
@@ -18,18 +18,30 @@ const useStyles = makeStyles(theme => ({
   divider: {
     marginTop: 8,
     marginBottom: 8
+  },
+  welcomeText: {
+    margin: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.primary.main,
   }
 }));
 
 function JobSeeker() {
-  const { userId } = useToken();
+  const { userId, name } = useToken();
   const [downloadOnlyResume, setDownloadOnly] = React.useState(true);
 
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <div>Hi</div>
+      <Typography
+        variant="h4"
+        className={classNames(classes.welcomeText)}
+      >
+        Welcome, {name}!
+      </Typography>
       <Divider className={classes.divider} />
 
       <FileUpload />

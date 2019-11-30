@@ -114,7 +114,8 @@ function AddJob(props) {
             'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN',
             'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY',
         ]
-    }
+    };
+
     const submit = async (e) => {
         e.preventDefault();
     
@@ -128,11 +129,12 @@ function AddJob(props) {
             newErrors.errorText = [...newErrors.errorText, 'Invalid Job Type'];
         }
 
-        setErrors(newErrors);
         if (newErrors.errorText.length > 0) {
-          toast('Errors on the page.', 'error');
-          return;
+            setErrors(newErrors);
+            toast('Errors on the page.', 'error');
+            return;
         }
+
         try {
           const { REACT_APP_BACKEND_URL } = process.env;
           await axios.post(
