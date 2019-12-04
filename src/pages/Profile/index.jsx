@@ -30,6 +30,7 @@ function Profile(props) {
       addlRoutes = [
         (<Route exact path="/profile" component={Admin} key={4} />),
         (<Route path="/profile/addjob" component={AddJob} key={5} />),
+        (<Route path="/profile/editJob" component={EditJob} key={6} />),
       ];
       break;
     default:

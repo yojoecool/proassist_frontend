@@ -87,7 +87,7 @@ function Company(props) {
 
   const [token] = useLocalStorage('proAssistToken');
 
-  const [moreJobs, updateMoreJobs] = React.useState(true)
+  const [moreJobs, updateMoreJobs] = React.useState(true);
   const [jobs, updateJobs] = React.useState([]);
   const [offset, incrementOffset] = React.useState(0);
   const limit = 5;

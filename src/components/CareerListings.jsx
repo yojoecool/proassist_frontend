@@ -1,14 +1,28 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import axios from 'axios';
 import useLocalStorage from 'react-use-localstorage';
 import {
-  Button, Checkbox, Chip, Divider, ExpansionPanel, ExpansionPanelActions,
-  ExpansionPanelDetails, ExpansionPanelSummary, FormControlLabel, Typography,
-  IconButton, CircularProgress
-} from '@material-ui/core';
+  Button,
+  Checkbox,
+  Chip,
+  Divider,
+  ExpansionPanel,
+  ExpansionPanelActions,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+  FormControlLabel,
+  Typography,
+  IconButton,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  Select
+} from "@material-ui/core";
 import { NavigateBefore, NavigateNext } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
+import classNames from "classnames";
 import { useToken } from '../hooks';
 import { toast } from '../modules';
 
@@ -61,6 +75,8 @@ function CareerListings({ filters, keyword }) {
   const [top, setTop] = React.useState(0);
   const [loading, setLoad] = React.useState(true);
   const [expanded, setExpanded] = React.useState(false);
+  const [pageSize, setPageSize] = React.useState(10);
+  const [sortColumn, setSort] = React.useState('');
 
   React.useEffect(() => {
     const getCareers = async () => {
@@ -74,10 +90,10 @@ function CareerListings({ filters, keyword }) {
         setLoad(false);
         setPage(0);
 
-        if (listings.data.all.length <= 10) {
+        if (listings.data.all.length <= pageSize) {
           setTop(listings.data.all.length);
         } else {
-          setTop(10);
+          setTop(pageSize);
         }
 
         setJobListings(listings.data.all);
@@ -106,6 +122,37 @@ function CareerListings({ filters, keyword }) {
       getUserJobs();
     }
   }, [userType, token]);
+
+  const sortBy = (e) => {
+    const sort = e.target.value;
+
+    switch (sort) {
+      case 'Applicants':
+        const newJobListings = jobListings.sort((a, b) => {
+          if (a.AppliedBy.length < b.AppliedBy.length) return 1;
+          if (b.AppliedBy.length < a.AppliedBy.length) return -1;
+          return 0;
+        });
+        setJobListings(newJobListings);
+        resetPageSize({ target: { value: pageSize } });
+        break;
+      default:
+        break;
+    }
+
+    setSort(sort);
+  };
+
+  const resetPageSize = (e) => {
+    const size = parseInt(e.target.value);
+    setPageSize(size);
+    setPage(0);
+    if (jobListings.length <= size) {
+      setTop(jobListings.length);
+    } else {
+      setTop(size);
+    }
+  };
 
   const handleExpansion = panel => (e, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -140,12 +187,14 @@ function CareerListings({ filters, keyword }) {
     let newPage;
     let newTop;
     if (next) {
-      newPage = page + 10;
-      newTop = top + 10 >= jobListings.length
-        ? jobListings.length : top + 10;
+      newPage = page + pageSize;
+      newTop =
+        top + pageSize >= jobListings.length
+          ? jobListings.length
+          : top + pageSize;
     } else {
-      newPage = page - 10;
-      newTop = top - 10 <= 10 ? 10 : top - 10;
+      newPage = page - pageSize;
+      newTop = top - pageSize <= pageSize ? pageSize : top - pageSize;
     }
 
     setExpanded(false);
@@ -233,100 +282,129 @@ function CareerListings({ filters, keyword }) {
 
   return (
     <div className={classes.listings}>
+      <div
+        className={classNames("row", "justify-content-around", "w-100", "mx-0")}
+      >
+        <FormControl className={classNames("col-sm", "col-md-6", "col-lg-4")} hidden={userType !== 'Admin'}>
+          <InputLabel>Sort By</InputLabel>
+          <Select native value={sortColumn} onChange={sortBy}>
+            <option value={""}></option>
+            <option value={"Applicants"}>Applicants</option>
+          </Select>
+        </FormControl>
+        <FormControl className={classNames("col-sm", "col-md-6", "col-lg-4")}>
+          <InputLabel>Number of Results</InputLabel>
+          <Select native value={pageSize} onChange={resetPageSize}>
+            <option value={10}>10</option>
+            <option value={20}>25</option>
+            <option value={30}>50</option>
+          </Select>
+        </FormControl>
+      </div>
       {pageComponent()}
-      { 
-        jobsToShow.slice(page, top + 1).map((job, index) => {
-          return (
-            <ExpansionPanel key={index} expanded={expanded === index} className={classes.listing} onChange={handleExpansion(index)}>
-              <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-                <div className={classes.column}>
-                  <div>
-                    <Typography
-                      className={classes.title} 
-                      variant="h5" 
-                      color="textSecondary" 
-                      gutterBottom
-                    >
-                      {job.title}
-                    </Typography>
+      {jobsToShow.slice(page, top + 1).map((job, index) => {
+        return (
+          <ExpansionPanel
+            key={index}
+            expanded={expanded === index}
+            className={classes.listing}
+            onChange={handleExpansion(index)}
+          >
+            <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+              <div className={classes.column}>
+                <div>
+                  <Typography
+                    className={classes.title}
+                    variant="h5"
+                    color="textSecondary"
+                    gutterBottom
+                  >
+                    {job.title}
+                  </Typography>
+                  <Typography color="textSecondary">
+                    {job.city}, {job.state}
+                  </Typography>
+                  {userType === "Admin" && (
                     <Typography color="textSecondary">
-                      {job.city}, {job.state}
+                      Applicants: {job.AppliedBy.length}
                     </Typography>
-                  </div>
+                  )}
                 </div>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <div className={classes.column}>
-                  <div className={classes.row}>
-                    <Typography color="textSecondary">
-                      Type:&nbsp;
-                    </Typography>
-                    <Typography component="pre">
-                      {job.type}
-                    </Typography>
-                  </div>
-                  <br />
-                  <Typography color="textSecondary">
-                    Description:&nbsp;
-                  </Typography>
-                  <Typography component="pre">
-                    {job.description}
-                  </Typography>
-                  <br />
-                  <Typography color="textSecondary">
-                    Skills: 
-                  </Typography>
-                  <Typography component="pre">
-                    {job.skills.map((skill, index) => {
-                      return <Chip
+              </div>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <div className={classes.column}>
+                <div className={classes.row}>
+                  <Typography color="textSecondary">Type:&nbsp;</Typography>
+                  <Typography component="pre">{job.type}</Typography>
+                </div>
+                <br />
+                <Typography color="textSecondary">
+                  Description:&nbsp;
+                </Typography>
+                <Typography component="pre">{job.description}</Typography>
+                <br />
+                <Typography color="textSecondary">Skills:</Typography>
+                <Typography component="pre">
+                  {job.skills.map((skill, index) => {
+                    return (
+                      <Chip
                         key={index}
                         label={skill}
                         className={classes.chip}
-                        />
-                    })}
+                      />
+                    );
+                  })}
+                </Typography>
+                <br />
+                <div className={classes.row}>
+                  <Typography color="textSecondary">
+                    Qualifications:&nbsp;
                   </Typography>
-                  <br />
-                  <div className={classes.row}>
-                    <Typography color="textSecondary">
-                      Qualifications:&nbsp;
-                    </Typography>
-                    <Typography component="pre">
-                      {job.qualifications}
-                    </Typography>
-                  </div>
+                  <Typography component="pre">{job.qualifications}</Typography>
                 </div>
-              </ExpansionPanelDetails>
-              <Divider />
-              <ExpansionPanelActions>
-                <FormControlLabel
-                  control={
-                    <Checkbox 
-                      icon={<StarBorder />} 
-                      checkedIcon={<Star />} 
-                      value='saved' 
-                      checked={savedJobs.has(job.jobId)} 
-                      onChange={(e) => handleSave(e, job)} 
-                    />}
-                />
-                <Button 
-                  hidden={appliedJobs.has(job.jobId)} 
-                  size="medium" 
-                  onClick={(e) => handleApply(e, job)}
-                >
-                  Apply
-                </Button>
-                <Button 
-                  hidden={!appliedJobs.has(job.jobId)} 
-                  size="medium" 
-                  disabled
-                >
-                  Applied
-                </Button>
-              </ExpansionPanelActions>
-            </ExpansionPanel>
-          )
-        })
-      }
+              </div>
+            </ExpansionPanelDetails>
+            <Divider />
+            <ExpansionPanelActions>
+              <Button
+                hidden={userType !== "Admin"}
+                size="medium"
+                component={Link}
+                to="/"
+              >
+                View Applicants
+              </Button>
+              <FormControlLabel
+                hidden={userType !== "JobSeeker"}
+                control={
+                  <Checkbox
+                    icon={<StarBorder />}
+                    checkedIcon={<Star />}
+                    value="saved"
+                    checked={savedJobs.has(job.jobId)}
+                    onChange={e => handleSave(e, job)}
+                  />
+                }
+              />
+              <Button
+                hidden={appliedJobs.has(job.jobId) || userType !== "JobSeeker"}
+                size="medium"
+                onClick={e => handleApply(e, job)}
+              >
+                Apply
+              </Button>
+              <Button
+                hidden={!appliedJobs.has(job.jobId) || userType !== "JobSeeker"}
+                size="medium"
+                disabled
+              >
+                Applied
+              </Button>
+            </ExpansionPanelActions>
+          </ExpansionPanel>
+        );
+      })}
       {pageComponent()}
     </div>
   );

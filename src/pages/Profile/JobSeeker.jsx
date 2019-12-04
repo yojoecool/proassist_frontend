@@ -36,10 +36,7 @@ function JobSeeker() {
 
   return (
     <div className={classes.root}>
-      <Typography
-        variant="h4"
-        className={classNames(classes.welcomeText)}
-      >
+      <Typography variant="h4" className={classNames(classes.welcomeText)}>
         Welcome, {name}!
       </Typography>
       <Divider className={classes.divider} />
@@ -48,16 +45,20 @@ function JobSeeker() {
 
       <Divider className={classes.divider} />
 
-      <div className="text-center">
-        <Button
-          onClick={() => setDownloadOnly(!downloadOnlyResume)}
-          className={classNames(classes.downloadOnlyButton)}
-          variant="outlined"
-        >
-          Toggle Resume Viewer
-        </Button>
+      <div className={classNames("grid")}>
+        <div className="col-sm">
+          <div className="text-center">
+            <Button
+              onClick={() => setDownloadOnly(!downloadOnlyResume)}
+              className={classNames(classes.downloadOnlyButton)}
+              variant="outlined"
+            >
+              Toggle Resume Viewer
+            </Button>
+          </div>
+          <PdfViewer userId={userId} downloadOnly={downloadOnlyResume} />
+        </div>
       </div>
-      <PdfViewer userId={userId} downloadOnly={downloadOnlyResume} />
     </div>
   );
 }
