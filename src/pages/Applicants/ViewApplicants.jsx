@@ -3,20 +3,16 @@ import axios from 'axios';
 import useLocalStorage from 'react-use-localstorage';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Button,
-  Typography,
-  NativeSelect,
-  FormControlLabel,
-  FormLabel,
-  Switch,
-} from '@material-ui/core';
+import { Button, Typography, Select, FormControl, InputLabel } from "@material-ui/core";
 import { withRouter } from 'react-router-dom';
+import classNames from "classnames";
 import { toast } from '../../modules';
 import { useToken } from '../../hooks';
 import { JobListing } from '../company';
 
 function ViewApplicants() {
+  const classes = useStyles();
+
   const { userType } = useToken();
   const [token] = useLocalStorage("proAssistToken");
   const { jobId } = useParams();
@@ -60,13 +56,60 @@ function ViewApplicants() {
   }, [token, page, setPage, jobId]);
 
   return (
-    <div className="d-flex align-items-center flex-column my-3">
+    <div
+      className={classNames(
+        "d-flex",
+        "align-items-center",
+        "flex-column",
+        "my-3"
+      )}
+    >
       {job && (
         <div className="w-75">
           <JobListing jobs={[job]} />
         </div>
       )}
-      {applicants.length > 0 && <div>Applicants</div>}
+      <div className={classNames("w-75", "grid")}>
+        <div className={classNames("row", "border-bottom", "my-2", "my-0")}>
+          <div className={classNames("col-sm", "py-2")}>Name</div>
+          <div className={classNames("col-sm", "py-2")}>Email</div>
+          <div className="col-sm" />
+          <div className="col-sm" />
+          <div className="col-sm">Status</div>
+        </div>
+        {applicants.map((applicant, index) => {
+          const { firstName, lastName, User, userId, JobsApplied } = applicant;
+          const { email } = User;
+          const { status } = JobsApplied;
+          return (
+            <div
+              className={classNames("row", "border-bottom", "py-2")}
+              key={userId}
+            >
+              <div className={classNames("col-sm", "py-2")}>
+                <Typography variant="body1">{`${firstName} ${lastName}`}</Typography>
+              </div>
+              <div className={classNames("col-sm", "py-2")}>
+                <Typography variant="body1">{email}</Typography>
+              </div>
+              <div className="col-sm">
+                <Button size="medium">View Resume</Button>
+              </div>
+              <div className="col-sm">
+                <Button size="medium">Send Message</Button>
+              </div>
+              <FormControl className={classNames("col-sm")}>
+                <InputLabel>Status</InputLabel>
+                <Select native value={status} onChange={() => {}}>
+                  <option value="Applied">Applied</option>
+                  <option value="Contacted">Contacted</option>
+                  <option value="Rejected">Rejected</option>
+                </Select>
+              </FormControl>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
