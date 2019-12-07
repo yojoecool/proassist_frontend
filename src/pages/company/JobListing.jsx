@@ -111,7 +111,7 @@ function JobListing({ jobs }) {
         </ExpansionPanelDetails>
         <Divider />
         <ExpansionPanelActions>
-            <Button size="medium" component={Link} to={{pathname: '/profile/editjob', jobId: job.jobId}}>Edit</Button>
+            <Button size="medium" component={Link} to={{pathname: `/careers/editjob/${job.jobId}`}}>Edit</Button>
           </ExpansionPanelActions>
         </ExpansionPanel>
           )

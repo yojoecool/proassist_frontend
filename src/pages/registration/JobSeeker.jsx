@@ -110,7 +110,7 @@ function JobSeeker(props) {
                 }
             );
           toast('Registration Successful!', 'success');
-          props.history.push('/login');
+          props.history.replace('/login');
         } catch (err) {
         if (err.response && err.response.status === 409) {
             toast('User with email already exists.', 'error');

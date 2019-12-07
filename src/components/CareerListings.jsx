@@ -25,6 +25,7 @@ import { ExpandMore, Star, StarBorder } from '@material-ui/icons';
 import classNames from "classnames";
 import { useToken } from '../hooks';
 import { toast } from '../modules';
+import { JobDetails, JobSummary } from './Job';
 
 const useStyles = makeStyles(theme => ({
   listings: {
@@ -104,7 +105,7 @@ function CareerListings({ filters, keyword }) {
     };
 
     getCareers();
-  }, [filters, backend, keyword]);
+  }, [filters, backend, keyword, pageSize]);
 
   React.useEffect(() => {
     const getUserJobs = async () => {
@@ -125,21 +126,32 @@ function CareerListings({ filters, keyword }) {
 
   const sortBy = (e) => {
     const sort = e.target.value;
+    let newJobListings = [];
 
     switch (sort) {
       case 'Applicants':
-        const newJobListings = jobListings.sort((a, b) => {
+        newJobListings = jobListings.sort((a, b) => {
           if (a.AppliedBy.length < b.AppliedBy.length) return 1;
           if (b.AppliedBy.length < a.AppliedBy.length) return -1;
           return 0;
         });
-        setJobListings(newJobListings);
-        resetPageSize({ target: { value: pageSize } });
+        break;
+      case 'Alpha':
+        newJobListings = jobListings.sort((a, b) => {
+          const aTitle = a.title.toUpperCase();
+          const bTitle = b.title.toUpperCase();
+
+          if (aTitle < bTitle) return -1;
+          if (bTitle < aTitle) return 1;
+          return 0;
+        });
         break;
       default:
-        break;
+        return;
     }
 
+    setJobListings(newJobListings);
+    resetPageSize({ target: { value: pageSize } });
     setSort(sort);
   };
 
@@ -285,11 +297,14 @@ function CareerListings({ filters, keyword }) {
       <div
         className={classNames("row", "justify-content-around", "w-100", "mx-0")}
       >
-        <FormControl className={classNames("col-sm", "col-md-6", "col-lg-4")} hidden={userType !== 'Admin'}>
+        <FormControl className={classNames("col-sm", "col-md-6", "col-lg-4")}>
           <InputLabel>Sort By</InputLabel>
           <Select native value={sortColumn} onChange={sortBy}>
             <option value={""}></option>
-            <option value={"Applicants"}>Applicants</option>
+            <option hidden={userType !== "Admin"} value={"Applicants"}>
+              Applicants
+            </option>
+            <option value={"Alpha"}>Alphabetical</option>
           </Select>
         </FormControl>
         <FormControl className={classNames("col-sm", "col-md-6", "col-lg-4")}>
@@ -311,59 +326,10 @@ function CareerListings({ filters, keyword }) {
             onChange={handleExpansion(index)}
           >
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-              <div className={classes.column}>
-                <div>
-                  <Typography
-                    className={classes.title}
-                    variant="h5"
-                    color="textSecondary"
-                    gutterBottom
-                  >
-                    {job.title}
-                  </Typography>
-                  <Typography color="textSecondary">
-                    {job.city}, {job.state}
-                  </Typography>
-                  {userType === "Admin" && (
-                    <Typography color="textSecondary">
-                      Applicants: {job.AppliedBy.length}
-                    </Typography>
-                  )}
-                </div>
-              </div>
+              <JobSummary job={job} userType={userType} />
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <div className={classes.column}>
-                <div className={classes.row}>
-                  <Typography color="textSecondary">Type:&nbsp;</Typography>
-                  <Typography component="pre">{job.type}</Typography>
-                </div>
-                <br />
-                <Typography color="textSecondary">
-                  Description:&nbsp;
-                </Typography>
-                <Typography component="pre">{job.description}</Typography>
-                <br />
-                <Typography color="textSecondary">Skills:</Typography>
-                <Typography component="pre">
-                  {job.skills.map((skill, index) => {
-                    return (
-                      <Chip
-                        key={index}
-                        label={skill}
-                        className={classes.chip}
-                      />
-                    );
-                  })}
-                </Typography>
-                <br />
-                <div className={classes.row}>
-                  <Typography color="textSecondary">
-                    Qualifications:&nbsp;
-                  </Typography>
-                  <Typography component="pre">{job.qualifications}</Typography>
-                </div>
-              </div>
+              <JobDetails job={job} />
             </ExpansionPanelDetails>
             <Divider />
             <ExpansionPanelActions>
@@ -371,9 +337,17 @@ function CareerListings({ filters, keyword }) {
                 hidden={userType !== "Admin"}
                 size="medium"
                 component={Link}
-                to="/"
+                to={`/careers/viewApplicants/${job.jobId}`}
               >
                 View Applicants
+              </Button>
+              <Button
+                hidden={userType !== "Admin"}
+                size="medium"
+                component={Link}
+                to={`/careers/editJob/${job.jobId}`}
+              >
+                Edit
               </Button>
               <FormControlLabel
                 hidden={userType !== "JobSeeker"}

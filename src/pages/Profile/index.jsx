@@ -17,8 +17,6 @@ function Profile(props) {
     case 'Company':
       addlRoutes = [
         (<Route exact path="/profile" component={Company} key={0} />),
-        (<Route path="/profile/addjob" component={AddJob} key={1} />),
-        (<Route path="/profile/editJob" component={EditJob} key={2} />),
       ];
       break;
     case 'JobSeeker':
@@ -28,9 +26,7 @@ function Profile(props) {
       break;
     case 'Admin':
       addlRoutes = [
-        (<Route exact path="/profile" component={Admin} key={4} />),
-        (<Route path="/profile/addjob" component={AddJob} key={5} />),
-        (<Route path="/profile/editJob" component={EditJob} key={6} />),
+        <Route exact path="/profile" component={Admin} key={4} />,
       ];
       break;
     default:

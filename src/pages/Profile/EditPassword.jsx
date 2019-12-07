@@ -110,7 +110,7 @@ function EditPassword(props) {
             }
         );
       toast('Edit Successful!', 'success');
-      props.history.push('/profile');
+      props.history.replace('/careers');
     } catch (err) {
     if (err.response && err.response.status === 404) {
         toast('User not found.', 'error');
@@ -177,7 +177,7 @@ const update = (e) => {
         />
             
       <div className={classes.buttonDiv}> 
-          <Button size="large" variant="contained" component={Link} to="/profile" className={classes.button}>
+          <Button size="large" variant="contained" onClick={props.history.goBack} className={classes.button}>
               Back
           </Button>
 

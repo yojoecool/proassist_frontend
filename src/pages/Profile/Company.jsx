@@ -143,7 +143,7 @@ function Company(props) {
             >
               See More Jobs
             </Button>
-            <Button size='large' variant='contained' color='primary' component={Link} to='/profile/addjob' 
+            <Button size='large' variant='contained' color='primary' component={Link} to='/careers/addjob' 
               className={classes.button} disabled={companyStatus !== 'Active'}>
               Add New Job
             </Button>

@@ -155,7 +155,7 @@ function AddJob(props) {
                 },
             );
           toast('Posted Job Successfully!', 'success');
-          props.history.push('/profile');
+          props.history.replace('/careers');
         } catch (err) {
           if (err.response.status === 403) {
             toast('Authorization error. Please try loging in again', 'error');
