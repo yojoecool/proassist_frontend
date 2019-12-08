@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AppBar, Drawer, Footer } from './navigation';
 import { Login, Register, Splashpage, About, Careers, Profile } from './pages';
+import { JobSeeker } from './pages/registration';
 import { history } from './modules';
 import './App.css';
 
@@ -34,12 +35,13 @@ function App() {
       <Router history={history}>
         <AppBar toggleDrawer={toggleDrawer} />
         <Drawer openDrawer={openDrawer} closeDrawer={closeDrawer} />
-        
+
         <Switch>
           <Route exact path="/" component={Splashpage} />
           <Route path="/about" component={About} />
           <Route path="/careers" component={Careers} />
-          <Route path="/register" component={Register} />
+          <Route path="/register" component={JobSeeker} />
+          {/* <Route path="/register" component={Register} /> */}
           <Route path="/login" component={Login} />
           <Route path="/profile" component={Profile} />
         </Switch>

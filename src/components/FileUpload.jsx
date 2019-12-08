@@ -129,7 +129,7 @@ function FileUpload() {
         {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
       </div>
 
-      <input type="file" name="blah" onChange={onChangeFile} hidden ref={fileInput} accept=".pdf" />
+      <input type="file" name="file" onChange={onChangeFile} hidden ref={fileInput} accept=".pdf" />
 
       <div className={classes.buttonWrapper}>
         <Button

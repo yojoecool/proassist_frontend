@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     Button, TextField, Typography, 
   } from '@material-ui/core';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { toast, validations } from '../../modules';
 
 const useStyles = makeStyles(theme => ({
@@ -90,6 +90,13 @@ function JobSeeker(props) {
         if (state.password && !validatePassword(state.password, state.passwordCheck)) {
             newErrors.password = true;
             newErrors.errorText = [...newErrors.errorText, 'Passwords do not match'];
+        }
+        if (state.password.length < 8) {
+          newErrors.password = true;
+          newErrors.errorText = [
+            ...newErrors.errorText,
+            "Password must be at least 8 characters long"
+          ];
         }
 
         setErrors(newErrors);
@@ -197,8 +204,8 @@ function JobSeeker(props) {
                 error={errors.password}
             />
 
-            <div className={classes.buttonDiv}> 
-                <Button size="large" variant="contained" component={Link} to="/register" className={classes.button}>
+            <div className={classes.buttonDiv}>
+                <Button size="large" variant="contained" onClick={props.history.goBack} className={classes.button}>
                     Back
                 </Button>
 

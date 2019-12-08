@@ -52,11 +52,11 @@ function ProAssistAppBar(props) {
         case '/':
           initialPage = 0;
           break;
-        case '/about':
-          initialPage = 1;
-          break;
+        // case '/about':
+        //   initialPage = 1;
+        //   break;
         case '/careers':
-          initialPage = 2;
+          initialPage = 1;
           break;
         default:
           initialPage = false;
@@ -102,7 +102,7 @@ function ProAssistAppBar(props) {
 
         <Tabs className={classes.navTab} value={page} hidden={mobileView}>
           <NavTab label="Home" to="/" />
-          <NavTab label="About" to="/about" />
+          {/* <NavTab label="About" to="/about" /> */}
           <NavTab label="Careers" to="/careers" />
         </Tabs>
 

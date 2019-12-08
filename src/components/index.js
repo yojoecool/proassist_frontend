@@ -3,4 +3,5 @@ export { default as FileUpload } from './FileUpload';
 export { default as UserInfo } from './UserInfo';
 export { default as CareerSearch } from './CareerSearch';
 export { default as CareerListings } from './CareerListings';
+export { default as LoadingButton } from "./LoadingButton";
 export { JobDetails, JobSummary } from './Job';

@@ -124,9 +124,9 @@ function ProAssistDrawer(props) {
         case '/':
           initialPage = 0;
           break;
-        case '/about':
-          initialPage = 1;
-          break;
+        // case '/about':
+        //   initialPage = 1;
+        //   break;
         case '/careers':
           initialPage = 2;
           break;
@@ -191,13 +191,13 @@ function ProAssistDrawer(props) {
         >
           Home
         </MenuLink>
-        <MenuLink
+        {/* <MenuLink
           onClick={props.closeDrawer}
           to="/about"
           curr={page === 1 ? 1 : 0}
         >
           About
-        </MenuLink>
+        </MenuLink> */}
         <MenuLink
           onClick={props.closeDrawer}
           to="/careers"
