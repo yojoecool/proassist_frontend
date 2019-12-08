@@ -14,3 +14,8 @@
 .Toastify__toast--success {
   background-color: #2e7d32;
 }
+
+canvas {
+  max-width: 100% !important;
+  max-height: 100% !important;
+}

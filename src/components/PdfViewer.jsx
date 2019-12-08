@@ -6,6 +6,7 @@ import { saveAs } from 'file-saver';
 import { Typography, IconButton, Button } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import { toast } from '../modules';
 import { useWindowDimensions } from '../hooks';
@@ -14,9 +15,11 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 const useStyles = makeStyles(theme => ({
   pdfViewer: {
-    marginTop: 15,
-    marginBottom: 15,
-    textAlign: 'center'
+    paddingTop: 15,
+    paddingBottom: 15,
+    textAlign: 'center',
+    overflowY: 'scroll',
+    height: '95%'
   },
   pageNums: {
     marginRight: 50,
@@ -37,7 +40,7 @@ const useStyles = makeStyles(theme => ({
   downloadButton: {
     color: theme.palette.blue.light,
     marginBottom: 10
-  }
+  },
 }));
 
 function PageNumContainer(props) {
@@ -119,7 +122,7 @@ function PdfViewer(props) {
       </Button>
 
       {!downloadOnly && (
-        <React.Fragment>
+        <>
           <PageNumContainer
             setCurrPage={setCurrPage}
             currPage={currPage}
@@ -131,9 +134,13 @@ function PdfViewer(props) {
             onLoadSuccess={({ numPages }) => setTotalPages(numPages)}
             externalLinkTarget="_blank"
           >
-            <Page pageNumber={currDisplayed} renderTextLayer={false} width={pageWidth} />
             <Page
-              className={classes.hidden}
+              pageNumber={currDisplayed}
+              renderTextLayer={false}
+              width={pageWidth}
+            />
+            <Page
+              className={classNames(classes.hidden)}
               pageNumber={currPage}
               renderTextLayer={false}
               width={pageWidth}
@@ -146,7 +153,7 @@ function PdfViewer(props) {
             currPage={currPage}
             totalPages={totalPages}
           />
-        </React.Fragment>
+        </>
       )}
     </div>
   )
