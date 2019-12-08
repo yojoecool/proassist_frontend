@@ -5,14 +5,12 @@ import useLocalStorage from 'react-use-localstorage';
 import {
   Button,
   Checkbox,
-  Chip,
   Divider,
   ExpansionPanel,
   ExpansionPanelActions,
   ExpansionPanelDetails,
   ExpansionPanelSummary,
   FormControlLabel,
-  Typography,
   IconButton,
   CircularProgress,
   FormControl,
@@ -90,14 +88,14 @@ function CareerListings({ filters, keyword }) {
         const listings = await axios.get(`${backend}/careers`, { params: { filters } });
         setLoad(false);
         setPage(0);
-
-        if (listings.data.all.length <= pageSize) {
-          setTop(listings.data.all.length);
-        } else {
-          setTop(pageSize);
-        }
-
         setJobListings(listings.data.all);
+
+        setTop(currSize => {
+          if (listings.data.all.length < currSize) {
+            return listings.data.all.length;
+          }
+          return currSize
+        });
       } catch (err) {
         setLoad(true);
         toast('Error during search. No applicable listings found.', 'error');
@@ -105,12 +103,10 @@ function CareerListings({ filters, keyword }) {
     };
 
     getCareers();
-  }, [filters, backend, keyword, pageSize]);
+  }, [filters, keyword, backend]);
 
   React.useEffect(() => {
     const getUserJobs = async () => {
-      const { REACT_APP_BACKEND_URL: backend } = process.env;
-
       const { data: userJobs } = await axios.get(
         `${backend}/careers/userJobs`,
         { headers: { authorization: 'Bearer ' + token }}
@@ -122,7 +118,7 @@ function CareerListings({ filters, keyword }) {
     if (userType === 'JobSeeker') {
       getUserJobs();
     }
-  }, [userType, token]);
+  }, [userType, token, backend]);
 
   const sortBy = (e) => {
     const sort = e.target.value;
@@ -297,7 +293,7 @@ function CareerListings({ filters, keyword }) {
       <div
         className={classNames("row", "justify-content-around", "w-100", "mx-0")}
       >
-        <FormControl className={classNames("col-sm", "col-md-6", "col-lg-4")}>
+        <FormControl className={classNames("col-sm", "col-md-6", "col-lg-4", "my-2")}>
           <InputLabel>Sort By</InputLabel>
           <Select native value={sortColumn} onChange={sortBy}>
             <option value={""}></option>
@@ -307,7 +303,7 @@ function CareerListings({ filters, keyword }) {
             <option value={"Alpha"}>Alphabetical</option>
           </Select>
         </FormControl>
-        <FormControl className={classNames("col-sm", "col-md-6", "col-lg-4")}>
+        <FormControl className={classNames("col-sm", "col-md-6", "col-lg-4", "my-2")}>
           <InputLabel>Number of Results</InputLabel>
           <Select native value={pageSize} onChange={resetPageSize}>
             <option value={10}>10</option>

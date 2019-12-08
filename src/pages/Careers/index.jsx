@@ -1,6 +1,5 @@
 import React from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
-import { toast } from "../../modules";
 import { useToken } from "../../hooks";
 import { AddJob, EditJob } from "../company";
 import ViewApplicants from '../Applicants/ViewApplicants';
@@ -23,8 +22,6 @@ function Careers(props) {
       ];
       break;
     default:
-      toast("You don't have permission to view this page", "error");
-      props.history.replace("/login");
       break;
   }
 

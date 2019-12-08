@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Divider, Typography } from '@material-ui/core';
+import { Link } from "react-router-dom";
 import { FileUpload, PdfViewer } from '../../components';
 import { useToken } from '../../hooks';
 
@@ -39,6 +40,34 @@ function JobSeeker() {
       <Typography variant="h4" className={classNames(classes.welcomeText)}>
         Welcome, {name}!
       </Typography>
+      <div
+        className={classNames(
+          "w-100",
+          "d-flex",
+          "justify-content-center",
+          "align-items-center",
+          "my-2"
+        )}
+      >
+        <Button
+          variant="outlined"
+          color="primary"
+          component={Link}
+          to="/profile/edit"
+          className="mx-2"
+        >
+          Update Profile
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          component={Link}
+          to="/profile/password"
+          className="mx-2"
+        >
+          Update Password
+        </Button>
+      </div>
       <Divider className={classes.divider} />
 
       <FileUpload />

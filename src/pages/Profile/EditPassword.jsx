@@ -5,7 +5,7 @@ import {
   Typography, Button, TextField
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { useToken } from '../../hooks';
 import { toast, validations } from '../../modules';
 

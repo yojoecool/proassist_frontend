@@ -56,7 +56,7 @@ function ViewApplicants() {
     };
 
     initialGetJob();
-  }, [token, jobId]);
+  }, [token, jobId, pageSize, applicants.length]);
 
   const getJob = async () => {
     const response = await axios.get(`${backend}/careers/applicants`, {
