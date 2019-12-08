@@ -34,6 +34,10 @@ const useStyles = makeStyles(theme => ({
   buttonWrapper: {
     position: "relative",
     marginBottom: 15
+  },
+  message: {
+    overflowY: "scroll",
+    height: "95%"
   }
 }));
 
@@ -85,7 +89,7 @@ function SendMessageModal({ userId, open, onClose }) {
             "flex-column",
             "align-items-center",
             "justify-content-center",
-            "overflow-auto"
+            classes.message
           )}
         >
           <TextField

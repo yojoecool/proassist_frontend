@@ -1,49 +1,62 @@
 import React from 'react';
 import axios from 'axios';
+import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
 import useLocalStorage from 'react-use-localstorage';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Typography, TextField, Button
+  Typography, TextField, Button, CircularProgress
 } from '@material-ui/core';
 import { toast, decodeToken } from '../modules';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    flexDirection: 'column',
-    marginTop: '10%',
-    marginBottom: '10%'
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    flexDirection: "column",
+    marginTop: "10%",
+    marginBottom: "10%"
   },
   loginText: {
     color: theme.palette.secondary.main,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   },
   form: {
-    width: '100%',
-    textAlign: 'center'
+    width: "100%",
+    textAlign: "center"
   },
   errorText: {
-    color: 'red',
+    color: "red",
     marginTop: 10,
-    width: '100%'
+    width: "100%"
   },
   errorHeight: {
     height: 20,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  buttonProgress: {
+    color: theme.palette.secondary.main,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12
+  },
+  buttonWrapper: {
+    position: "relative",
+    marginBottom: 15
   },
   submitButton: {
-    backgroundColor: '#2e7d32',
-    color: 'white',
-    '&:hover': {
-      backgroundColor: '#005005',
-      color: 'white'
+    backgroundColor: "#2e7d32",
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#005005",
+      color: "white"
     }
   },
   input: {
@@ -57,6 +70,7 @@ function LogIn(props) {
   const [email, changeEmail] = React.useState('');
   const [errors, setErrors] = React.useState({});
   const [password, changePassword] = React.useState('');
+  const [loading, setLoad] = React.useState(false);
 
   const [token, setToken] = useLocalStorage('proAssistToken');
 
@@ -71,6 +85,7 @@ function LogIn(props) {
 
     try {
       const { REACT_APP_BACKEND_URL } = process.env;
+      setLoad(true);
       const response = await axios.post(`${REACT_APP_BACKEND_URL}/users/login`, { email, password });
       const token = response.data.token;
 
@@ -83,6 +98,7 @@ function LogIn(props) {
       } else {
         toast('Error logging in. Please try again later.', 'error');
       }
+      setLoad(false);
     }
   };
 
@@ -94,7 +110,9 @@ function LogIn(props) {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h4" className={classes.loginText}>Log In</Typography>
+      <Typography variant="h4" className={classes.loginText}>
+        Log In
+      </Typography>
 
       <div className={classes.errorHeight}>
         <Typography variant="subtitle1" className={classes.errorText}>
@@ -131,12 +149,23 @@ function LogIn(props) {
           required
         />
 
-        <br /><br />
-        <Button variant="contained" className={classes.submitButton} type="submit">
-          Submit
-        </Button>
+        <br />
+        <br />
+        <div className={classes.buttonWrapper}>
+          <Button
+            variant="contained"
+            type="submit"
+            className={classNames(classes.submitButton)}
+            color="primary"
+            disabled={loading}
+          >
+            Submit
+          </Button>
+          {loading && (
+            <CircularProgress size={24} className={classes.buttonProgress} />
+          )}
+        </div>
       </form>
-
     </div>
   );
 }

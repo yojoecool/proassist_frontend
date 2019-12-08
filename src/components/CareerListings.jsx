@@ -102,7 +102,7 @@ function CareerListings({ filters, keyword }) {
     };
 
     getCareers();
-  }, [filters, keyword, backend]);
+  }, [filters, keyword, backend, pageSize]);
 
   React.useEffect(() => {
     const getUserJobs = async () => {
