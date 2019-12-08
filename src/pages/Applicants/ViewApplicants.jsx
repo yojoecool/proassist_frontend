@@ -4,7 +4,9 @@ import useLocalStorage from 'react-use-localstorage';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Button, Typography, Select, FormControl, InputLabel, CircularProgress
+  Button, Typography, Select,
+  FormControl, InputLabel, CircularProgress,
+  Checkbox, FormControlLabel
 } from "@material-ui/core";
 import classNames from "classnames";
 import { toast } from '../../modules';
@@ -34,37 +36,52 @@ function ViewApplicants() {
   const [selectedApplicant, setSelectedApplicant] = React.useState(null);
   const [resumeModal, setResumeModal] = React.useState(false);
   const [messageModal, setMessageModal] = React.useState(false);
+  const [includeRejected, setRejected] = React.useState(false);
 
   React.useEffect(() => {
-    const getJob = async () => {
+    const initialGetJob = async () => {
+      setLoad(true);
       try {
-        setLoad(true);
-
-        const response = await axios.get(`${backend}/careers/applicants`, {
-          params: { jobId },
-          headers: { authorization: 'Bearer ' + token }
-        });
-        setPage(0);
-
-        const { job, applicants, count } = response.data;
-
-        if (count <= pageSize) {
-          setTop(count);
-        } else {
-          setTop(pageSize);
-        }
-
-        setApplicants(applicants);
-        setJob(job);
+        await getJob();
       } catch (err) {
-        toast("Error during search. No applicable listings found.", "error");
-      } finally {
-        setLoad(false);
+        toast("No career listing found.", "error");
       }
+      setPage(0);
+      if (applicants.length <= pageSize) {
+        setTop(applicants.length);
+      } else {
+        setTop(pageSize);
+      }
+      setLoad(false);
     };
 
-    getJob();
+    initialGetJob();
   }, [token, jobId]);
+
+  const getJob = async () => {
+    const response = await axios.get(`${backend}/careers/applicants`, {
+      params: { jobId },
+      headers: { authorization: "Bearer " + token }
+    });
+
+    const { job, applicants } = response.data;
+    setApplicants(applicants);
+    setJob(job);
+  };
+
+  const updateStatus = (jobSeekerId) => async (e) => {
+    try {
+      await axios.post(
+        `${backend}/careers/updateApplicantStatus`,
+        { jobSeekerId, jobId, status: e.target.value },
+        { headers: { authorization: "Bearer " + token } }
+      );
+      toast("Status successfully updated.", "success");
+      await getJob();
+    } catch (err) {
+      toast("Unable to update state. Try again later.", "error");
+    }
+  }
 
   if (loading) {
     return (
@@ -106,6 +123,20 @@ function ViewApplicants() {
           <JobListing jobs={[job]} />
         </div>
       )}
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={includeRejected}
+            onChange={() => setRejected(!includeRejected)}
+            color="primary"
+            inputProps={{
+              "aria-label": "primary checkbox"
+            }}
+          />
+        }
+        label="Include Rejected?"
+        className="my-2"
+      />
       <div className={classNames("w-75", "grid", "my-2")}>
         <div className={classNames("row", "border-bottom", "py-2")}>
           <div className={classNames("col-sm", "py-2")}>Name</div>
@@ -114,44 +145,59 @@ function ViewApplicants() {
           <div className="col-sm" />
           <div className={classNames("col-sm", "py-2")}>Status</div>
         </div>
-        {applicants.map((applicant, index) => {
-          const { firstName, lastName, User, userId, JobsApplied } = applicant;
-          const { email } = User;
-          const { status } = JobsApplied;
-          return (
-            <div
-              className={classNames("row", "border-bottom", "py-2", {
-                [classes.evenRow]: index % 2 === 0
-              })}
-              key={userId}
-            >
-              <div className={classNames("col-sm", "py-2")}>
-                <Typography variant="body1">{`${firstName} ${lastName}`}</Typography>
+        {applicants
+          .filter(applicant =>
+            includeRejected ? true : applicant.JobsApplied.status !== "Rejected"
+          )
+          .map((applicant, index) => {
+            const {
+              firstName,
+              lastName,
+              User,
+              userId,
+              JobsApplied
+            } = applicant;
+            const { email } = User;
+            const { status } = JobsApplied;
+            return (
+              <div
+                className={classNames("row", "border-bottom", "py-2", {
+                  [classes.evenRow]: index % 2 === 0
+                })}
+                key={userId}
+              >
+                <div className={classNames("col-sm", "py-2")}>
+                  <Typography variant="body1">{`${firstName} ${lastName}`}</Typography>
+                </div>
+                <div className={classNames("col-sm", "py-2")}>
+                  <Typography variant="body1">{email}</Typography>
+                </div>
+                <div className="col-sm">
+                  <Button size="medium" onClick={openResume(userId)}>
+                    View Resume
+                  </Button>
+                </div>
+                <div className="col-sm">
+                  <Button size="medium" onClick={openMessage(userId)}>
+                    Send Message
+                  </Button>
+                </div>
+                <FormControl className={classNames("col-sm")}>
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    native
+                    value={status}
+                    onChange={updateStatus(userId)}
+                    disabled={status === "Rejected"}
+                  >
+                    <option value="Applied">Applied</option>
+                    <option value="Contacted">Contacted</option>
+                    <option value="Rejected">Rejected</option>
+                  </Select>
+                </FormControl>
               </div>
-              <div className={classNames("col-sm", "py-2")}>
-                <Typography variant="body1">{email}</Typography>
-              </div>
-              <div className="col-sm">
-                <Button size="medium" onClick={openResume(userId)}>
-                  View Resume
-                </Button>
-              </div>
-              <div className="col-sm">
-                <Button size="medium" onClick={openMessage(userId)}>
-                  Send Message
-                </Button>
-              </div>
-              <FormControl className={classNames("col-sm")}>
-                <InputLabel>Status</InputLabel>
-                <Select native value={status} onChange={() => {}}>
-                  <option value="Applied">Applied</option>
-                  <option value="Contacted">Contacted</option>
-                  <option value="Rejected">Rejected</option>
-                </Select>
-              </FormControl>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
 
       <Applicant

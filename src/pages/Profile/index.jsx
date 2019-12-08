@@ -5,9 +5,8 @@ import { useToken } from '../../hooks';
 import Company from './Company';
 import JobSeeker from'./JobSeeker';
 import Admin from './Admin';
-import EditProfile from './EditProfile'
-import EditPassword from './EditPassword'
-import { AddJob, EditJob } from '../company';
+import EditProfile from './EditProfile';
+import EditPassword from './EditPassword';
 
 function Profile(props) {
   const { userType } = useToken();
