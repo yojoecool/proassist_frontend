@@ -90,12 +90,11 @@ function CareerListings({ filters, keyword }) {
         setPage(0);
         setJobListings(listings.data.all);
 
-        setTop(currSize => {
-          if (listings.data.all.length < currSize) {
-            return listings.data.all.length;
-          }
-          return currSize
-        });
+        if (listings.data.all.length < pageSize) {
+          setTop(listings.data.all.length);
+        } else {
+          setTop(pageSize);
+        }
       } catch (err) {
         setLoad(true);
         toast('Error during search. No applicable listings found.', 'error');
