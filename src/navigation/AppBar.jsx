@@ -8,16 +8,31 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Link, withRouter } from 'react-router-dom';
 import { VisitorMenu, JSMenu } from './AppBarMenus';
 import { useWindowDimensions, useToken } from '../hooks';
+import { logo_white } from '../img';
 
-const useStyles = makeStyles(theme => ({
-  title: {
-    flexGrow: 1,
-  },
+const useStyles = makeStyles(() => ({
   linkItems: {
-    '&:hover': {
-      color: 'inherit'
+    "&:hover": {
+      border: "1px solid white"
     },
-    color: 'inherit'
+    color: "inherit"
+  },
+  logo: {
+    height: 58
+  },
+  toolbarContainer: {
+    maxHeight: 64,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%"
+  },
+  navigation: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end"
   }
 }));
 
@@ -96,41 +111,45 @@ function ProAssistAppBar(props) {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" className={classes.title}>
-          <Link to="/" className={classes.linkItems}>ProAssist, Inc</Link>
-        </Typography>
+        <div className={classes.toolbarContainer}>
+          <Link to="/" className={classes.linkItems}>
+            <img src={logo_white} alt="logo" className={classes.logo} />
+          </Link>
 
-        <Tabs className={classes.navTab} value={page} hidden={mobileView}>
-          <NavTab label="Home" to="/" />
-          {/* <NavTab label="About" to="/about" /> */}
-          <NavTab label="Careers" to="/careers" />
-        </Tabs>
+          <div className={classes.navigation}>
+            <Tabs className={classes.navTab} value={page} hidden={mobileView}>
+              <NavTab label="Home" to="/" />
+              {/* <NavTab label="About" to="/about" /> */}
+              <NavTab label="Careers" to="/careers" />
+            </Tabs>
 
-        <IconButton
-          aria-owns={open ? 'menu-appbar' : undefined}
-          aria-haspopup="true"
-          color="inherit"
-          hidden={mobileView}
-          onClick={handleMenu}
-        >
-          <AccountCircle />
-        </IconButton>
-        <Menu
-          id="menu-appbar"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={closeMenu}
-        >
-          {menu}
-        </Menu>
+            <IconButton
+              aria-owns={open ? "menu-appbar" : undefined}
+              aria-haspopup="true"
+              color="inherit"
+              hidden={mobileView}
+              onClick={handleMenu}
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={closeMenu}
+            >
+              {menu}
+            </Menu>
 
-        <IconButton
-          color="inherit"
-          hidden={!mobileView}
-          onClick={props.toggleDrawer}
-        >
-          <MenuIcon />
-        </IconButton>
+            <IconButton
+              color="inherit"
+              hidden={!mobileView}
+              onClick={props.toggleDrawer}
+            >
+              <MenuIcon />
+            </IconButton>
+          </div>
+        </div>
       </Toolbar>
     </AppBar>
   );

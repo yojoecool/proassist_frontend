@@ -4,17 +4,16 @@ import {
   IconButton, TextField, Typography
 } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-import { splashpage } from '../img';
+import { splashpage, logo } from '../img';
 import classNames from 'classnames';
 // import useWindowDimensions from './modules/useWindowDimensions';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: 35,
+    marginBottom: 35
   },
   left: {
     display: 'flex',
@@ -23,10 +22,19 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   slogan: {
-    margin: 20
+    marginTop: 10,
+    textAlign: 'center'
   },
   search: {
     flexGrow: 1
+  },
+  logo: {
+    width: '100%',
+    maxWidth: '100vw'
+  },
+  sideImg: {
+    width: '100%',
+    maxWidth: '100vw'
   }
 }));
 
@@ -47,18 +55,18 @@ function Splashpage(props) {
     };
 
     return (
-      <div className={classes.root}>
-        <div className={classes.left}>
-          <Typography variant="h2" className={classes.slogan}>
-            ProAssist
-          </Typography>
+      <div className={classNames('row', classes.root)}>
+        <div className={classNames(classes.left, "col-sm", "col-md")}>
+          <div className={classNames("align-items-center")}>
+            <img src={logo} alt="logo" className={classes.logo} />
+          </div>
 
           <Typography variant="h5" className={classes.slogan}>
             Start your career in the medical field today
           </Typography>
 
           <form className={classes.slogan}>
-            <div className={classNames('row')}>
+            <div className={classNames("row")}>
               <TextField
                 // id="outlined-simple-start-adornment"
                 variant="outlined"
@@ -68,18 +76,15 @@ function Splashpage(props) {
                 onChange={e => handleChange(e)}
               />
 
-              <IconButton
-                type="submit"
-                onClick={e => submit(e)}
-              >
+              <IconButton type="submit" onClick={e => submit(e)}>
                 <Search />
               </IconButton>
             </div>
           </form>
         </div>
 
-        <div className={classNames('align-items-center')}>
-          <img src={splashpage} alt="splashpage" />
+        <div className={classNames(classes.left, "col-sm", "col-md")}>
+          <img src={splashpage} alt="splashpage" className={classes.sideImg} />
         </div>
       </div>
     );
